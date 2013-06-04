@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6A67E9EA-E2AB-47CC-90A5-8E8813084721}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Helper</RootNamespace>
+    <AssemblyName>Helper</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\Helper.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\Helper.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Audio\Sound.cs" />
+    <Compile Include="Audio\SoundManager.cs" />
+    <Compile Include="Camera\Cameras\BaseCamera.cs" />
+    <Compile Include="Camera\CameraManager.cs" />
+    <Compile Include="Camera\Cameras\ChaseCamera.cs" />
+    <Compile Include="Camera\Cameras\FirstPersonCamera.cs" />
+    <Compile Include="Camera\Cameras\FreeCamera.cs" />
+    <Compile Include="Camera\Cameras\UprightCamera.cs" />
+    <Compile Include="Camera\Cameras\WatchCamera.cs" />
+    <Compile Include="Chat.cs" />
+    <Compile Include="Collections\Counter.cs" />
+    <Compile Include="Collections\ThreadQueue.cs" />
+    <Compile Include="Communication\ClientInfoSocket.cs" />
+    <Compile Include="Communication\SocketComm.cs" />
+    <Compile Include="Communication\TcpEventClient.cs" />
+    <Compile Include="Gui\Containers\DynamicContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Gui\Containers\DynamicContainer.Designer.cs">
+      <DependentUpon>DynamicContainer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Handlers.cs" />
+    <Compile Include="Input\ActionBinding.cs" />
+    <Compile Include="Input\ActionManager.cs" />
+    <Compile Include="Input\FlowLayoutTabPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Input\FlowLayoutTabPage.Designer.cs">
+      <DependentUpon>FlowLayoutTabPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Input\KeyBinding.cs" />
+    <Compile Include="Input\KeyBindingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Input\KeyBindingControl.Designer.cs">
+      <DependentUpon>KeyBindingControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Input\KeyMap.cs" />
+    <Compile Include="Input\KeyMapCollection.cs" />
+    <Compile Include="Input\Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Input\Settings.Designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Lighting\DeferredRenderer.cs" />
+    <Compile Include="Lighting\VertexFormats\LightingVertexFormat.cs" />
+    <Compile Include="Lighting\PointLight.cs" />
+    <Compile Include="Lighting\VertexFormats\TexturedVertexFormat.cs" />
+    <Compile Include="Multiplayer\ClientPacketInfo.cs" />
+    <Compile Include="Multiplayer\CommClient.cs" />
+    <Compile Include="Multiplayer\CommServer.cs" />
+    <Compile Include="Multiplayer\Packets\ChatPacket.cs" />
+    <Compile Include="Multiplayer\Packets\ClientConnectedPacket.cs" />
+    <Compile Include="Multiplayer\Packets\ClientDisconnectPacket.cs" />
+    <Compile Include="Multiplayer\Packets\ClientReadyPacket.cs" />
+    <Compile Include="Multiplayer\Packets\KeepAlivePacket.cs" />
+    <Compile Include="Multiplayer\Packets\ObjectActionPacket.cs" />
+    <Compile Include="Multiplayer\Packets\ObjectAttributePacket.cs" />
+    <Compile Include="Multiplayer\Packets\ObjectDeletedPacket.cs" />
+    <Compile Include="Multiplayer\Packets\ObjectRequestPacket.cs" />
+    <Compile Include="Multiplayer\Packets\ObjectAddedPacket.cs" />
+    <Compile Include="Multiplayer\Packets\ObjectUpdatePacket.cs" />
+    <Compile Include="Communication\TcpEventServer.cs" />
+    <Compile Include="Multiplayer\Packets\ClientInfoRequestPacket.cs" />
+    <Compile Include="Multiplayer\Packets\ClientInfoResponsePacket.cs" />
+    <Compile Include="Multiplayer\Packets\Packet.cs" />
+    <Compile Include="Multiplayer\ServerInfo.cs" />
+    <Compile Include="Objects\RigBone.cs" />
+    <Compile Include="Objects\RigManager.cs" />
+    <Compile Include="Objects\Asset.cs" />
+    <Compile Include="Objects\AssetManager.cs" />
+    <Compile Include="Physics\BoostController.cs" />
+    <Compile Include="Physics\DefaultCollisionPredicate.cs" />
+    <Compile Include="Physics\GravityController.cs" />
+    <Compile Include="Objects\Gobject.cs" />
+    <Compile Include="Physics\HeightMapInfo.cs" />
+    <Compile Include="Physics\PhysicObjects\Aircraft.cs" />
+    <Compile Include="Physics\PhysicObjects\CarObject.cs" />
+    <Compile Include="Physics\PhysicObjects\HeightmapObject.cs" />
+    <Compile Include="Physics\PhysicObjects\LunarVehicle.cs" />
+    <Compile Include="Physics\PhysicObjects\PhysicObject.cs" />
+    <Compile Include="Physics\PhysicObjects\PlaneObject.cs" />
+    <Compile Include="Physics\PhysicObjects\Planet.cs" />
+    <Compile Include="Physics\PhysicObjects\RagdollObject.cs" />
+    <Compile Include="Physics\PhysicObjects\Rover.cs" />
+    <Compile Include="Physics\PhysicObjects\RoverObject.cs" />
+    <Compile Include="Physics\PhysicObjects\TriangleMeshObject.cs" />
+    <Compile Include="Physics\PhysicsManager.cs" />
+    <Compile Include="Physics\Terrain.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Camera\ViewProfile.cs" />
+    <Compile Include="Utility\MultEnum.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Gui\Containers\DynamicContainer.resx">
+      <DependentUpon>DynamicContainer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Input\FlowLayoutTabPage.resx">
+      <DependentUpon>FlowLayoutTabPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Input\KeyBindingControl.resx">
+      <DependentUpon>KeyBindingControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Input\Settings.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JigLibX 0.3.1\JigLibX\JigLibX.csproj">
+      <Project>{8A7CEF45-3501-491D-AEDA-0164060F5348}</Project>
+      <Name>JigLibX</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

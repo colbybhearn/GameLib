@@ -1,0 +1,571 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Helper.Audio.Sound" Collapsed="true">
+    <Position X="40" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAQAAAABAACA4AAAAAAAAAA=</HashCode>
+      <FileName>Audio\Sound.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Audio.SoundManager" Collapsed="true">
+    <Position X="41.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEABAAAAABAIAAQEABAAAAAAAAgQAAGApAAAAAgAIAA=</HashCode>
+      <FileName>Audio\SoundManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Camera.CameraManager" Collapsed="true">
+    <Position X="40" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>Ag0CAIIhAAIQAFAAAAAAIBAAAEMAAAKIQAAAEAgAAAA=</HashCode>
+      <FileName>Camera\CameraManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Camera.ViewProfile" Collapsed="true">
+    <Position X="38.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EBAAAAAAAAAAAKAAAAAAAAAAAAAAAAAAAAAABEAAgAA=</HashCode>
+      <FileName>Camera\ViewProfile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Camera.Cameras.BaseCamera" Collapsed="true">
+    <Position X="4" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAUCEZIAIUAQIXAAGAKAABABgCEAIiycTQhAAgACAgE=</HashCode>
+      <FileName>Camera\Cameras\BaseCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Camera.Cameras.ChaseCamera" Collapsed="true">
+    <Position X="3" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Camera\Cameras\ChaseCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Camera.Cameras.FirstPersonCamera" Collapsed="true">
+    <Position X="5.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Camera\Cameras\FirstPersonCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Camera.Cameras.FreeCamera" Collapsed="true">
+    <Position X="7.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUCAIAAAAAAAAAAAAAAABAAACEAAAgIQAAAAAAAAAA=</HashCode>
+      <FileName>Camera\Cameras\FreeCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Camera.Cameras.UprightCamera" Collapsed="true">
+    <Position X="4" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAABBAAQAAAAAAAAgAgAAAACAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Camera\Cameras\UprightCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Camera.Cameras.WatchCamera" Collapsed="true">
+    <Position X="0.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Camera\Cameras\WatchCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.ChatMessage" Collapsed="true">
+    <Position X="31.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAEAAAAAAAgAAAIAAAAAAAAIAAAAQA=</HashCode>
+      <FileName>Chat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Chat" Collapsed="true">
+    <Position X="41.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAEAAAJAAgAgIAAAAEACACBAAAAAAEAAAAICAAA=</HashCode>
+      <FileName>Chat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Handlers" Collapsed="true">
+    <Position X="34.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Handlers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Collections.Tick" Collapsed="true">
+    <Position X="36.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAQA=</HashCode>
+      <FileName>Collections\Counter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Collections.Counter" Collapsed="true">
+    <Position X="38.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAgRAAAAAEQAgAAgCAEAAgEAAGAABCA=</HashCode>
+      <FileName>Collections\Counter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Collections.ThreadQueue&lt;T&gt;" Collapsed="true">
+    <Position X="34.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Collections\ThreadQueue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Communication.ClientInfoSocket" Collapsed="true">
+    <Position X="0.5" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAQAAAAAAAAACAAAAAAAAAAAAIgAAAAA=</HashCode>
+      <FileName>Communication\ClientInfoSocket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Communication.SocketComm" Collapsed="true">
+    <Position X="0.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAgAiAAQQAAQEAAAIACAACIAAAAAgECIgAAgAA=</HashCode>
+      <FileName>Communication\SocketComm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Communication.TcpEventClient" Collapsed="true">
+    <Position X="31.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAgAAAEAAAIAAAAAAAAAAIAEAAgAAAAA=</HashCode>
+      <FileName>Communication\TcpEventClient.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Communication.TcpEventServer" Collapsed="true">
+    <Position X="33" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACEAAAAAiAAIAAAIGAAAAAAAAAAAAgQIIAAIgAAACI=</HashCode>
+      <FileName>Communication\TcpEventServer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Gui.Containers.DynamicContainer" Collapsed="true">
+    <Position X="41.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAACAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Gui\Containers\DynamicContainer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Input.ActionBinding" Collapsed="true">
+    <Position X="31.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Input\ActionBinding.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Input.ActionManager" Collapsed="true">
+    <Position X="33" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAggAgAACAAAAAAAAQAAAABAgAMAAAAAAEAA=</HashCode>
+      <FileName>Input\ActionManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Input.FlowLayoutTabPage" Collapsed="true">
+    <Position X="31.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAACAAAAAAAACAAAACIEAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Input\FlowLayoutTabPage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Input.InputManager" Collapsed="true">
+    <Position X="40" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAAIAIAIAAABAAJAAKAAAAAAAACAAIAAAAAABgAAA=</HashCode>
+      <FileName>Input\InputManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Input.KeyBinding" Collapsed="true">
+    <Position X="41.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAIAGAwEAIAAAAAAAAAAAAAAAoAAEACAQAA=</HashCode>
+      <FileName>Input\KeyBinding.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Input.KeyBindingControl" Collapsed="true">
+    <Position X="31.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgBAAAAAACIAABAAAACAgAACAAAAAAAIAEAAICAEAAA=</HashCode>
+      <FileName>Input\KeyBindingControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Input.KeyMap" Collapsed="true">
+    <Position X="33" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAiAAAIAAIAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Input\KeyMap.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Input.KeyMapCollection" Collapsed="true">
+    <Position X="34.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgIAIAAAAAIAEAAAAAAAACAggAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Input\KeyMapCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Input.Settings" Collapsed="true">
+    <Position X="38.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAQIACAAAAEAAACAAEACAAAAABAAiAAAAAIAhAA=</HashCode>
+      <FileName>Input\Settings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Lighting.PointLight" Collapsed="true">
+    <Position X="40" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAkAAAAA=</HashCode>
+      <FileName>Lighting\PointLight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.ClientPacketInfo" Collapsed="true">
+    <Position X="33" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAgA=</HashCode>
+      <FileName>Multiplayer\ClientPacketInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.CommClient" Collapsed="true">
+    <Position X="34.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>A4MAIABAAiCAQSAIIEAIIIAACAABEDAiIAEgBkBDACQ=</HashCode>
+      <FileName>Multiplayer\CommClient.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.CommServer" Collapsed="true">
+    <Position X="36.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>A4ARAQAAAiAAQAAAAGAAICAAgAAIUDAIJAEpCmgBAAA=</HashCode>
+      <FileName>Multiplayer\CommServer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.ServerInfo" Collapsed="true">
+    <Position X="36.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEIAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\ServerInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.ChatPacket" Collapsed="true">
+    <Position X="22" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAACA=</HashCode>
+      <FileName>Multiplayer\Packets\ChatPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.ClientConnectedPacket" Collapsed="true">
+    <Position X="26.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\Packets\ClientConnectedPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.ClientDisconnectPacket" Collapsed="true">
+    <Position X="1.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Multiplayer\Packets\ClientDisconnectPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.ClientInfoRequestPacket" Collapsed="true">
+    <Position X="6.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\Packets\ClientInfoRequestPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.ClientInfoResponsePacket" Collapsed="true">
+    <Position X="10.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\Packets\ClientInfoResponsePacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.ClientReadyPacket" Collapsed="true">
+    <Position X="13" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\Packets\ClientReadyPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.KeepAlivePacket" Collapsed="true">
+    <Position X="15.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\Packets\KeepAlivePacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.ObjectActionPacket" Collapsed="true">
+    <Position X="17.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAhAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\Packets\ObjectActionPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.ObjectAddedPacket" Collapsed="true">
+    <Position X="19.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAgAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\Packets\ObjectAddedPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.ObjectAttributePacket" Collapsed="true">
+    <Position X="24.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAECAAAAAAAAIAAAAAAAAABABAAAACAAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\Packets\ObjectAttributePacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.ObjectDeletedPacket" Collapsed="true">
+    <Position X="28.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\Packets\ObjectDeletedPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.ObjectRequestPacket" Collapsed="true">
+    <Position X="4" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\Packets\ObjectRequestPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.ObjectUpdatePacket" Collapsed="true">
+    <Position X="8.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAACAgAAAAAIAAAACBAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\Packets\ObjectUpdatePacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Multiplayer.Packets.Packet" Collapsed="true">
+    <Position X="15.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgACBAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Multiplayer\Packets\Packet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Objects.Asset" Collapsed="true">
+    <Position X="34.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAQAAAAAAAAAAAAAgAEAAAA=</HashCode>
+      <FileName>Objects\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Objects.AssetManager" Collapsed="true">
+    <Position X="36.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAQAEAAICABEQAAAQAAAAAABAKAAAAAAAkEAAAAAA=</HashCode>
+      <FileName>Objects\AssetManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Objects.Gobject" Collapsed="true">
+    <Position X="10.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADAEggAGEQgAoipgMMohAACAkgAZAAEAAAgAQAQAASI=</HashCode>
+      <FileName>Objects\Gobject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Objects.RigBone" Collapsed="true">
+    <Position X="41.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAADAEAAAgAAAAIMAAKBAIAEAAQQAAAAABABAAAQAAA=</HashCode>
+      <FileName>Objects\RigBone.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Objects.RigManager" Collapsed="true">
+    <Position X="31.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAEAQCAAAAEAAACAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Objects\RigManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.BoostController" Collapsed="true">
+    <Position X="38.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAQACAAICAABAQABCAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Physics\BoostController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.DefaultCollisionPredicate" Collapsed="true">
+    <Position X="40" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Physics\DefaultCollisionPredicate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.GravityController" Collapsed="true">
+    <Position X="33" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAABAAAAIAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Physics\GravityController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.HeightMapInfo" Collapsed="true">
+    <Position X="36.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAIAApAAAAAEABAAAAAAAAAAAA=</HashCode>
+      <FileName>Physics\HeightMapInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.HeightMapInfoReader" Collapsed="true">
+    <Position X="38.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Physics\HeightMapInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.PhysicsManager" Collapsed="true">
+    <Position X="38.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEEBKACGCAAhAAAgEBEIAQAIoRAAAFJIEQAFAAAAAA=</HashCode>
+      <FileName>Physics\PhysicsManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.Terrain" Collapsed="true">
+    <Position X="10.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AYACQEAAAAABAgAAgAAACAAAAEABAgAIAVAAAEAEAAA=</HashCode>
+      <FileName>Physics\Terrain.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.PhysicsObjects.Aircraft" Collapsed="true">
+    <Position X="14.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAACAgAAIEFRERIAAAKQAEAAAQIEIRwhEEARQAAAg=</HashCode>
+      <FileName>Physics\PhysicObjects\Aircraft.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.PhysicsObjects.CarObject" Collapsed="true">
+    <Position X="19.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAgEAQAAgAACCAgIAAAIAAQAAAAAEgAEAQAAAA=</HashCode>
+      <FileName>Physics\PhysicObjects\CarObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.PhysicsObjects.HeightmapObject" Collapsed="true">
+    <Position X="1.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Physics\PhysicObjects\HeightmapObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.PhysicsObjects.LunarVehicle" Collapsed="true">
+    <Position X="3.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQIACDCABQAAAIAAAAgAAIARAAAQAAAAAABAAAQAAAA=</HashCode>
+      <FileName>Physics\PhysicObjects\LunarVehicle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.PhysicsObjects.PlaneObject" Collapsed="true">
+    <Position X="5.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Physics\PhysicObjects\PlaneObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.PhysicsObjects.Rover" Collapsed="true">
+    <Position X="33" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAICARgAAAgQgAYAQBAoQAAAiABCgAAACAAAAAIAQBA=</HashCode>
+      <FileName>Physics\PhysicObjects\Rover.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.PhysicsObjects.RoverObject" Collapsed="true">
+    <Position X="8" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>FACQGAAoEARBqgoTICAkaAg0gBAUAoAMwkBAFAQAQAQ=</HashCode>
+      <FileName>Physics\PhysicObjects\RoverObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.PhysicsObjects.RoverChassis" Collapsed="true">
+    <Position X="34.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Physics\PhysicObjects\RoverObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.PhysicsObjects.TriangleMeshObject" Collapsed="true">
+    <Position X="12.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAgA=</HashCode>
+      <FileName>Physics\PhysicObjects\TriangleMeshObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Physics.PhysicObjects.Planet" Collapsed="true">
+    <Position X="17" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAgCAAAAAAAAAAEgAAgAIAAAAAEAAAAE=</HashCode>
+      <FileName>Physics\PhysicObjects\Planet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Helper.Utility.MultEnum" Collapsed="true">
+    <Position X="36.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAACAAAAAAAIAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utility\MultEnum.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Helper.Lighting.LightingVertexFormat" Collapsed="true">
+    <Position X="31.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAAAAACBAAAAAAAAAAA=</HashCode>
+      <FileName>Lighting\VertexFormats\LightingVertexFormat.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Helper.Lighting.TexturedVertexFormat" Collapsed="true">
+    <Position X="33" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAgAAAAAAAABAAIAAAAAAAA=</HashCode>
+      <FileName>Lighting\VertexFormats\TexturedVertexFormat.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="Helper.Audio.SoundTypes" Collapsed="true">
+    <Position X="34.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Audio\SoundManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Helper.Input.InputMode" Collapsed="true">
+    <Position X="31.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAACAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>Input\InputManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Helper.Input.KeyEvent" Collapsed="true">
+    <Position X="33" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAEAAI=</HashCode>
+      <FileName>Input\KeyMap.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="Helper.Input.ActionBindingDelegate" Collapsed="true">
+    <Position X="31.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Input\ActionManager.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Helper.Input.ChatDelegate" Collapsed="true">
+    <Position X="33" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Input\InputManager.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Helper.Input.KeyBindingDelegate" Collapsed="true">
+    <Position X="36.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Input\KeyMap.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Helper.Objects.GetGobjectDelegate" Collapsed="true">
+    <Position X="34.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Objects\Asset.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
