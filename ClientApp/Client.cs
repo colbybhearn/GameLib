@@ -34,7 +34,7 @@ namespace ClientApp
         Queue<Packet> InputQueue = new Queue<Packet>();
         Queue<Packet> OutputQueue = new Queue<Packet>();
 
-        Game.GameBase game;
+        GameHelper.GameBase game;
         #endregion
 
         #region Constructor
@@ -54,7 +54,7 @@ namespace ClientApp
             btnDisconnect.Enabled = false;
 
             // Create an instance of the game
-            game = new Game.ExampleGame(false);
+            game = new GameHelper.ExampleGame(false);
             //game.ClientDisconnected+=new Helper.Handlers.StringEH(game_ClientDisconnected);
             // Give the xna panel a reference to game.
             // Xna Panel will initialize the game with its graphicsDevice the moment it is ready.
@@ -71,7 +71,7 @@ namespace ClientApp
         {
         }
 
-        private void AddXnaPanel(ref Game.GameBase game)
+        private void AddXnaPanel(ref GameHelper.GameBase game)
         {
             // 
             // XnaPanelMain

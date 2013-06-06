@@ -18,7 +18,7 @@ namespace ServerApp
         #endregion
         
         #region Constructor
-        Game.GameBase game;
+        GameHelper.GameBase game;
         public Server()
         {
             InitializeComponent();
@@ -26,7 +26,7 @@ namespace ServerApp
             iBasePort = (int)numBasePort.Value;
             btnStopServer.Enabled = false;
 
-            game = new Game.ExampleGame(true);
+            game = new GameHelper.ExampleGame(true);
             game.ClientConnected += new Helper.Handlers.IntStringEH(game_ClientConnected); 
             AddXnaPanel(ref game);
 
@@ -50,7 +50,7 @@ namespace ServerApp
         }
 
         XnaView.XnaPanel XnaPanelMain;
-        private void AddXnaPanel(ref Game.GameBase game)
+        private void AddXnaPanel(ref GameHelper.GameBase game)
         {
             // 
             // XnaPanelMain

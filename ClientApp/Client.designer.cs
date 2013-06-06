@@ -38,13 +38,13 @@ namespace ClientApp
             this.label5 = new System.Windows.Forms.Label();
             this.tStatus = new System.Windows.Forms.Timer(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtIPAddress = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.spMain = new System.Windows.Forms.SplitContainer();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiSettings = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtIPAddress = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numLobbyPort)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -134,7 +134,6 @@ namespace ClientApp
             // 
             this.tStatus.Interval = 500;
             this.tStatus.Tick += new System.EventHandler(this.tStatus_Tick);
-            
             // 
             // groupBox1
             // 
@@ -155,6 +154,15 @@ namespace ClientApp
             this.groupBox1.TabIndex = 41;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Connectivity";
+            // 
+            // txtIPAddress
+            // 
+            this.txtIPAddress.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::ClientApp.Properties.Settings.Default, "ServerIP", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txtIPAddress.Location = new System.Drawing.Point(9, 33);
+            this.txtIPAddress.Name = "txtIPAddress";
+            this.txtIPAddress.Size = new System.Drawing.Size(91, 20);
+            this.txtIPAddress.TabIndex = 0;
+            this.txtIPAddress.Text = global::ClientApp.Properties.Settings.Default.ServerIP;
             // 
             // statusStrip1
             // 
@@ -210,15 +218,6 @@ namespace ClientApp
             this.tsmiSettings.Size = new System.Drawing.Size(116, 22);
             this.tsmiSettings.Text = "Settings";
             this.tsmiSettings.Click += new System.EventHandler(this.tsmiSettings_Click);
-            // 
-            // txtIPAddress
-            // 
-            this.txtIPAddress.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::ClientApp.Properties.Settings.Default, "ServerIP", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.txtIPAddress.Location = new System.Drawing.Point(9, 33);
-            this.txtIPAddress.Name = "txtIPAddress";
-            this.txtIPAddress.Size = new System.Drawing.Size(91, 20);
-            this.txtIPAddress.TabIndex = 0;
-            this.txtIPAddress.Text = global::ClientApp.Properties.Settings.Default.ServerIP;
             // 
             // Client
             // 
