@@ -82,17 +82,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GameHelper\GameHelper.csproj">
-      <Project>{6A67E9EA-E2AB-47CC-90A5-8E8813084721}</Project>
-      <Name>GameHelper</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JigLibX 0.3.1\JigLibX\JigLibX.csproj">
       <Project>{8A7CEF45-3501-491D-AEDA-0164060F5348}</Project>
       <Name>JigLibX</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WindowsGameLibrary\WindowsGameLibrary.csproj">
-      <Project>{080DD9B6-4867-457A-9B9B-2400CCD30AAD}</Project>
-      <Name>WindowsGameLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

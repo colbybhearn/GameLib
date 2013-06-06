@@ -101,6 +101,23 @@
     <Compile Include="Gui\Containers\DynamicContainer.Designer.cs">
       <DependentUpon>DynamicContainer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gui\Controls\GraphicsDeviceService.cs" />
+    <Compile Include="Gui\Controls\XNAControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Gui\Controls\XnaPanel.cs" />
+    <Compile Include="Gui\Forms\Client.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\Forms\Client.designer.cs">
+      <DependentUpon>Client.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gui\Forms\Server.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gui\Forms\Server.designer.cs">
+      <DependentUpon>Server.cs</DependentUpon>
+    </Compile>
     <Compile Include="Handlers.cs" />
     <Compile Include="Input\ActionBinding.cs" />
     <Compile Include="Input\ActionManager.cs" />
@@ -181,6 +198,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Gui\Containers\DynamicContainer.resx">
       <DependentUpon>DynamicContainer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\Forms\Client.resx">
+      <DependentUpon>Client.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\Forms\Server.resx">
+      <DependentUpon>Server.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Input\FlowLayoutTabPage.resx">
       <DependentUpon>FlowLayoutTabPage.cs</DependentUpon>
