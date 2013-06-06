@@ -18,7 +18,7 @@ namespace ServerApp
         #endregion
         
         #region Constructor
-        Game.BaseGame game;
+        Game.GameBase game;
         public Server()
         {
             InitializeComponent();
@@ -50,7 +50,7 @@ namespace ServerApp
         }
 
         XnaView.XnaPanel XnaPanelMain;
-        private void AddXnaPanel(ref Game.BaseGame game)
+        private void AddXnaPanel(ref Game.GameBase game)
         {
             // 
             // XnaPanelMain

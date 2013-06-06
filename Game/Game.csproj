@@ -75,7 +75,7 @@
   <ItemGroup>
     <Compile Include="ClientBase.cs" />
     <Compile Include="ExampleGame.cs" />
-    <Compile Include="BaseGame.cs" />
+    <Compile Include="GameBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerBase.cs" />
   </ItemGroup>

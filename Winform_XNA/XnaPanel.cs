@@ -50,14 +50,14 @@ namespace XnaView
         private Stopwatch tmrDrawElapsed;
         private SortedList<int, Gobject> gameObjects; // This member is accessed from multiple threads and needs to be locked
         private SortedList<int, Gobject> newObjects;
-        Game.BaseGame game;
+        Game.GameBase game;
         #endregion
         
         #endregion
 
         #region Init
         PointLight pl;
-        public XnaPanel(ref Game.BaseGame g)
+        public XnaPanel(ref Game.GameBase g)
         {
             pl = new PointLight();
             game = g;

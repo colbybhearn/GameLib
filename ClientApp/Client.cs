@@ -34,7 +34,7 @@ namespace ClientApp
         Queue<Packet> InputQueue = new Queue<Packet>();
         Queue<Packet> OutputQueue = new Queue<Packet>();
 
-        Game.BaseGame game;
+        Game.GameBase game;
         #endregion
 
         #region Constructor
@@ -71,7 +71,7 @@ namespace ClientApp
         {
         }
 
-        private void AddXnaPanel(ref Game.BaseGame game)
+        private void AddXnaPanel(ref Game.GameBase game)
         {
             // 
             // XnaPanelMain

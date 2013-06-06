@@ -15,6 +15,7 @@ using JigLibX.Geometry;
 
 namespace Game
 {
+    /*
     // Wiki: https://github.com/colbybhearn/3DPhysics/wiki
     public class ExampleGame : BaseGame
     {
@@ -707,5 +708,5 @@ namespace Game
         }
         #endregion
         
-    }
+    }*/
 }
