@@ -84,10 +84,6 @@
       <Project>{6A67E9EA-E2AB-47CC-90A5-8E8813084721}</Project>
       <Name>GameHelper</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Game\Game.csproj">
-      <Project>{5F52A970-F0E8-468F-BF24-20DC5E081C96}</Project>
-      <Name>Game</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WindowsGameLibrary\WindowsGameLibrary.csproj">
       <Project>{080DD9B6-4867-457A-9B9B-2400CCD30AAD}</Project>
       <Name>WindowsGameLibrary</Name>

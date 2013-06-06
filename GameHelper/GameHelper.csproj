@@ -78,6 +78,10 @@
   <ItemGroup>
     <Compile Include="Audio\Sound.cs" />
     <Compile Include="Audio\SoundManager.cs" />
+    <Compile Include="Base\ClientBase.cs" />
+    <Compile Include="Base\ExampleGame.cs" />
+    <Compile Include="Base\GameBase.cs" />
+    <Compile Include="Base\ServerBase.cs" />
     <Compile Include="Camera\Cameras\BaseCamera.cs" />
     <Compile Include="Camera\CameraManager.cs" />
     <Compile Include="Camera\Cameras\ChaseCamera.cs" />

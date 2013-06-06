@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeightmapProcessor", "Heigh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientApp", "ClientApp\ClientApp.csproj", "{2FC5D1C9-20EA-4124-A503-2A02EFE5D1C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game", "Game\Game.csproj", "{5F52A970-F0E8-468F-BF24-20DC5E081C96}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerApp", "ServerApp\ServerApp.csproj", "{76420BD4-8577-47F3-82FA-12FB5D088939}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3C606ED6-594F-4BB0-8FCC-B7D56B685E61}"
@@ -115,19 +113,6 @@ Global
 		{2FC5D1C9-20EA-4124-A503-2A02EFE5D1C5}.Release|x86.ActiveCfg = Release|x86
 		{2FC5D1C9-20EA-4124-A503-2A02EFE5D1C5}.Release|x86.Build.0 = Release|x86
 		{2FC5D1C9-20EA-4124-A503-2A02EFE5D1C5}.Release|Xbox 360.ActiveCfg = Release|x86
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Debug|x86.ActiveCfg = Debug|x86
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Debug|x86.Build.0 = Debug|x86
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Debug|Xbox 360.ActiveCfg = Debug|Any CPU
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Release|x86.ActiveCfg = Release|Any CPU
-		{5F52A970-F0E8-468F-BF24-20DC5E081C96}.Release|Xbox 360.ActiveCfg = Release|Any CPU
 		{76420BD4-8577-47F3-82FA-12FB5D088939}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{76420BD4-8577-47F3-82FA-12FB5D088939}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{76420BD4-8577-47F3-82FA-12FB5D088939}.Debug|Mixed Platforms.Build.0 = Debug|x86
