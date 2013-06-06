@@ -6,8 +6,9 @@ using Helper.Multiplayer.Packets;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using GameHelper;
+using GameHelper.Base;
 
-namespace GameHelper.Gui.Forms.ClientApp
+namespace GameHelper.Gui.Forms
 {
     /*
    * I had to reference the WindowsGameLibrary from Clientapp in order for the ContentManager to load any models when invoked from the client (it worked fine in XNA_Panel and the missing reference was the only difference)
@@ -15,7 +16,7 @@ namespace GameHelper.Gui.Forms.ClientApp
    * 
    */
 
-    public partial class Client : Form
+    public partial class frmClientBase : Form
     {
         #region Properties
 
@@ -41,9 +42,9 @@ namespace GameHelper.Gui.Forms.ClientApp
 
         #region Constructor
 
-        
 
-        public Client()
+
+        public frmClientBase(ClientBase g)
         {
             Mouse.WindowHandle = this.Handle;
             //Microsoft.Xna.Framework.Input.Keyboard.
@@ -56,9 +57,27 @@ namespace GameHelper.Gui.Forms.ClientApp
             btnDisconnect.Enabled = false;
 
             // Create an instance of the game
-            game = new ClientBase();
+            game = g;
             bGame = game;
             //game.ClientDisconnected+=new Helper.Handlers.StringEH(game_ClientDisconnected);
+            // Give the xna panel a reference to game.
+            // Xna Panel will initialize the game with its graphicsDevice the moment it is ready.
+            AddXnaPanel(ref bGame);
+            Application.Idle += new EventHandler(Application_Idle);
+        }
+
+        public frmClientBase()
+        {
+            Mouse.WindowHandle = this.Handle;
+
+            InitializeComponent();
+            InitializeScene();
+            sKey = "";// System.Guid.NewGuid().ToString();
+            iPort = (int)numLobbyPort.Value;
+            tStatus.Start();
+            btnDisconnect.Enabled = false;
+
+            bGame = new GameBase();
             // Give the xna panel a reference to game.
             // Xna Panel will initialize the game with its graphicsDevice the moment it is ready.
             AddXnaPanel(ref bGame);

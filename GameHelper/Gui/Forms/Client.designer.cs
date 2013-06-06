@@ -1,6 +1,6 @@
-namespace GameHelper.Gui.Forms.ClientApp
+namespace GameHelper.Gui.Forms
 {
-    partial class Client
+    partial class frmClientBase
     {
         /// <summary>
         /// Required designer variable.

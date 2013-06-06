@@ -19,7 +19,7 @@ using Helper.Objects;
 using System.Windows.Forms;
 
 
-namespace GameHelper
+namespace GameHelper.Base
 {
 
    
@@ -218,6 +218,7 @@ namespace GameHelper
         public virtual void InitializeInputs()
         {
             keyMapCollections = GetDefaultControls();
+            inputManager = new InputManager(this.name, keyMapCollections);
         }
         public virtual KeyMapCollection GetDefaultControls()
         {

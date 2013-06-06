@@ -4,10 +4,11 @@ using System.Windows.Forms;
 using Helper.Multiplayer.Packets;
 using Helper;
 using GameHelper;
+using GameHelper.Base;
 
-namespace GameHelper.Gui.Forms.ServerApp
+namespace GameHelper.Gui.Forms
 {    
-    public partial class Server : Form
+    public partial class frmServerBase : Form
     {
 
         #region Properties
@@ -19,18 +20,18 @@ namespace GameHelper.Gui.Forms.ServerApp
         #endregion
         
         #region Constructor
-        GameHelper.ServerBase game;
+        ServerBase game;
         GameBase bGame;
 
 
-        public Server()
+        public frmServerBase(ServerBase g)
         {
             InitializeComponent();
             iLobbyPort = (int)numLobbyPort.Value;
             iBasePort = (int)numBasePort.Value;
             btnStopServer.Enabled = false;
 
-            game = new GameHelper.ServerBase();
+            game = g;
             game.ClientConnected += new Helper.Handlers.IntStringEH(game_ClientConnected);
             bGame = game;
             AddXnaPanel(ref bGame);
@@ -44,6 +45,14 @@ namespace GameHelper.Gui.Forms.ServerApp
                 this.WindowState = FormWindowState.Minimized;
         }
 
+        public frmServerBase()
+        {
+            InitializeComponent();
+
+            bGame = new GameBase();
+            AddXnaPanel(ref bGame);
+        }
+
         void game_ClientConnected(int id, string alias)
         {
             if (InvokeRequired)
@@ -55,7 +64,7 @@ namespace GameHelper.Gui.Forms.ServerApp
         }
 
         XnaView.XnaPanel XnaPanelMain;
-        private void AddXnaPanel(ref GameHelper.GameBase game)
+        private void AddXnaPanel(ref GameBase game)
         {
             // 
             // XnaPanelMain

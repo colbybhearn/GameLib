@@ -14,6 +14,7 @@ using Helper.Lighting;
 using Helper.Physics.PhysicsObjects;
 using Helper.Physics.PhysicObjects;
 using Helper.Objects;
+using GameHelper.Base;
 
 namespace GameHelper.Gui.Forms.XnaView
 {
@@ -50,14 +51,14 @@ namespace GameHelper.Gui.Forms.XnaView
         private Stopwatch tmrDrawElapsed;
         private SortedList<int, Gobject> gameObjects; // This member is accessed from multiple threads and needs to be locked
         private SortedList<int, Gobject> newObjects;
-        GameHelper.GameBase game;
+        GameBase game;
         #endregion
         
         #endregion
 
         #region Init
         PointLight pl;
-        public XnaPanel(ref GameHelper.GameBase g)
+        public XnaPanel(ref GameBase g)
         {
             pl = new PointLight();
             game = g;

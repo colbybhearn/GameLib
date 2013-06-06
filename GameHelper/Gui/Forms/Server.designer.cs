@@ -1,6 +1,6 @@
-namespace GameHelper.Gui.Forms.ServerApp
+namespace GameHelper.Gui.Forms
 {
-    partial class Server
+    partial class frmServerBase
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace GameHelper.Gui.Forms.ServerApp
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Server));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmServerBase));
             this.btnStartServer = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.btnStopServer = new System.Windows.Forms.Button();

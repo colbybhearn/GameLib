@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using Helper.Objects;
 using Helper.Physics.PhysicsObjects;
 
-namespace GameHelper 
+namespace GameHelper.Base
 {
     public class ClientBase : GameBase 
     {

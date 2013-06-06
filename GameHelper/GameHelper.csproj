@@ -69,7 +69,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -105,7 +104,9 @@
     <Compile Include="Gui\Controls\XNAControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Gui\Controls\XnaPanel.cs" />
+    <Compile Include="Gui\Controls\XnaPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Gui\Forms\Client.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -7,7 +7,7 @@ using Helper.Multiplayer.Packets;
 using Helper.Objects;
 using Microsoft.Xna.Framework;
 
-namespace GameHelper
+namespace GameHelper.Base
 {
     public class ServerBase : GameBase
     {
