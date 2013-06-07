@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Threading;
-using Helper.Multiplayer.Packets;
+using GameHelper.Multiplayer.Packets;
 using Microsoft.Xna.Framework;
-using Helper.Communication;
-using Helper.Collections;
+using GameHelper.Communication;
+using GameHelper.Collections;
 
-namespace Helper.Multiplayer
+namespace GameHelper.Multiplayer
 {
     public class CommClient
     {
         public int iPort;
         public string sAlias;
         IPAddress a;
-        Helper.Communication.TcpEventClient client;
+        GameHelper.Communication.TcpEventClient client;
         ServerInfo Server;
         bool ShouldBeRunning = false;
         ThreadQueue<Packet> InputQueue = new ThreadQueue<Packet>();
@@ -42,7 +42,7 @@ namespace Helper.Multiplayer
                 inputThread = new Thread(new ThreadStart(inputWorker));
                 inputThread.Start();
                 client = new TcpEventClient();
-                client.PacketReceived += new Helper.Handlers.PacketReceivedEH(PacketReceived);
+                client.PacketReceived += new GameHelper.Handlers.PacketReceivedEH(PacketReceived);
                 client.Disconnected += new Handlers.voidEH(client_ThisClientDisconnectedFromServer);                
                 connected = client.Connect(Server.endPoint);
             }
@@ -63,7 +63,7 @@ namespace Helper.Multiplayer
             ThisClientDisconnectedFromServer();
         }
 
-        void PacketReceived(Helper.Multiplayer.Packets.Packet p)
+        void PacketReceived(GameHelper.Multiplayer.Packets.Packet p)
         {
             InputQueue.Enqueue(p);             
         }
@@ -175,7 +175,7 @@ namespace Helper.Multiplayer
             OtherClientConnectedToServer(id, alias);
         }
 
-        public event Helper.Handlers.ObjectActionEH ObjectActionReceived;
+        public event GameHelper.Handlers.ObjectActionEH ObjectActionReceived;
         private void CallObjectActionReceived(int id, object[] parameters)
         {
             if (ObjectActionReceived == null)
@@ -184,7 +184,7 @@ namespace Helper.Multiplayer
         }
 
 
-        public event Helper.Handlers.ObjectUpdateEH ObjectUpdateReceived;
+        public event GameHelper.Handlers.ObjectUpdateEH ObjectUpdateReceived;
         private void CallObjectUpdateReceived(int id, int asset, Vector3 pos, Matrix orient, Vector3 vel)
         {
             if (ObjectUpdateReceived == null)
@@ -192,7 +192,7 @@ namespace Helper.Multiplayer
             ObjectUpdateReceived(id, asset, pos, orient, vel);
         }
 
-        public event Helper.Handlers.ObjectAddedResponseEH ObjectAddedReceived;
+        public event GameHelper.Handlers.ObjectAddedResponseEH ObjectAddedReceived;
         private void CallObjectRequestResponseReceived(int owner, int id, int asset)
         {
             if (ObjectAddedReceived == null)
@@ -201,7 +201,7 @@ namespace Helper.Multiplayer
         }
 
         
-        public event Helper.Handlers.ChatMessageEH ChatMessageReceived;
+        public event GameHelper.Handlers.ChatMessageEH ChatMessageReceived;
         private void CallChatMessageReceived(ChatMessage cm)
         {
             if (ChatMessageReceived == null)
@@ -209,7 +209,7 @@ namespace Helper.Multiplayer
             ChatMessageReceived(cm);
         }
 
-        public event Helper.Handlers.IntEH ClientInfoRequestReceived;
+        public event GameHelper.Handlers.IntEH ClientInfoRequestReceived;
         private void CallClientInfoRequestReceived(int id)
         {
             if (ClientInfoRequestReceived == null)

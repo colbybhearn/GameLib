@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Helper.Multiplayer.Packets;
-using Helper;
+using GameHelper.Multiplayer.Packets;
+using GameHelper;
+using GameHelper.Base;
 
 namespace ServerApp
 {    
@@ -18,7 +19,7 @@ namespace ServerApp
         #endregion
         
         #region Constructor
-        GameHelper.GameBase game;
+        GameBase game;
         public Server()
         {
             InitializeComponent();
@@ -27,7 +28,7 @@ namespace ServerApp
             btnStopServer.Enabled = false;
 
             game = new GameHelper.ExampleGame(true);
-            game.ClientConnected += new Helper.Handlers.IntStringEH(game_ClientConnected); 
+            game.ClientConnected += new GameHelper.Handlers.IntStringEH(game_ClientConnected); 
             AddXnaPanel(ref game);
 
             bool autoStart = false;
@@ -43,14 +44,14 @@ namespace ServerApp
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Helper.Handlers.IntStringEH(game_ClientConnected), new object[] { id, alias });
+                this.Invoke(new GameHelper.Handlers.IntStringEH(game_ClientConnected), new object[] { id, alias });
                 return;
             }
             lstClients.Items.Add(alias);
         }
 
         XnaView.XnaPanel XnaPanelMain;
-        private void AddXnaPanel(ref GameHelper.GameBase game)
+        private void AddXnaPanel(ref GameBase game)
         {
             // 
             // XnaPanelMain

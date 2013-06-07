@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Helper.Multiplayer.Packets;
+using GameHelper.Multiplayer.Packets;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 

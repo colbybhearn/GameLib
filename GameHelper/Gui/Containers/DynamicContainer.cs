@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Helper.Gui.Containers
+namespace GameHelper.Gui.Containers
 {
     public partial class DynamicContainer : Panel
     {

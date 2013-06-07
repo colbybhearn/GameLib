@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Helper.Camera.Cameras
+namespace GameHelper.Camera.Cameras
 {
     public class FreeCamera : UprightCamera
     {

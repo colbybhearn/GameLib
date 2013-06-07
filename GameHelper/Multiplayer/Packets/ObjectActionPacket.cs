@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Helper.Multiplayer.Packets
+namespace GameHelper.Multiplayer.Packets
 {
     [Serializable]
     public class ObjectActionPacket : Packet

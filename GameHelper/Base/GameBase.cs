@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
-using Helper;
-using Helper.Camera;
-using Helper.Camera.Cameras;
-using Helper.Input;
-using Helper.Multiplayer;
-using Helper.Multiplayer.Packets;
-using Helper.Physics;
-using Helper.Physics.PhysicsObjects;
+using GameHelper;
+using GameHelper.Camera;
+using GameHelper.Camera.Cameras;
+using GameHelper.Input;
+using GameHelper.Multiplayer;
+using GameHelper.Multiplayer.Packets;
+using GameHelper.Physics;
+using GameHelper.Physics.PhysicsObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Helper.Audio;
+using GameHelper.Audio;
 using System.Diagnostics;
-using Helper.Objects;
+using GameHelper.Objects;
 using System.Windows.Forms;
 
 
@@ -125,9 +125,9 @@ namespace GameHelper.Base
         #endregion
 
         #region Events
-        public event Helper.Handlers.voidEH Stopped;
+        public event GameHelper.Handlers.voidEH Stopped;
         public event Handlers.ChatMessageEH ChatMessageReceived;
-        public event Helper.Handlers.IntStringEH ClientConnected;
+        public event GameHelper.Handlers.IntStringEH ClientConnected;
         public event Handlers.ClientConnectedEH OtherClientConnectedToServer;
         public event Handlers.IntEH OtherClientDiconnectedFromServer;
         public event Handlers.voidEH ThisClientDisconnectedFromServer;
@@ -146,16 +146,6 @@ namespace GameHelper.Base
 
         
 
-        #endregion
-
-        #region Enums
-        // you have to declare some enums for assets, cameras, inputmodes, sounds
-        public enum AssetTypes
-        {
-            Car,
-            Aircraft,
-            Lander,
-        }
         #endregion
 
         #region Initialization
@@ -208,6 +198,7 @@ namespace GameHelper.Base
 
         public virtual void InitializeCameras()
         {
+            
         }
 
         public virtual List<ViewProfile> GetViewProfiles()
@@ -247,7 +238,8 @@ namespace GameHelper.Base
                 System.Diagnostics.Debug.WriteLine(E.StackTrace);
             }
         }
-        private void LoadModel(Model m, string name)
+
+        public void LoadModel(Model m, string name)
         {
             try
             {
@@ -258,6 +250,20 @@ namespace GameHelper.Base
                 System.Diagnostics.Debug.WriteLine(E.StackTrace);
             }
         }
+
+        public void LoadModel(Model m, string name, Enum e, GetGobjectDelegate creatorCallback)
+        {
+            try
+            {
+                m = Content.Load<Model>(name);
+                assetManager.AddAsset(e, creatorCallback);
+            }
+            catch (Exception E)
+            {
+                System.Diagnostics.Debug.WriteLine(E.StackTrace);
+            }
+        }
+
 
         /// <summary>
         /// Should do scene and object initialization common to client and server
@@ -331,7 +337,11 @@ namespace GameHelper.Base
             currentSelectedObject.Selected = true;
             //objectCam.TargetPosition = currentSelectedObject.Position;
         }
-        
+
+        public virtual void Start()
+        {
+        }
+
         public virtual void Stop()
         {
             physicsManager.Stop();
@@ -501,12 +511,14 @@ namespace GameHelper.Base
         {
             cameraManager.DecreaseMovementSpeed();
         }
-
-        public void AdjustCameraOrientation(float pitch, float yaw)
+        public void AdjustCameraOrientationTo(float pitch, float yaw)
         {
             cameraManager.AdjustTargetOrientationTo(pitch, yaw);
         }
-
+        public void AdjustCameraOrientationBy(float pitch, float yaw)
+        {
+            cameraManager.AdjustTargetOrientationBy(pitch, yaw);
+        }
         public void CameraMoveHeightIncrease()
         {
             cameraManager.MoveUp();
@@ -518,9 +530,13 @@ namespace GameHelper.Base
         public void CameraMoveHome()
         {
         }
-
         public virtual void PreUpdateCameraCallback()
         {
+        }
+        public void CameraModeCycle()
+        {
+            cameraManager.NextCamera();
+            //cameraManager.SetGobjectList(cameraMode.ToString(), new List<Gobject> { currentSelectedObject });
         }
         #endregion
 
@@ -698,16 +714,7 @@ namespace GameHelper.Base
 
             return objectid;
         }
-        
 
-
-        // SERVER only
-        public void ListenForClients(int port)
-        {
-            commServer = new CommServer(port);
-            InitializeMultiplayer();
-            commServer.Start();
-        }
 
 
 
@@ -764,9 +771,26 @@ namespace GameHelper.Base
 
         #endregion
 
-
+        float mouselastX;
+        float mouselastY;
         public virtual void ProcessMouseMove(Point p, MouseEventArgs e, System.Drawing.Rectangle bounds)
         {
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                if (mouselastX != 0 && mouselastY != 0)
+                {
+                    float dX = mouselastX - e.X;
+                    float dY = mouselastY - e.Y;
+                    PanCam(dX, dY);
+                }
+            }
+            mouselastX = e.X;
+            mouselastY = e.Y;
+        }
+
+        public void PanCam(float dX, float dY)
+        {
+            AdjustCameraOrientationBy(-dY * .001f, -dX * .001f);
         }
 
         public virtual void ProcessMouseDown(object sender, MouseEventArgs e, System.Drawing.Rectangle globalSystemDrawingRectangle)

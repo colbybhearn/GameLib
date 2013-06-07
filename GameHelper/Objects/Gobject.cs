@@ -5,12 +5,12 @@ using Microsoft.Xna.Framework;
 using JigLibX.Geometry;
 using System.Collections.Generic;
 using System;
-using Helper.Physics.PhysicsObjects;
-using Helper.Lighting;
-using Helper.Physics.PhysicObjects;
-using Helper.Physics;
+using GameHelper.Physics.PhysicsObjects;
+using GameHelper.Lighting;
+using GameHelper.Physics.PhysicObjects;
+using GameHelper.Physics;
 
-namespace Helper.Objects
+namespace GameHelper.Objects
 {
     public class Gobject
     {
@@ -36,7 +36,7 @@ namespace Helper.Objects
         }
         public Vector3 Scale { get; set; }
         public bool Selected;
-        public Helper.Input.ActionManager actionManager = new Helper.Input.ActionManager();
+        public GameHelper.Input.ActionManager actionManager = new GameHelper.Input.ActionManager();
         public List<Controller> controllers = new List<Controller>();
         internal BasicEffect Effect { get; set; }
         public bool hasNotDoneFirstInterpoladation = true; // this object has never processed an update and interpolated (with any factor) 
@@ -145,7 +145,7 @@ namespace Helper.Objects
             }
         }
         
-        internal void CommonInit(Vector3 pos, Vector3 scale, Model model, bool moveable, int asset)
+        public void CommonInit(Vector3 pos, Vector3 scale, Model model, bool moveable, int asset)
         {
             Position = pos;
             Scale = scale;

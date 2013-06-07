@@ -8,9 +8,9 @@ using JigLibX.Geometry;
 using JigLibX.Physics;
 using JigLibX.Collision;
 using JigLibX.Utils;
-using Helper.Objects;
+using GameHelper.Objects;
 
-namespace Helper.Physics
+namespace GameHelper.Physics
 {
     public class Terrain : Gobject
     {

@@ -2,21 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Helper;
-using Helper.Multiplayer.Packets;
-using Helper.Objects;
+using GameHelper;
+using GameHelper.Multiplayer.Packets;
+using GameHelper.Objects;
 using Microsoft.Xna.Framework;
+using GameHelper.Multiplayer;
 
 namespace GameHelper.Base
 {
     public class ServerBase : GameBase
     {
 
+        public int ListenOnPort = 8800;
         public ServerBase()
             : base()
         {
         }
 
+        #region Initialization
         public override void InitializeMultiplayer()
         {
             base.InitializeMultiplayer();
@@ -29,9 +32,17 @@ namespace GameHelper.Base
             commServer.ObjectAttributeReceived += new Handlers.ObjectAttributeEH(commServer_ObjectAttributeReceived);
             commServer.ClientReadyReceived += new Handlers.IntStringEH(commServer_ClientReadyReceived);
         }
+        public override void InitializeCameras()
+        {
+            base.InitializeCameras();
+        }
+        public override void InitializeEnvironment()
+        {
+            base.InitializeEnvironment();
+        }
+        #endregion
 
         /// <summary>
-        /// SERVER SIDE
         /// Server has received an Object Action packet and it should be processed
         /// </summary>
         /// <param name="id"></param>
@@ -45,7 +56,6 @@ namespace GameHelper.Base
         }
 
         /// <summary>
-        /// SERVER SIDE
         /// Server has received a request for a new object from a client.
         /// This is how a client requests an object it can "own"
         /// </summary>
@@ -155,6 +165,19 @@ namespace GameHelper.Base
                 commServer.BroadcastChatMessage(msg.Message, msg.Owner);
         }
 
+
+        private void ListenForClients(int port)
+        {
+            commServer = new CommServer(port);
+            InitializeMultiplayer();
+            commServer.Start();
+        }
+
+        public override void Start()
+        {
+            base.Start();
+            ListenForClients(ListenOnPort);
+        }
         public override void Stop()
         {
             base.Stop();

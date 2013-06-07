@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Helper.Camera.Cameras
+namespace GameHelper.Camera.Cameras
 {
     public class UprightCamera : BaseCamera
     {

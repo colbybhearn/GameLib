@@ -5,16 +5,16 @@ using System.Text;
 using System.Threading;
 using System.Net.Sockets;
 using System.Net;
-using Helper.Multiplayer.Packets;
-using Helper.Collections;
+using GameHelper.Multiplayer.Packets;
+using GameHelper.Collections;
 
-namespace Helper.Communication
+namespace GameHelper.Communication
 {
     class TcpEventClient
     {
         SocketComm socket;
-        public event Helper.Handlers.PacketReceivedEH PacketReceived;
-        public event Helper.Handlers.voidEH Disconnected;
+        public event GameHelper.Handlers.PacketReceivedEH PacketReceived;
+        public event GameHelper.Handlers.voidEH Disconnected;
 
         public TcpEventClient()
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Helper.Utility
+namespace GameHelper.Utility
 {
     public class MultEnum
     {

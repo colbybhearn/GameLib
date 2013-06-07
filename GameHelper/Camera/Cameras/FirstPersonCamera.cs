@@ -1,10 +1,10 @@
 ﻿
 using Microsoft.Xna.Framework;
 using System;
-using Helper.Physics;
-using Helper.Objects;
+using GameHelper.Physics;
+using GameHelper.Objects;
 
-namespace Helper.Camera.Cameras
+namespace GameHelper.Camera.Cameras
 {
     public class FirstPersonCamera : UprightCamera
     {

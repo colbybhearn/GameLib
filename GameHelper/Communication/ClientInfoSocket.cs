@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 
-namespace Helper.Communication
+namespace GameHelper.Communication
 {
     public class ClientInfoSocket : SocketComm
     {
         // Using new keywords suppresses warnings about "hiding" the SocketComm's versions
         new public delegate void PacketReceivedEventHandler(int id, byte[] data);
         new public event PacketReceivedEventHandler PacketReceived;
-        new public event Helper.Handlers.IntEH ClientDisconnected;
+        new public event GameHelper.Handlers.IntEH ClientDisconnected;
         public int ClientID;
 
         public ClientInfoSocket(Socket s, int id) 

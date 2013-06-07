@@ -1,4 +1,4 @@
-﻿namespace Helper.Input
+﻿namespace GameHelper.Input
 {
     partial class FlowLayoutTabPage
     {

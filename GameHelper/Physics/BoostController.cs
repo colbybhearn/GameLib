@@ -8,7 +8,7 @@ using JigLibX.Collision;
 using JigLibX.Math;
 using Microsoft.Xna.Framework;
 
-namespace Helper.Physics
+namespace GameHelper.Physics
 {
     public class BoostController : Controller
     {

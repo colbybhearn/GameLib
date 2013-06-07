@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Helper.Physics;
-using Helper.Objects;
+using GameHelper.Physics;
+using GameHelper.Objects;
 
-namespace Helper.Camera.Cameras
+namespace GameHelper.Camera.Cameras
 {
     /*This is the base class for all cameras
      * A specifc camera class defines the behavior of the camera, but not the properties or attributes of a camera.

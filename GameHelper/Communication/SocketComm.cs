@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 using System.Threading;
-using Helper.Collections;
+using GameHelper.Collections;
 using System.Net;
 using System.Diagnostics;
 
-namespace Helper.Communication
+namespace GameHelper.Communication
 {
     public class SocketComm
     {
@@ -19,7 +19,7 @@ namespace Helper.Communication
         
         public delegate void PacketReceivedEventHandler(byte[] data);
         public event PacketReceivedEventHandler PacketReceived;
-        public event Helper.Handlers.voidEH ClientDisconnected;
+        public event GameHelper.Handlers.voidEH ClientDisconnected;
 
         bool ShouldBeRunning = false;
         ThreadQueue<byte[]> DataReceived = new ThreadQueue<byte[]>();

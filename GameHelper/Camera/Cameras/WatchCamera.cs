@@ -1,9 +1,9 @@
 ﻿
 using Microsoft.Xna.Framework;
-using Helper.Physics;
-using Helper.Objects;
+using GameHelper.Physics;
+using GameHelper.Objects;
 
-namespace Helper.Camera.Cameras
+namespace GameHelper.Camera.Cameras
 {
     public class WatchCamera : UprightCamera
     {

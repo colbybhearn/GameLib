@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using JigLibX.Collision;
 using JigLibX.Physics;
-using Helper.Objects;
+using GameHelper.Objects;
 
-namespace Helper.Physics.PhysicsObjects
+namespace GameHelper.Physics.PhysicsObjects
 {
     public class PlaneObject : Gobject
     {

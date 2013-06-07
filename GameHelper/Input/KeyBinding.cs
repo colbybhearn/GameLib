@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework.Input;
 using System.Runtime.Serialization;
 
-namespace Helper.Input
+namespace GameHelper.Input
 {
     [DataContract]
     public class KeyBinding

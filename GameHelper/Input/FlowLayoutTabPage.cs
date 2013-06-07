@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Helper.Input
+namespace GameHelper.Input
 {
     public partial class FlowLayoutTabPage : TabPage
     {

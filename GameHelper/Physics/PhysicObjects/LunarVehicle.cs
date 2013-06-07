@@ -4,10 +4,10 @@ using JigLibX.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using Helper.Objects;
+using GameHelper.Objects;
 
 
-namespace Helper.Physics.PhysicsObjects
+namespace GameHelper.Physics.PhysicsObjects
 {
     public class LunarVehicle : Gobject
     {
@@ -37,10 +37,10 @@ namespace Helper.Physics.PhysicsObjects
             PhysicsSystem.CurrentPhysicsSystem.AddController(RotJetZ);
             PhysicsSystem.CurrentPhysicsSystem.AddController(RotJetY);
 
-            actionManager.AddBinding((int)Actions.ThrustUp, new Helper.Input.ActionBindingDelegate(GenericThrustUp), 1);
-            actionManager.AddBinding((int)Actions.Pitch, new Helper.Input.ActionBindingDelegate(GenericPitch), 1);
-            actionManager.AddBinding((int)Actions.Roll, new Helper.Input.ActionBindingDelegate(GenericRoll), 1);
-            actionManager.AddBinding((int)Actions.Yaw, new Helper.Input.ActionBindingDelegate(GenericYaw), 1);
+            actionManager.AddBinding((int)Actions.ThrustUp, new GameHelper.Input.ActionBindingDelegate(GenericThrustUp), 1);
+            actionManager.AddBinding((int)Actions.Pitch, new GameHelper.Input.ActionBindingDelegate(GenericPitch), 1);
+            actionManager.AddBinding((int)Actions.Roll, new GameHelper.Input.ActionBindingDelegate(GenericRoll), 1);
+            actionManager.AddBinding((int)Actions.Yaw, new GameHelper.Input.ActionBindingDelegate(GenericYaw), 1);
         }
 
         public enum Actions

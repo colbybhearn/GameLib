@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Helper.Multiplayer;
-using Helper.Multiplayer.Packets;
-using Helper;
+using GameHelper.Multiplayer;
+using GameHelper.Multiplayer.Packets;
+using GameHelper;
 using Microsoft.Xna.Framework;
-using Helper.Objects;
-using Helper.Physics.PhysicsObjects;
+using GameHelper.Objects;
+using GameHelper.Physics.PhysicsObjects;
 
 namespace GameHelper.Base
 {
@@ -42,6 +42,11 @@ namespace GameHelper.Base
                 commClient.Send(new ClientReadyPacket(MyClientID, "someone"));
         }
 
+        public override void InitializeContent()
+        {
+            base.InitializeContent();
+        }
+
         public override void InitializeMultiplayer()
         {
             base.InitializeMultiplayer();
@@ -58,13 +63,17 @@ namespace GameHelper.Base
         }
 
 
-        #region Client Side
+        public override void Start()
+        {
+            base.Start();
+            
+        }
+
         // CLIENT only
         public virtual bool ConnectToServer(string ip, int port, string alias)
         {
             commClient = new CommClient(ip, port, alias);
             InitializeMultiplayer();
-            //ChatManager.PlayerAlias = alias;
             return commClient.Connect();
         }
         /// <summary>
@@ -139,16 +148,13 @@ namespace GameHelper.Base
         {
             isConnectedToServer = false; // this is wrong 2012.10.09
             CallOtherClientDisconnectedFromServer(id);
-            
         }
-
-
 
         public void commClient_ObjectUpdateReceived(int id, int asset, Vector3 pos, Matrix orient, Vector3 vel)
         {
             lock (MultiplayerUpdateQueue)
             {
-                MultiplayerUpdateQueue.Add(new Helper.Multiplayer.Packets.ObjectUpdatePacket(id, asset, pos, orient, vel));
+                MultiplayerUpdateQueue.Add(new GameHelper.Multiplayer.Packets.ObjectUpdatePacket(id, asset, pos, orient, vel));
             }
         }
 
@@ -164,7 +170,6 @@ namespace GameHelper.Base
 
         }
 
-
         /// <summary>
         /// CLIENT SIDE
         /// calls this to disconnect from the server
@@ -174,13 +179,11 @@ namespace GameHelper.Base
             commClient.Stop();
             isConnectedToServer = false;
         }
-        #endregion
 
-
-        public void SendChatPacket(ChatMessage msg)
+        public override void SendChatPacket(ChatMessage msg)
         {
-                if (commClient != null)
-                    commClient.SendChatPacket(msg.Message, MyClientID);
+            if (commClient != null)
+                commClient.SendChatPacket(msg.Message, MyClientID);
         }
 
         public override void SetNominalInputState()

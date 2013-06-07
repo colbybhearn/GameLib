@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace Helper.Objects
+namespace GameHelper.Objects
 {
     public class RigBone
     {

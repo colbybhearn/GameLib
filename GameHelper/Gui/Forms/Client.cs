@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Helper.Multiplayer.Packets;
+using GameHelper.Multiplayer.Packets;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using GameHelper;
@@ -63,7 +63,7 @@ namespace GameHelper.Gui.Forms
             // Give the xna panel a reference to game.
             // Xna Panel will initialize the game with its graphicsDevice the moment it is ready.
             AddXnaPanel(ref bGame);
-            Application.Idle += new EventHandler(Application_Idle);
+            Application.Idle += new EventHandler(Application_Idle);            
         }
 
         public frmClientBase()
@@ -110,8 +110,8 @@ namespace GameHelper.Gui.Forms
             this.XnaPanelMain.Size = new System.Drawing.Size(596, 366);
             this.XnaPanelMain.TabIndex = 46;
             this.XnaPanelMain.Text = "XnaPanel";
-            this.XnaPanelMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlMouseDown);
             this.XnaPanelMain.MouseEnter += new System.EventHandler(this.pnlMouseEnter);
+            this.XnaPanelMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlMouseDown);
             this.XnaPanelMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMouseMove);
             this.XnaPanelMain.MouseWheel += new MouseEventHandler(XnaPanelMain_MouseWheel);
             this.spMain.Panel2.Controls.Add(this.XnaPanelMain);
@@ -152,7 +152,6 @@ namespace GameHelper.Gui.Forms
             btnDisconnect.Enabled = false;
             game.DisconnectFromServer();
         }
-
         
         private void ClientApp_MainFormClosed(object sender, FormClosedEventArgs e)
         {

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Helper.Physics;
-using Helper.Camera.Cameras;
+using GameHelper.Physics;
+using GameHelper.Camera.Cameras;
 using Microsoft.Xna.Framework;
-using Helper.Objects;
+using GameHelper.Objects;
 
-namespace Helper.Camera
+namespace GameHelper.Camera
 {
     public class CameraManager
     {

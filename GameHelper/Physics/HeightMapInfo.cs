@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace Helper.Physics
+namespace GameHelper.Physics
 {
     /// <summary>
     /// HeightMapInfo is a collection of data about the heightmap. It includes

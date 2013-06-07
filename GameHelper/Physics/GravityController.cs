@@ -5,7 +5,7 @@ using System.Text;
 using JigLibX.Physics;
 using Microsoft.Xna.Framework;
 
-namespace Helper.Physics
+namespace GameHelper.Physics
 {
     class GravityController : Controller
     {

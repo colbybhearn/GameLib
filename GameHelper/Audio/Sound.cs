@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Audio;
 
-namespace Helper.Audio
+namespace GameHelper.Audio
 {
     class Sound
     {

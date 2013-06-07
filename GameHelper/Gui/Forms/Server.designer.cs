@@ -231,11 +231,14 @@ namespace GameHelper.Gui.Forms
             this.spMain.Panel1.Controls.Add(this.label1);
             this.spMain.Panel1.Controls.Add(this.numLobbyPort);
             this.spMain.Panel1.Controls.Add(this.numBasePort);
+            // 
+            // spMain.Panel2
+            // 
             this.spMain.Size = new System.Drawing.Size(763, 517);
             this.spMain.SplitterDistance = 171;
             this.spMain.TabIndex = 29;
             // 
-            // Server
+            // frmServerBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -243,7 +246,7 @@ namespace GameHelper.Gui.Forms
             this.Controls.Add(this.spMain);
             this.Controls.Add(this.statusStrip1);
             this.MinimumSize = new System.Drawing.Size(337, 264);
-            this.Name = "Server";
+            this.Name = "frmServerBase";
             this.Text = "WinPhysiX Server";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ServerApp_MainFormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.numLobbyPort)).EndInit();

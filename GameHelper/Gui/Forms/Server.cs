@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Helper.Multiplayer.Packets;
-using Helper;
+using GameHelper.Multiplayer.Packets;
+using GameHelper;
 using GameHelper;
 using GameHelper.Base;
+using Microsoft.Xna.Framework;
 
 namespace GameHelper.Gui.Forms
 {    
@@ -32,7 +33,7 @@ namespace GameHelper.Gui.Forms
             btnStopServer.Enabled = false;
 
             game = g;
-            game.ClientConnected += new Helper.Handlers.IntStringEH(game_ClientConnected);
+            game.ClientConnected += new GameHelper.Handlers.IntStringEH(game_ClientConnected);
             bGame = game;
             AddXnaPanel(ref bGame);
 
@@ -43,6 +44,17 @@ namespace GameHelper.Gui.Forms
 
             if (autoMinimize)
                 this.WindowState = FormWindowState.Minimized;
+
+            Application.Idle += new EventHandler(Application_Idle);
+            this.FormClosing += new FormClosingEventHandler(frmServerBase_FormClosing);
+        }
+        void Application_Idle(object sender, EventArgs e)
+        {
+            game.ProcessInput();
+        }
+        void frmServerBase_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            
         }
 
         public frmServerBase()
@@ -57,7 +69,7 @@ namespace GameHelper.Gui.Forms
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Helper.Handlers.IntStringEH(game_ClientConnected), new object[] { id, alias });
+                this.Invoke(new GameHelper.Handlers.IntStringEH(game_ClientConnected), new object[] { id, alias });
                 return;
             }
             lstClients.Items.Add(alias);
@@ -83,9 +95,9 @@ namespace GameHelper.Gui.Forms
             this.XnaPanelMain.Text = "XnaPanel";
             this.XnaPanelMain.KeyDown += new KeyEventHandler(XnaPanelMain_KeyDown);
             this.XnaPanelMain.KeyUp += new KeyEventHandler(XnaPanelMain_KeyUp);
-            this.XnaPanelMain.MouseDown += new MouseEventHandler(XnaPanelMain_MouseDown);
             this.XnaPanelMain.MouseEnter += new EventHandler(XnaPanelMain_MouseEnter);
-            this.XnaPanelMain.MouseMove += new MouseEventHandler(XnaPanelMain_MouseMove);
+            this.XnaPanelMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlMouseDown);
+            this.XnaPanelMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMouseMove);
             this.XnaPanelMain.PreviewKeyDown += new PreviewKeyDownEventHandler(XnaPanelMain_PreviewKeyDown);
             this.spMain.Panel2.Controls.Add(this.XnaPanelMain);
             //this.Controls.Add(this.XnaPanelMain);
@@ -95,16 +107,9 @@ namespace GameHelper.Gui.Forms
         {
         }
 
-        void XnaPanelMain_MouseMove(object sender, MouseEventArgs e)
-        {
-        }
-
         void XnaPanelMain_MouseEnter(object sender, EventArgs e)
         {
-        }
-
-        void XnaPanelMain_MouseDown(object sender, MouseEventArgs e)
-        {
+            XnaPanelMain.Focus();
         }
 
         void XnaPanelMain_KeyUp(object sender, KeyEventArgs e)
@@ -125,7 +130,8 @@ namespace GameHelper.Gui.Forms
 
         private void StartServer()
         {
-            game.ListenForClients(iLobbyPort);
+            game.ListenOnPort = iLobbyPort;
+            game.Start();
             btnStartServer.Enabled = false;
             btnStopServer.Enabled = true;
         }
@@ -173,5 +179,33 @@ namespace GameHelper.Gui.Forms
             game.SetSimFactor(value);
         }
 
+        #region Mouse Input
+        private void pnlMouseEnter(object sender, EventArgs e)
+        {
+            XnaPanelMain.Focus();
+        }
+        int lastx;
+        int lasty;
+        Point dPos;
+        private void pnlMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.X == lastx && e.Y == lasty)
+                return;
+
+            dPos = new Microsoft.Xna.Framework.Point((lastx - e.X), (lasty - e.Y));
+            lastx = e.X;
+            lasty = e.Y;
+            game.ProcessMouseMove(dPos, e, XnaPanelMain.Bounds);
+        }
+        private void pnlMouseDown(object sender, MouseEventArgs e)
+        {
+            game.ProcessMouseDown(sender, e, XnaPanelMain.Bounds);
+            //XnaPanelMain.ProcessMouseDown(e, XnaPanelMain.Bounds);
+        }
+        void XnaPanelMain_MouseWheel(object sender, MouseEventArgs e)
+        {
+            game.AdjustZoom(e.Delta);
+        }
+        #endregion
     }
 }

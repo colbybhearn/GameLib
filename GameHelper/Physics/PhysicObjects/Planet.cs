@@ -7,9 +7,9 @@ using Microsoft.Xna.Framework;
 using JigLibX.Physics;
 using JigLibX.Collision;
 using Microsoft.Xna.Framework.Graphics;
-using Helper.Objects;
+using GameHelper.Objects;
 
-namespace Helper.Physics.PhysicObjects
+namespace GameHelper.Physics.PhysicObjects
 {
     public class Planet : Gobject
     {

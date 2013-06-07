@@ -9,7 +9,7 @@ using JigLibX.Physics;
 using JigLibX.Collision;
 using JigLibX.Geometry;
 
-namespace Helper.Physics.PhysicsObjects
+namespace GameHelper.Physics.PhysicsObjects
 {
     /*
     /// <summary>

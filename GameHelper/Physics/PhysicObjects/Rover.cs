@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using JigLibX.Vehicles;
 #endregion
 
-namespace Helper.Physics.PhysicsObjects
+namespace GameHelper.Physics.PhysicsObjects
 {
     /// <summary>
     /// Class Car

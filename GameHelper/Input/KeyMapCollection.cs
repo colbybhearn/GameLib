@@ -7,7 +7,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
 
-namespace Helper.Input
+namespace GameHelper.Input
 {
     // DataContract serialization allows IDictionary implementers to be serialized! WooHoo
     [DataContract]

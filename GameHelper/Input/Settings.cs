@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Input;
 
-namespace Helper.Input
+namespace GameHelper.Input
 {
     public partial class Settings : Form
     {

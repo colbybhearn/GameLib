@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Input;
 
-namespace Helper.Input
+namespace GameHelper.Input
 {
     public partial class KeyBindingControl : UserControl
     {
@@ -23,7 +23,7 @@ namespace Helper.Input
             UpdateBindingKeyAlias();
         }
 
-        public event Helper.Handlers.voidEH BindFieldClicked;
+        public event GameHelper.Handlers.voidEH BindFieldClicked;
 
         private void tbBinding_Click(object sender, EventArgs e)
         {

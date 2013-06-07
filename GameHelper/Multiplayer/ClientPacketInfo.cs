@@ -1,5 +1,5 @@
 ﻿
-namespace Helper.Multiplayer
+namespace GameHelper.Multiplayer
 {
     public class ClientPacketInfo
     {

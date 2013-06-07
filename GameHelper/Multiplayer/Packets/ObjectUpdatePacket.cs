@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace Helper.Multiplayer.Packets
+namespace GameHelper.Multiplayer.Packets
 {
     [Serializable]
     public class ObjectUpdatePacket : Packet

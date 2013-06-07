@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Helper.Lighting
+namespace GameHelper.Lighting
 {
     // Parallel Split Shadow Mapping
     // Forward Shadow Mapping

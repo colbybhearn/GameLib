@@ -1,4 +1,4 @@
-﻿namespace Helper.Gui.Containers
+﻿namespace GameHelper.Gui.Containers
 {
     partial class DynamicContainer
     {

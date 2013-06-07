@@ -31,7 +31,7 @@ using Microsoft.Xna.Framework.Input;
          * read in the binding per game, per user.
          * 
          */
-namespace Helper.Input
+namespace GameHelper.Input
 {
     public enum InputMode
     {

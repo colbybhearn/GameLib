@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Helper.Multiplayer.Packets
+namespace GameHelper.Multiplayer.Packets
 {
     [Serializable]
     public class ClientReadyPacket : Packet

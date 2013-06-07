@@ -8,7 +8,7 @@ using System.IO;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace Helper.Input
+namespace GameHelper.Input
 {
     public enum KeyEvent
     {

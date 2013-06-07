@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Helper.Collections
+namespace GameHelper.Collections
 {
     public class ThreadQueue<T> : Queue<T>
     {

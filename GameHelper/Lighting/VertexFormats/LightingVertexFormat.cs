@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Helper.Lighting
+namespace GameHelper.Lighting
 {
     //http://www.riemers.net/eng/Tutorials/XNA/Csharp/Series3/Vertex_format.php
     public struct LightingVertexFormat

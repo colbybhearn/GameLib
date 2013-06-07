@@ -6,9 +6,9 @@ using Microsoft.Xna.Framework;
 using JigLibX.Geometry;
 using JigLibX.Physics;
 using JigLibX.Collision;
-using Helper.Objects;
+using GameHelper.Objects;
 
-namespace Helper.Physics.PhysicsObjects
+namespace GameHelper.Physics.PhysicsObjects
 {
     class TriangleMeshObject : Gobject
     {

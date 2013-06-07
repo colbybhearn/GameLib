@@ -5,7 +5,7 @@ using System.Text;
 using System.Net;
 using System.IO;
 
-namespace Helper.Multiplayer
+namespace GameHelper.Multiplayer
 {
     public class ServerInfo
     {

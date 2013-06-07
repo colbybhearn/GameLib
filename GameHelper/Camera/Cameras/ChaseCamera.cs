@@ -1,9 +1,9 @@
 ﻿
-using Helper.Physics;
+using GameHelper.Physics;
 using Microsoft.Xna.Framework;
 using System;
-using Helper.Objects;
-namespace Helper.Camera.Cameras
+using GameHelper.Objects;
+namespace GameHelper.Camera.Cameras
 {
     public class ChaseCamera : UprightCamera
     {

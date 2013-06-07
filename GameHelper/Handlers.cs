@@ -1,8 +1,8 @@
-﻿using Helper.Multiplayer.Packets;
+﻿using GameHelper.Multiplayer.Packets;
 using Microsoft.Xna.Framework;
 
 
-namespace Helper
+namespace GameHelper
 {
     public static class Handlers
     {

@@ -2,9 +2,9 @@ using System;
 using JigLibX.Vehicles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Helper.Objects;
+using GameHelper.Objects;
 
-namespace Helper.Physics.PhysicsObjects
+namespace GameHelper.Physics.PhysicsObjects
 {
     public class CarObject : Gobject
     {
@@ -42,9 +42,9 @@ namespace Helper.Physics.PhysicsObjects
             CommonInit(pos, new Vector3(1, 1, 1), model, true, asset);
             SetCarMass(100.1f);
 
-            actionManager.AddBinding((int)Actions.Acceleration, new Helper.Input.ActionBindingDelegate(SimulateAcceleration), 1);
-            actionManager.AddBinding((int)Actions.Steering, new Helper.Input.ActionBindingDelegate(SimulateSteering), 1);
-            actionManager.AddBinding((int)Actions.Handbrake, new Helper.Input.ActionBindingDelegate(SimulateHandbrake), 1);
+            actionManager.AddBinding((int)Actions.Acceleration, new GameHelper.Input.ActionBindingDelegate(SimulateAcceleration), 1);
+            actionManager.AddBinding((int)Actions.Steering, new GameHelper.Input.ActionBindingDelegate(SimulateSteering), 1);
+            actionManager.AddBinding((int)Actions.Handbrake, new GameHelper.Input.ActionBindingDelegate(SimulateHandbrake), 1);
         }
 
         public enum Actions

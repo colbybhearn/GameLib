@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using JigLibX.Geometry;
 using JigLibX.Collision;
-using Helper.Objects;
+using GameHelper.Objects;
 
-namespace Helper.Physics.PhysicsObjects
+namespace GameHelper.Physics.PhysicsObjects
 {
     public class RoverObject : Gobject
     {
@@ -115,13 +115,13 @@ namespace Helper.Physics.PhysicsObjects
             SetRoverMass(400.1f);
 
             // allow different types of bindings. bool, int, float
-            actionManager.AddBinding((int)Actions.Acceleration, new Helper.Input.ActionBindingDelegate(SimulateAcceleration), 1);
-            actionManager.AddBinding((int)Actions.Steering, new Helper.Input.ActionBindingDelegate(SimulateSteering), 1);
-            actionManager.AddBinding((int)Actions.ShootLaser, new Helper.Input.ActionBindingDelegate(SimulateShootLaser), 1);
-            actionManager.AddBinding((int)Actions.DropLaser, new Helper.Input.ActionBindingDelegate(SimulateDropLaser), 1);
-            actionManager.AddBinding((int)Actions.DropRadar, new Helper.Input.ActionBindingDelegate(SimulateDropRadar), 1);
-            actionManager.AddBinding((int)Actions.RotatedCamX, new Helper.Input.ActionBindingDelegate(SimulateSetRotateCamYaw), 1);
-            actionManager.AddBinding((int)Actions.RotatedCamY, new Helper.Input.ActionBindingDelegate(SimulateSetRotateCamPitch), 1);
+            actionManager.AddBinding((int)Actions.Acceleration, new GameHelper.Input.ActionBindingDelegate(SimulateAcceleration), 1);
+            actionManager.AddBinding((int)Actions.Steering, new GameHelper.Input.ActionBindingDelegate(SimulateSteering), 1);
+            actionManager.AddBinding((int)Actions.ShootLaser, new GameHelper.Input.ActionBindingDelegate(SimulateShootLaser), 1);
+            actionManager.AddBinding((int)Actions.DropLaser, new GameHelper.Input.ActionBindingDelegate(SimulateDropLaser), 1);
+            actionManager.AddBinding((int)Actions.DropRadar, new GameHelper.Input.ActionBindingDelegate(SimulateDropRadar), 1);
+            actionManager.AddBinding((int)Actions.RotatedCamX, new GameHelper.Input.ActionBindingDelegate(SimulateSetRotateCamYaw), 1);
+            actionManager.AddBinding((int)Actions.RotatedCamY, new GameHelper.Input.ActionBindingDelegate(SimulateSetRotateCamPitch), 1);
             
             InitializeRigging();
         }

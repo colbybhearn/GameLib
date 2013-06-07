@@ -6,9 +6,9 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using JigLibX.Collision;
 using System;
-using Helper.Objects;
+using GameHelper.Objects;
 
-namespace Helper.Physics.PhysicsObjects
+namespace GameHelper.Physics.PhysicsObjects
 {
     public class Aircraft : Gobject
     {
@@ -118,9 +118,9 @@ namespace Helper.Physics.PhysicsObjects
             AddController(Drag);
             AddController(Elevator);
 
-            actionManager.AddBinding((int)Actions.Thrust, new Helper.Input.ActionBindingDelegate(SimulateThrust), 1);
-            actionManager.AddBinding((int)Actions.Aileron, new Helper.Input.ActionBindingDelegate(SimulateAileron), 1);
-            actionManager.AddBinding((int)Actions.Elevator, new Helper.Input.ActionBindingDelegate(SimulateElevator), 1);
+            actionManager.AddBinding((int)Actions.Thrust, new GameHelper.Input.ActionBindingDelegate(SimulateThrust), 1);
+            actionManager.AddBinding((int)Actions.Aileron, new GameHelper.Input.ActionBindingDelegate(SimulateAileron), 1);
+            actionManager.AddBinding((int)Actions.Elevator, new GameHelper.Input.ActionBindingDelegate(SimulateElevator), 1);
         }
         public override void FinalizeBody()
         {

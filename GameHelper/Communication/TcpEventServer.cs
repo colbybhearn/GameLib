@@ -4,9 +4,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Collections.Generic;
-using Helper.Multiplayer.Packets;
+using GameHelper.Multiplayer.Packets;
 
-namespace Helper.Communication
+namespace GameHelper.Communication
 {
     public class TcpEventServer
     {
@@ -25,7 +25,7 @@ namespace Helper.Communication
         TcpListener myListener;
         Thread ServerListener;
         SortedList<int, ClientInfoSocket> Clients = new SortedList<int, ClientInfoSocket>();
-        public event Helper.Handlers.IntPacketEH PacketReceived;
+        public event GameHelper.Handlers.IntPacketEH PacketReceived;
 
         #endregion
 
@@ -89,7 +89,7 @@ namespace Helper.Communication
         }
         
         //public delegate void SocketEH(Socket s);
-        public event Helper.Handlers.IntEH ClientAccepted;
+        public event GameHelper.Handlers.IntEH ClientAccepted;
         int nextClientId = 0;
         public void CallClientAccepted(Socket s)
         {

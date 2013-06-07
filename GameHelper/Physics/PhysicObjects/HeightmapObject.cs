@@ -8,10 +8,10 @@ using JigLibX.Geometry;
 using JigLibX.Math;
 using Microsoft.Xna.Framework.Graphics;
 using JigLibX.Utils;
-using Helper.Objects;
+using GameHelper.Objects;
 #endregion
 
-namespace Helper.Physics.PhysicsObjects
+namespace GameHelper.Physics.PhysicsObjects
 {
     public class HeightmapObject : Gobject
     {

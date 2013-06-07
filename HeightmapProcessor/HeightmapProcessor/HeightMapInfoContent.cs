@@ -101,8 +101,8 @@ namespace HeightmapProcessor
         {
             // Edit, clean, rebuild.
             // class, namespace, 
-            return "Helper.Physics.HeightMapInfo, " +
-                "Helper.Physics, Version=1.0.0.0, Culture=neutral";
+            return "GameHelper.Physics.HeightMapInfo, " +
+                "GameHelper.Physics, Version=1.0.0.0, Culture=neutral";
         }
         
 
@@ -112,7 +112,7 @@ namespace HeightmapProcessor
         /// </summary>
         public override string GetRuntimeReader(TargetPlatform targetPlatform)
         {
-            string name = typeof(Helper.Physics.HeightMapInfoReader).AssemblyQualifiedName;
+            string name = typeof(GameHelper.Physics.HeightMapInfoReader).AssemblyQualifiedName;
                  return name;
             // class, assembly
             /*return "Helper.Physics.HeightMapInfoReader, " +

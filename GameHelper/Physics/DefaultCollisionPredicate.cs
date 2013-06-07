@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using JigLibX.Collision;
 
-namespace Helper.Physics
+namespace GameHelper.Physics
 {
     public class DefaultCollisionPredicate : CollisionSkinPredicate1
     {

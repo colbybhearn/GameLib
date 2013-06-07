@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
-using Helper.Physics;
+using GameHelper.Physics;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Helper.Objects
+namespace GameHelper.Objects
 {
     public class AssetManager
     {

@@ -8,11 +8,11 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using JigLibX.Geometry;
-using Helper.Physics.PhysicsObjects;
-using Helper.Collections;
-using Helper.Objects;
+using GameHelper.Physics.PhysicsObjects;
+using GameHelper.Collections;
+using GameHelper.Objects;
 
-namespace Helper.Physics
+namespace GameHelper.Physics
 {
     public class PhysicsManager
     {
@@ -113,14 +113,14 @@ namespace Helper.Physics
                 }
             }
         }
-        public event Helper.Handlers.voidEH PostIntegrate;
+        public event GameHelper.Handlers.voidEH PostIntegrate;
         private void CallPostIntegrate()
         {
             if (PostIntegrate == null)
                 return;
             PostIntegrate();
         }
-        public event Helper.Handlers.voidEH PreIntegrate;
+        public event GameHelper.Handlers.voidEH PreIntegrate;
         private void CallPreIntegrate()
         {
             if (PreIntegrate == null)
