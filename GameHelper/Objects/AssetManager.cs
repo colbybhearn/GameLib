@@ -98,10 +98,7 @@ namespace GameHelper.Objects
                 try
                 {
                     Model m = cm.Load<Model>(ac.AssetName);
-                    
-                    //assetManager.AddAssetType(e, creatorCallback);
-                    Asset a = new Asset(ac.AssetName, new Vector3(1, 1, 1));
-                    a.model = m;
+                    Asset a = new Asset(ac.AssetName, new Vector3(1, 1, 1), m);                    
                     AddAsset(a, ac);
                 }
                 catch (Exception E)
@@ -173,39 +170,50 @@ namespace GameHelper.Objects
                 return true;
 
             ContentBuilder contentBuilder = new ContentBuilder();
-            //contentBuilder.OutputDirectory = assetConfigDirectory;
             foreach (AssetConfig ac in assetConfigs.Values)
             {
-                contentBuilder.Add(ac.fbxModelFilepath, ac.AssetName, "FbxImporter", "ModelProcessor");
+                if(NeedsCompiling(ac))
+                    contentBuilder.Add(ac.fbxModelFilepath, ac.AssetName, "FbxImporter", "ModelProcessor");
             }
 
-            //Aplica o Build
+            if (!contentBuilder.hasContent)
+                return true;
+
+            // kick-off the build
             string error = contentBuilder.Build();
-            //Se houve algum erro, informa-o
+            
             if (!String.IsNullOrEmpty(error))
             {
                 MessageBox.Show(error);
                 return false;
             }
             
-            //Recupera os arquivos criados
+            // move the output from the temp directory to the destination directory
             string tempPath = contentBuilder.OutputDirectory;
-
             if (!Directory.Exists(processedModelDirectory))
                 Directory.CreateDirectory(processedModelDirectory);
 
             string[] files = Directory.GetFiles(tempPath, "*.xnb");
-            //Copia os arquivos para a saída
+            
             foreach (string file in files)
-            {
                 System.IO.File.Copy(file, Path.Combine(processedModelDirectory, Path.GetFileName(file)), true);
-            }
-            MessageBox.Show("Files compiled !!");
             
-            
+            MessageBox.Show("Files compiled successfully.");
             return true;
+        }
 
+        private bool NeedsCompiling(AssetConfig ac)
+        {            
+            if (!File.Exists(ac.fbxModelFilepath))
+                return false;
 
+            string compiledFile = Path.Combine(processedModelDirectory, ac.AssetName + ".xnb");
+            if (!File.Exists(compiledFile))
+                return true;
+
+            DateTime dtSource = File.GetLastWriteTimeUtc(ac.fbxModelFilepath);
+            DateTime dtCompiled = File.GetLastWriteTimeUtc(compiledFile);
+            return dtSource > dtCompiled;
         }
 
         /// <summary>
@@ -223,8 +231,6 @@ namespace GameHelper.Objects
             int id = (int)Convert.ChangeType(e, e.GetTypeCode());
             AssetTypesById.Add(id, at);
             AssetTypesByName.Add(e.ToString(), at);
-
-            //AddAsset(new Asset(e.ToString(), CreateCallback, scale));
         }
         /// <summary>
         /// Adds an asset with a scale of X = Y = Z = scale

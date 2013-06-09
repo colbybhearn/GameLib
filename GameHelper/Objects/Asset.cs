@@ -21,10 +21,10 @@ namespace GameHelper.Objects
         public Color Color;
         public Model model;
 
-        public Asset(string name, Vector3 scale)
+        public Asset(string name, Vector3 scale, Model m)
         {
             Name = name;
-            //GetNewGobject = getgobjectcallback;
+            model = m;
             Scale = scale;
             Color = Color.Gray;
         }

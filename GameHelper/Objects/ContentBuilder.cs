@@ -182,7 +182,9 @@ namespace GameHelper
                 item.SetMetadataValue("Processor", processor);
 
             projectItems.Add(item);
+            hasContent = true;
         }
+        public bool hasContent = false;
 
 
         /// <summary>
@@ -203,6 +205,8 @@ namespace GameHelper
         /// </summary>
         public string Build()
         {
+            if (projectItems.Count == 0)
+                return null;
             // Clear any previous errors.
             errorLogger.Errors.Clear();
 
