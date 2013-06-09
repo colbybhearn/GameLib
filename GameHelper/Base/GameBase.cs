@@ -142,6 +142,7 @@ namespace GameHelper.Base
         Texture2D moon;
         protected Terrain terrain;
         PlaneObject planeObj;
+        public Model sphere;
         #endregion
 
         
@@ -168,6 +169,7 @@ namespace GameHelper.Base
             physicsManager = new PhysicsManager(ref gameObjects, ref objectsToAdd, ref objectsToDelete, physicsUpdateInterval);
             physicsManager.PreIntegrate += new Handlers.voidEH(physicsManager_PreIntegrate);
             physicsManager.PostIntegrate += new Handlers.voidEH(physicsManager_PostIntegrate);
+            
         }
         
         public virtual void Initialize(ServiceContainer services, GraphicsDevice gd, myCallbackDelegate updateCamCallback)
@@ -232,6 +234,7 @@ namespace GameHelper.Base
                 carModel = Content.Load<Model>("car");
                 wheelModel = Content.Load<Model>("wheel");
                 //debugFont = Content.Load<SpriteFont>("DebugFont");
+                sphere = Content.Load<Model>("sphere");
             }
             catch (Exception E)
             {
@@ -239,31 +242,18 @@ namespace GameHelper.Base
             }
         }
 
-        public void LoadModel(Model m, string name)
+        public void LoadModel(ref Model m, string name, Enum e, GetGobjectDelegate creatorCallback)
         {
             try
             {
                 m = Content.Load<Model>(name);
+                assetManager.AddAssetType(e, creatorCallback);
             }
             catch (Exception E)
             {
                 System.Diagnostics.Debug.WriteLine(E.StackTrace);
             }
         }
-
-        public void LoadModel(Model m, string name, Enum e, GetGobjectDelegate creatorCallback)
-        {
-            try
-            {
-                m = Content.Load<Model>(name);
-                assetManager.AddAsset(e, creatorCallback);
-            }
-            catch (Exception E)
-            {
-                System.Diagnostics.Debug.WriteLine(E.StackTrace);
-            }
-        }
-
 
         /// <summary>
         /// Should do scene and object initialization common to client and server
@@ -382,7 +372,7 @@ namespace GameHelper.Base
         /// <param name="clientId"></param>
         /// <param name="asset"></param>
         /// <param name="objectId"></param>
-        public void ServeObjectRequest(int clientId, int asset, out int objectId)
+        public void ServeObjectRequest(int clientId, string asset, out int objectId)
         {
             objectId = AddOwnedObject(clientId, asset);
             commServer.BroadcastObjectAddedPacket(clientId, objectId, asset);
@@ -395,7 +385,7 @@ namespace GameHelper.Base
         /// <param name="objectid"></param>
         /// <param name="asset"></param>
         /// <returns></returns>
-        public virtual void AddNewObject(int objectid, int asset)
+        public virtual void AddNewObject(int objectid, string asset)
         {
             // all we have here is the name.
             // that tells us a model to load
@@ -611,7 +601,7 @@ namespace GameHelper.Base
              */
         }
 
-        public void commServer_ObjectRequestReceived(int clientId, int asset)
+        public void commServer_ObjectRequestReceived(int clientId, string asset)
         {
             ProcessObjectRequest(clientId, asset);
         }
@@ -683,7 +673,7 @@ namespace GameHelper.Base
         /// </summary>
         /// <param name="clientId"></param>
         /// <param name="asset"></param>
-        public virtual int ProcessObjectRequest(int clientId, int asset)
+        public virtual int ProcessObjectRequest(int clientId, string asset)
         {
             int objectId = -1;
             ServeObjectRequest(clientId, asset, out objectId);
@@ -698,7 +688,7 @@ namespace GameHelper.Base
         /// <param name="clientId"></param>
         /// <param name="asset"></param>
         /// <returns></returns>
-        private int AddOwnedObject(int clientId, int asset)
+        private int AddOwnedObject(int clientId, string asset)
         {
             int objectid = assetManager.GetAvailableObjectId();
             
@@ -741,7 +731,7 @@ namespace GameHelper.Base
                     #endregion
 
                     #region Send Object Updates to the client
-                    ObjectUpdatePacket oup = new ObjectUpdatePacket(go.ID, go.type, go.BodyPosition(), go.BodyOrientation(), go.BodyVelocity());
+                    ObjectUpdatePacket oup = new ObjectUpdatePacket(go.ID, go.assetName, go.BodyPosition(), go.BodyOrientation(), go.BodyVelocity());
                     commServer.SendPacket(oup,id);
                     #endregion
                 }

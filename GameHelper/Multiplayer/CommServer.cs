@@ -175,7 +175,7 @@ namespace GameHelper.Multiplayer
         }
 
         public event GameHelper.Handlers.ObjectRequestEH ObjectRequestReceived;
-        private void CallObjectRequestReceived(int clientId, int asset)
+        private void CallObjectRequestReceived(int clientId, string asset)
         {
             if (ObjectRequestReceived == null)
                 return;
@@ -199,7 +199,7 @@ namespace GameHelper.Multiplayer
         }
 
         public event GameHelper.Handlers.ObjectUpdateEH ObjectUpdateReceived;
-        private void CallObjectUpdateReceived(int id, int asset, Vector3 pos, Matrix orient, Vector3 vel)
+        private void CallObjectUpdateReceived(int id, string asset, Vector3 pos, Matrix orient, Vector3 vel)
         {
             if (ObjectUpdateReceived == null)
                 return;
@@ -234,14 +234,14 @@ namespace GameHelper.Multiplayer
             SendPacket(new ClientConnectedPacket(id, alias), receivingClient);
         }
 
-        public void BroadcastObjectAddedPacket(int clientid, int objectId, int asset)
+        public void BroadcastObjectAddedPacket(int clientid, int objectId, string asset)
         {
             if (!Clients.Contains(clientid))
                 return;
             tcpServer.Send(new ObjectAddedPacket(clientid, objectId, asset));
         }
 
-        public void SendObjectAddedPacket(int receivingClient, int owner, int objectId, int asset)
+        public void SendObjectAddedPacket(int receivingClient, int owner, int objectId, string asset)
         {
             if (!Clients.Contains(owner) || !Clients.Contains(receivingClient))
                 return;

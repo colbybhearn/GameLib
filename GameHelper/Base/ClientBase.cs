@@ -112,7 +112,7 @@ namespace GameHelper.Base
         /// </summary>
         /// <param name="i"></param>
         /// <param name="asset"></param>
-        void commClient_ObjectAddedReceived(int owner, int id, int asset)
+        void commClient_ObjectAddedReceived(int owner, int id, string asset)
         {
             // MINE!
             if (owner == MyClientID)
@@ -150,7 +150,7 @@ namespace GameHelper.Base
             CallOtherClientDisconnectedFromServer(id);
         }
 
-        public void commClient_ObjectUpdateReceived(int id, int asset, Vector3 pos, Matrix orient, Vector3 vel)
+        public void commClient_ObjectUpdateReceived(int id, string asset, Vector3 pos, Matrix orient, Vector3 vel)
         {
             lock (MultiplayerUpdateQueue)
             {
@@ -165,7 +165,7 @@ namespace GameHelper.Base
         /// </summary>
         /// <param name="i"></param>
         /// <param name="asset"></param>
-        public virtual void ProcessObjectAdded(int owner, int id, int asset)
+        public virtual void ProcessObjectAdded(int owner, int id, string asset)
         {
 
         }

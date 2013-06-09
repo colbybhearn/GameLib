@@ -27,9 +27,9 @@ namespace GameHelper.Camera.Cameras
             
             Gobject gob = GetFirstGobject();
             if (gob == null) return;
-            
-            
-            int assetname = gob.type;
+
+
+            int assetname = gob.aType.Id;
             // if this camera has a profile for this asset,
             if (profiles.ContainsKey(assetname))
             {

@@ -203,7 +203,10 @@ namespace GameHelper.Gui.Forms.XnaView
                                     (go as Planet).Draw(GraphicsDevice, view, proj);
                                 }
                                 else
+                                {
                                     go.Draw(ref view, ref proj);
+                                    go.DrawWireframe(GraphicsDevice, view, proj);
+                                }
                             }
                             if (game.DebugPhysics)
                                 go.DrawWireframe(GraphicsDevice, view, proj);

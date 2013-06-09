@@ -21,7 +21,8 @@ namespace GameHelper.Objects
         public Vector3 Position { get; set; }
         public bool isOnServer;
         public bool isOnClient;
-        public int type;
+        public AssetType aType;
+        public string assetName;
         public Matrix Orientation
         {
             get
@@ -144,14 +145,23 @@ namespace GameHelper.Objects
                 System.Diagnostics.Debug.WriteLine(E.StackTrace);
             }
         }
-        
+        public enum types
+        {
+            a1,
+            b2,
+        }
         public void CommonInit(Vector3 pos, Vector3 scale, Model model, bool moveable, int asset)
         {
             Position = pos;
             Scale = scale;
             Model = model;
             Body.Immovable = !moveable;
-            type = asset;
+            // Enumerated AssetTypes are the only integers/Enums
+
+
+            //aType = new AssetType(types.a1, this, );
+
+            // asset names are loaded at runtime
             
             // MOVED TO BEFORE INTEGRATE
             //FinalizeBody();

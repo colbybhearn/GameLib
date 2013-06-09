@@ -72,9 +72,9 @@ namespace GameHelper.Camera
                     {
                         if (gob == null)
                             continue;
-                        int assetname = gob.type;
-                        if (Views[camId].ContainsKey(assetname))
-                            camViews.Add(assetname, Views[camId][assetname]);
+                        int assettype = gob.aType.Id;
+                        if (Views[camId].ContainsKey(assettype))
+                            camViews.Add(assettype, Views[camId][assettype]);
                     }
                 }
             }

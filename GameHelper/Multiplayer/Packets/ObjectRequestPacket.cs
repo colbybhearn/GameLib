@@ -5,9 +5,9 @@ namespace GameHelper.Multiplayer.Packets
     [Serializable]
     public class ObjectRequestPacket : Packet
     {
-        public int AssetName;
-        
-        public ObjectRequestPacket(int asset) 
+        public string AssetName;
+
+        public ObjectRequestPacket(string asset) 
             : base(Types.csObjectRequest)
         {
             AssetName = asset;

@@ -61,6 +61,8 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -167,6 +169,10 @@
     <Compile Include="Multiplayer\Packets\ClientInfoResponsePacket.cs" />
     <Compile Include="Multiplayer\Packets\Packet.cs" />
     <Compile Include="Multiplayer\ServerInfo.cs" />
+    <Compile Include="Objects\AssetConfig.cs" />
+    <Compile Include="Objects\AssetType.cs" />
+    <Compile Include="Objects\ContentBuilder.cs" />
+    <Compile Include="Objects\ErrorLogger.cs" />
     <Compile Include="Objects\RigBone.cs" />
     <Compile Include="Objects\RigManager.cs" />
     <Compile Include="Objects\Asset.cs" />
@@ -192,6 +198,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Camera\ViewProfile.cs" />
     <Compile Include="Utility\MultEnum.cs" />
+    <Compile Include="Utility\XmlUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

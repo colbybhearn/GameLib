@@ -7,9 +7,9 @@ namespace GameHelper.Multiplayer.Packets
     {
         public int Owner;
         public int ID;
-        public int AssetName;
+        public string AssetName;
 
-        public ObjectAddedPacket(int owner, int id, int asset)
+        public ObjectAddedPacket(int owner, int id, string asset)
             : base(Types.scObjectResponse)
         {
             Owner = owner;

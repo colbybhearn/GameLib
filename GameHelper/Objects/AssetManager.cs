@@ -6,9 +6,53 @@ using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using GameHelper.Physics;
 using Microsoft.Xna.Framework.Graphics;
+using System.IO;
+using System.Xml;
+using System.Windows.Forms;
+using Microsoft.Xna.Framework.Content;
 
 namespace GameHelper.Objects
 {
+
+    /*
+     * Vision:
+     * game assets have config files
+     * one file for each possible asset
+     * The game operates on asset types
+     *  Example types: Fighters, Cruisers, Feathers
+     * 
+     * At runtime, assets of the appropriate type are used
+     *  Example assets: FighterA, FighterB, CuiserA, Feather1, Feather2
+     *  
+     * the asset manager should be prepped with the types to accept.
+     * It should then try loading everything in a specified directory
+     * Files successfully parsed can be processed.
+     * 
+     * File processing means validating asset types against those allowed
+     * Store those assets validated.
+     * Store a name, a model filename, the asset type, movement parameters, scale     
+     * 
+     * Extended asset properties should be suppored:
+     *  Health
+     *  Ammo
+     *  Armor
+     *  MovementEnergy
+     *  OffenseEnergy
+     *  DefenseEnergy
+     *  
+     * Peroperties go into a namevaluecollection / sortedlist for extraction
+     * A class shall exist for an assetType, such that those properties used by the game are correctly assigned when loading an asset of that type.
+     * 
+     * Asset manager can put the information from the files into the an asset config array
+     * Each asset Type needs its initialization class
+     * That class should inherit a base class for all asset Types
+     * The Gobject shall 
+     * Asset manager should allow a unit with those specs to be created.
+     * When an asset is requested from the asset manager, it should create a gobject with the correct config from the config array
+     * All gobjects subclasses need the base asset parameter class as a field.
+     * 
+     * 
+     */
     public class AssetManager
     {
         /*
@@ -18,18 +62,72 @@ namespace GameHelper.Objects
          * 
          */
         
-        public SortedList<int, Asset> Assets = new SortedList<int, Asset>();
+        public SortedList<string, Asset> Assets = new SortedList<string, Asset>();
         private SortedList<int, Gobject> gameObjects;
         private SortedList<int, Gobject> objectsToAdd;
         private List<int> objectsToDelete;
         private SortedList<int, List<int>> ObjectIdsByOwningClient = new SortedList<int, List<int>>();
         private SortedList<int, int> OwningClientsByObjectId = new SortedList<int, int>();
+        private string assetConfigDirectory;
+        private string processedModelDirectory;
+
+        private SortedList<string, AssetType> AssetTypesByName = new SortedList<string, AssetType>();
+        private SortedList<int, AssetType> AssetTypesById = new SortedList<int, AssetType>();
+        private SortedList<int, List<Asset>> AssetsByType = new SortedList<int, List<Asset>>();
+        SortedList<string, AssetConfig> assetConfigs = new SortedList<string, AssetConfig>();
 
         public AssetManager(ref SortedList<int, Gobject> gObjects, ref SortedList<int, Gobject> nObjects, ref List<int> dObjects)
+            : this(ref gObjects, ref nObjects, ref dObjects, System.Windows.Forms.Application.StartupPath)
+        {
+        }
+
+        public AssetManager(ref SortedList<int, Gobject> gObjects, ref SortedList<int, Gobject> nObjects, ref List<int> dObjects, string Root)
         {
             gameObjects = gObjects;
             objectsToAdd = nObjects;
             objectsToDelete = dObjects;
+            assetConfigDirectory = Root + @"\Assets";
+            processedModelDirectory = Root + @"\Content";
+            
+        }
+
+        private void LoadCompiledAssets(ContentManager cm)
+        {
+            foreach (AssetConfig ac in assetConfigs.Values)
+            {
+                try
+                {
+                    Model m = cm.Load<Model>(ac.AssetName);
+                    
+                    //assetManager.AddAssetType(e, creatorCallback);
+                    Asset a = new Asset(ac.AssetName, new Vector3(1, 1, 1));
+                    a.model = m;
+                    AddAsset(a, ac);
+                }
+                catch (Exception E)
+                {
+                    System.Diagnostics.Debug.WriteLine(E.StackTrace);
+                }
+            }
+        }
+
+        private void AddAsset(Asset a, AssetConfig ac)
+        {
+            if (Assets.ContainsKey(a.Name))
+                return;
+            Assets.Add(a.Name, a);
+
+            if (AssetTypesByName.ContainsKey(ac.AssetTypeName))
+            {
+                AssetType at = AssetTypesByName[ac.AssetTypeName];
+                if (!AssetsByType.ContainsKey(at.Id))
+                {
+                    AssetsByType.Add(at.Id, new List<Asset>());
+                }
+                List<Asset> assets = AssetsByType[at.Id];
+                assets.Add(a);
+            }
+
         }
 
         /// <summary>
@@ -41,18 +139,92 @@ namespace GameHelper.Objects
             if (Assets.ContainsKey(a.Name))
                 return;
             Assets.Add(a.Name, a);
+        }
+
+        public void LoadAssetConfigFiles()
+        {
+            string[] files = Directory.GetFiles(assetConfigDirectory, "*.xml");
+            foreach (string file in files)
+            {
+                LoadAssetConfigFile(file);
+                
+            }
+        }
+
+        public Gobject GetAssetOfType(Enum e)
+        {
+            if (!AssetTypesByName.ContainsKey(e.ToString()))
+                return null;
+            return AssetTypesByName[e.ToString()].GetNewGobject();
+        }
+
+        private void LoadAssetConfigFile(string file)
+        {
+            AssetConfig ac = new AssetConfig();
+            ac.LoadFromFile(file);
+            assetConfigs.Add(ac.AssetName, ac);
+
             
         }
+
+        private bool CompileAssets()
+        {
+            if (assetConfigs.Count == 0)
+                return true;
+
+            ContentBuilder contentBuilder = new ContentBuilder();
+            //contentBuilder.OutputDirectory = assetConfigDirectory;
+            foreach (AssetConfig ac in assetConfigs.Values)
+            {
+                contentBuilder.Add(ac.fbxModelFilepath, ac.AssetName, "FbxImporter", "ModelProcessor");
+            }
+
+            //Aplica o Build
+            string error = contentBuilder.Build();
+            //Se houve algum erro, informa-o
+            if (!String.IsNullOrEmpty(error))
+            {
+                MessageBox.Show(error);
+                return false;
+            }
+            
+            //Recupera os arquivos criados
+            string tempPath = contentBuilder.OutputDirectory;
+
+            if (!Directory.Exists(processedModelDirectory))
+                Directory.CreateDirectory(processedModelDirectory);
+
+            string[] files = Directory.GetFiles(tempPath, "*.xnb");
+            //Copia os arquivos para a saída
+            foreach (string file in files)
+            {
+                System.IO.File.Copy(file, Path.Combine(processedModelDirectory, Path.GetFileName(file)), true);
+            }
+            MessageBox.Show("Files compiled !!");
+            
+            
+            return true;
+
+
+        }
+
         /// <summary>
-        /// Adds an asset
+        /// Adds an asset type
         /// </summary>
         /// <param name="name"></param>
         /// <param name="CreateCallback"></param>
         /// <param name="scale"></param>
-        public void AddAsset(Enum e, GetGobjectDelegate CreateCallback, Vector3 scale)
+        public void AddAssetType(Enum e, GetGobjectDelegate CreateCallback, Vector3 scale)
         {
+            if (AssetTypesByName.ContainsKey(e.ToString()))
+                return;
+
+            AssetType at = new AssetType(e, null, CreateCallback);
             int id = (int)Convert.ChangeType(e, e.GetTypeCode());
-            AddAsset(new Asset(id, CreateCallback, scale));
+            AssetTypesById.Add(id, at);
+            AssetTypesByName.Add(e.ToString(), at);
+
+            //AddAsset(new Asset(e.ToString(), CreateCallback, scale));
         }
         /// <summary>
         /// Adds an asset with a scale of X = Y = Z = scale
@@ -60,18 +232,19 @@ namespace GameHelper.Objects
         /// <param name="name"></param>
         /// <param name="CreateCallback"></param>
         /// <param name="scale"></param>
-        public void AddAsset(Enum e, GetGobjectDelegate CreateCallback, float scale)
+        public void AddAssetType(Enum e, GetGobjectDelegate CreateCallback, float scale)
         {
-            AddAsset(e, CreateCallback, new Vector3(scale, scale, scale));
+            AddAssetType(e, CreateCallback, new Vector3(scale, scale, scale));
         }
+
         /// <summary>
         /// Adds an asset with a default scale of 1
         /// </summary>
         /// <param name="name"></param>
         /// <param name="CreateCallback"></param>
-        public void AddAsset(Enum e, GetGobjectDelegate CreateCallback)
+        public void AddAssetType(Enum e, GetGobjectDelegate CreateCallback)
         {
-            AddAsset(e, CreateCallback, 1.0f);
+            AddAssetType(e, CreateCallback, 1.0f);
         }
         /// <summary>
         /// returns an instance of the specified asset type
@@ -81,7 +254,7 @@ namespace GameHelper.Objects
         /// <returns></returns>
         public Gobject GetNewInstance(Enum e)
         {
-            return GetNewInstance(e, -1);
+            return GetNewInstanceOfType(e, -1);
         }
         
         /// <summary>
@@ -90,17 +263,11 @@ namespace GameHelper.Objects
         /// <param name="e"></param>
         /// <param name="owningClientId"></param>
         /// <returns></returns>
-        public Gobject GetNewInstance(Enum e, int owningClientId)
+        public Gobject GetNewInstanceOfType(Enum e, int owningClientId)
         {
             int id = (int)Convert.ChangeType(e, e.GetTypeCode());
-            return GetNewInstance(id, owningClientId);
+            return GetNewInstanceOfType(id, owningClientId);
         }
-
-
-        //public Gobject GetNewInstance<T>(T type, int owningClientId) where T : int
-        //{
-        //    return GetNewInstance(type, owningClientId);
-        //}
 
         /// <summary>
         /// returns an instance of the specified asset type
@@ -108,21 +275,23 @@ namespace GameHelper.Objects
         /// <param name="e"></param>
         /// <param name="owningClientId"></param>
         /// <returns></returns>
-        private Gobject GetNewInstance(int id, int owningClientId)
+        private Gobject GetNewInstanceOfType(int id, int owningClientId)
         {
-            if (!Assets.ContainsKey(id))
+            if (!AssetTypesById.ContainsKey(id))
             {
-                Debug.WriteLine("Aborting load of asset unkown to AssetManager: " + id);
+                Trace.WriteLine("Aborting instantiation of asset Type. Unkown to AssetManager: " + id);
                 return null;
             }
 
-            Asset a = Assets[id];
-            if (a == null)
-                return null;
-
-            Gobject go = a.GetNewGobject();
+            AssetType at  = AssetTypesById[id];
+            Asset asset = AssetsByType[id][0];
+            Gobject go = at.GetNewGobject();
             go.OwningClientId = owningClientId;
-            go.type = id; // THIS IS WRONG BUT SO CHEAP! - Colby.
+
+            go.assetName = asset.Name;
+            go.Model = asset.model;
+
+            go.aType = AssetTypesById[id];
             go.ID = GetAvailableObjectId();
 
             if (!ObjectIdsByOwningClient.ContainsKey(owningClientId))
@@ -243,13 +412,22 @@ namespace GameHelper.Objects
                     idList.Remove(id);
         }
 
-        public Model GetModel(int id)
+        public Model GetModel(string id)
         {
             Asset a = Assets[id];
             if (a == null)
                 return null;
-            Gobject go = a.GetNewGobject();
-            return go.Model;
+            return a.model;
+        }
+
+        public void LoadAssets(ContentManager cm)
+        {
+            if (!Directory.Exists(assetConfigDirectory))
+                Directory.CreateDirectory(assetConfigDirectory);
+
+            LoadAssetConfigFiles();
+            CompileAssets();
+            LoadCompiledAssets(cm);
         }
     }
 }

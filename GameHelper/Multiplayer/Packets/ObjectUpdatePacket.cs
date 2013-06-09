@@ -8,12 +8,12 @@ namespace GameHelper.Multiplayer.Packets
     public class ObjectUpdatePacket : Packet
     {
         public int objectId;
-        public int assetName;
+        public string assetName;
         public Vector3 position;
         public Matrix orientation;
         public Vector3 velocity;
         
-        public ObjectUpdatePacket(int id, int asset, Vector3 pos, Matrix orient, Vector3 vel) 
+        public ObjectUpdatePacket(int id, string asset, Vector3 pos, Matrix orient, Vector3 vel) 
             : base(Types.scObjectUpdate)
         {
             objectId = id;
@@ -40,8 +40,15 @@ namespace GameHelper.Multiplayer.Packets
             index += 4;
             Array.Copy(BitConverter.GetBytes(objectId), 0, data, index, 4);
             index += 4;
-            Array.Copy(BitConverter.GetBytes(assetName), 0, data, index, 4);
+
+            // length
+            int bytecount = System.Text.ASCIIEncoding.ASCII.GetByteCount(assetName);
+            Array.Copy(BitConverter.GetBytes(bytecount), 0, data, index, 4);
             index += 4;
+            // data           
+            Array.Copy(System.Text.ASCIIEncoding.ASCII.GetBytes(assetName), 0, data, index, bytecount);
+            index += bytecount;
+
             Array.Copy(BitConverter.GetBytes(position.X), 0, data, index, 4);
             index += 4;
             Array.Copy(BitConverter.GetBytes(position.Y), 0, data, index, 4);
@@ -78,8 +85,24 @@ namespace GameHelper.Multiplayer.Packets
             int index=0;
             objectId = BitConverter.ToInt32(data, index);  
             index+=4;
-            assetName = BitConverter.ToInt32(data, index);
+
+
+
+            // length
+            int bytecount = BitConverter.ToInt32(data, index);
             index += 4;
+
+            // data
+            byte[] str = new byte[bytecount];
+            assetName = string.Empty;
+            for (int i = 0; i < bytecount; i++)
+            {
+                str[i] = (byte)BitConverter.ToChar(data, index);
+                index++;
+            }            
+            assetName = System.Text.ASCIIEncoding.ASCII.GetString(str);
+
+
             position.X = BitConverter.ToSingle(data, index);
             index+=4;
             position.Y = BitConverter.ToSingle(data, index);

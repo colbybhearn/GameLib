@@ -64,7 +64,7 @@ namespace GameHelper.Base
         /// <param name="pos"></param>
         /// <param name="orient"></param>
         /// <param name="vel"></param>
-        public void commServer_ObjectUpdateReceived(int id, int asset, Vector3 pos, Matrix orient, Vector3 vel)
+        public void commServer_ObjectUpdateReceived(int id, string asset, Vector3 pos, Matrix orient, Vector3 vel)
         {
             physicsUpdateList.Add(new ObjectUpdatePacket(id, asset, pos, orient, vel));
         }
@@ -143,7 +143,7 @@ namespace GameHelper.Base
                             go.UpdateCountdown--;
                             if (go.UpdateCountdown == 0 || assetManager.isObjectOwnedByAnyClient(go.ID))
                             {
-                                ObjectUpdatePacket oup = new ObjectUpdatePacket(go.ID, go.type, go.BodyPosition(), go.BodyOrientation(), go.BodyVelocity());
+                                ObjectUpdatePacket oup = new ObjectUpdatePacket(go.ID, go.assetName, go.BodyPosition(), go.BodyOrientation(), go.BodyVelocity());
                                 commServer.BroadcastObjectUpdate(oup);
                                 go.UpdateCountdown = 10;
                             }

@@ -185,7 +185,7 @@ namespace GameHelper.Multiplayer
 
 
         public event GameHelper.Handlers.ObjectUpdateEH ObjectUpdateReceived;
-        private void CallObjectUpdateReceived(int id, int asset, Vector3 pos, Matrix orient, Vector3 vel)
+        private void CallObjectUpdateReceived(int id, string asset, Vector3 pos, Matrix orient, Vector3 vel)
         {
             if (ObjectUpdateReceived == null)
                 return;
@@ -193,7 +193,7 @@ namespace GameHelper.Multiplayer
         }
 
         public event GameHelper.Handlers.ObjectAddedResponseEH ObjectAddedReceived;
-        private void CallObjectRequestResponseReceived(int owner, int id, int asset)
+        private void CallObjectRequestResponseReceived(int owner, int id, string asset)
         {
             if (ObjectAddedReceived == null)
                 return;
@@ -231,7 +231,7 @@ namespace GameHelper.Multiplayer
             client.Send(new ChatPacket(msg, player));
         }
 
-        public void SendObjectRequest(int assetname)
+        public void SendObjectRequest(string assetname)
         {
             client.Send(new ObjectRequestPacket(assetname));
         }
@@ -239,7 +239,7 @@ namespace GameHelper.Multiplayer
         public void SendObjectUpdate(int id, Vector3 pos, Matrix orient, Vector3 vel)
         {//NEVER USED?
             // the 0 here is WRONG if this IS ever Used
-            client.Send(new ObjectUpdatePacket(id, 0, pos, orient, vel));
+            client.Send(new ObjectUpdatePacket(id, string.Empty, pos, orient, vel));
         }
 
         public void SendObjectAction(int id, object[] actionvals)

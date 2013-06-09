@@ -46,8 +46,8 @@ namespace GameHelper.Camera.Cameras
                 Vector3 WhereItCameFrom = bodyPosition - (ObjectDirection);
 
                 Vector3 offset = new Vector3(0, 2, 0);
-                if(profiles.ContainsKey(gob.type))
-                    offset = profiles[gob.type].PositionOffset;
+                if(profiles.ContainsKey(gob.aType.Id))
+                    offset = profiles[gob.aType.Id].PositionOffset;
                 offset = Vector3.Transform(offset, bodyOrientation); 
                 // get the correction value from the profile
                 WhereItCameFrom += offset; 

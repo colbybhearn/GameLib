@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using GameHelper.Physics;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GameHelper.Objects
 {
@@ -14,15 +15,16 @@ namespace GameHelper.Objects
     // they are different game elements and should be distinct asset types with distinct names and distinct default properties with which to be created.
     public class Asset
     {
-        public int Name;
-        public GetGobjectDelegate GetNewGobject;
+        public string Name;
+        
         public Vector3 Scale;
         public Color Color;
+        public Model model;
 
-        public Asset(int name, GetGobjectDelegate getgobjectcallback, Vector3 scale)
+        public Asset(string name, Vector3 scale)
         {
             Name = name;
-            GetNewGobject = getgobjectcallback;
+            //GetNewGobject = getgobjectcallback;
             Scale = scale;
             Color = Color.Gray;
         }

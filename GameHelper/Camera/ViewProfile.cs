@@ -41,9 +41,9 @@ namespace GameHelper.Camera
         public Vector3 PositionOffset;
         public Vector3 OrientationOffset;
 
-        public ViewProfile(int camAlias, int asset, Vector3 posOffset, float posLag, Vector3 orientOffsetXYZ, float orientLag)
+        public ViewProfile(int camAlias, int assetType, Vector3 posOffset, float posLag, Vector3 orientOffsetXYZ, float orientLag)
         {
-            assetAlias = asset;
+            assetAlias = assetType;
             CameraId = camAlias;
             PositionOffset = posOffset;
             PositionLagFactor = posLag;
