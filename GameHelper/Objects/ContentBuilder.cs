@@ -170,6 +170,7 @@ namespace GameHelper
         /// </summary>
         public void Add(string filename, string name, string importer, string processor)
         {
+            filename = Environment.CurrentDirectory + Path.DirectorySeparatorChar + filename;
             ProjectItem item = buildProject.AddItem("Compile", filename)[0];
 
             item.SetMetadataValue("Link", Path.GetFileName(filename));

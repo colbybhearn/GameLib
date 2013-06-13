@@ -172,8 +172,10 @@ namespace GameHelper.Objects
             ContentBuilder contentBuilder = new ContentBuilder();
             foreach (AssetConfig ac in assetConfigs.Values)
             {
-                if(NeedsCompiling(ac))
+                if (NeedsCompiling(ac))
                     contentBuilder.Add(ac.fbxModelFilepath, ac.AssetName, "FbxImporter", "ModelProcessor");
+                else
+                    Trace.WriteLine("Skipping compilation of asset \"" + ac.AssetName+"\"");
             }
 
             if (!contentBuilder.hasContent)

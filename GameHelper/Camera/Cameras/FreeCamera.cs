@@ -56,6 +56,7 @@ namespace GameHelper.Camera.Cameras
             //Quaternion.CreateFromAxisAngle(GetLevelCameraLhs.Right, -dY * .001f) *
             //Quaternion.CreateFromAxisAngle(Vector3.UnitY, -dX * .001f);
             //Orientation = Orientation * cameraChange;
+            
         }
 
         public override void AdjustTargetOrientationBy(float pitch, float yaw)

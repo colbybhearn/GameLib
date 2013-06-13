@@ -28,6 +28,7 @@ namespace GameHelper.Gui.Forms.XnaView
         BaseCamera cam;
         Matrix view = Matrix.Identity;
         Matrix proj = Matrix.Identity;
+        public Color BackColor = Color.Black;
 
         #region Debug
         private SpriteBatch spriteBatch;
@@ -110,7 +111,7 @@ namespace GameHelper.Gui.Forms.XnaView
                 //Counter.AddTick("average_fps", Counter.GetAveragePerSecond("fps"));
 
                 Matrix proj = Matrix.Identity;
-                GraphicsDevice.Clear(Color.SkyBlue);
+                GraphicsDevice.Clear(BackColor);
 
                 DrawObjects();
 
@@ -205,7 +206,6 @@ namespace GameHelper.Gui.Forms.XnaView
                                 else
                                 {
                                     go.Draw(ref view, ref proj);
-                                    go.DrawWireframe(GraphicsDevice, view, proj);
                                 }
                             }
                             if (game.DebugPhysics)

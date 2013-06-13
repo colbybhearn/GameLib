@@ -86,7 +86,7 @@ namespace GameHelper.Base
         #region Graphics
 
         public Effect lighteffect;
-
+        public Color BackColor;
         /// <summary>
         /// Gets an IServiceProvider containing our IGraphicsDeviceService.
         /// This can be used with components such as the ContentManager,

@@ -99,6 +99,7 @@ namespace GameHelper.Gui.Forms
             this.XnaPanelMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlMouseDown);
             this.XnaPanelMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMouseMove);
             this.XnaPanelMain.PreviewKeyDown += new PreviewKeyDownEventHandler(XnaPanelMain_PreviewKeyDown);
+            this.XnaPanelMain.BackColor = game.BackColor;
             this.spMain.Panel2.Controls.Add(this.XnaPanelMain);
             //this.Controls.Add(this.XnaPanelMain);
         }

@@ -113,7 +113,18 @@ namespace GameHelper.Base
                     }
                 }
                 #endregion
+
+                #region Apply AI controllers
+                lock (gameObjects)
+                {
+                    DoAiLogic();
+                }
+                #endregion
             }
+        }
+
+        public virtual void DoAiLogic()
+        {
         }
 
         public override void physicsManager_PostIntegrate()
