@@ -56,7 +56,7 @@ namespace GameHelper.Communication
 
         public void Send(byte[] data)
         {
-            DataToSendQueue.EnQ(data);
+            DataToSendQueue.Enqueue(data);
         }
 
         private void inputWorker()
@@ -167,7 +167,7 @@ namespace GameHelper.Communication
         
         private void CallDataReceived(byte[] b)
         {
-            DataReceived.EnQ(b);
+            DataReceived.Enqueue(b);
         }
 
         private void inputProcWorker()
@@ -183,7 +183,7 @@ namespace GameHelper.Communication
                 {
                     try
                     {
-                        byte[] inData = DataReceived.DeQ() as byte[];
+                        byte[] inData = DataReceived.Dequeue() as byte[];
                         int requiredLength = oldData.Length + inData.Length;
                         //if (data.Length < requiredLength)
                             data = new byte[requiredLength]; // make data large enough to contain old and new
@@ -252,7 +252,7 @@ namespace GameHelper.Communication
                 {
                     //packetSizeCount++;
                     //packetSizeSum += DataToSendQueue.Peek().Length;
-                    dataToSend.AddRange(DataToSendQueue.DeQ());
+                    dataToSend.AddRange(DataToSendQueue.Dequeue());
                 }                
 
                 if (dataToSend.Count == 0)

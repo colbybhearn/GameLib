@@ -25,22 +25,32 @@ namespace GameHelper.Collections
             }
         }
 
-        public void EnQ(T o)
+        public void Enqueue(T o)
         {
             lock(this)
             {
-                this.Enqueue(o);
+                base.Enqueue(o);
             }
         }
 
-        public T DeQ()
+        public T Dequeue()
         {
             T o;
             lock (this)
             {
-                o = this.Dequeue();
+                o = base.Dequeue();
             }
             return o;
+        }
+
+        public T DequeueUnsafe()
+        {
+            return base.Dequeue();
+        }
+
+        public void EnqueueUnsafe(T o)
+        {
+            base.Enqueue(o);
         }
 
     }
