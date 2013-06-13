@@ -1,12 +1,11 @@
+using GameHelper.Base;
+using GameHelper.Multiplayer.Packets;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using GameHelper.Multiplayer.Packets;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework;
-using GameHelper;
-using GameHelper.Base;
 
 namespace GameHelper.Gui.Forms
 {
@@ -23,7 +22,7 @@ namespace GameHelper.Gui.Forms
         public string sKey;
         public int iPort;
         
-        public string sAlias;        
+        public string sAlias;
         public string sIPAddress;
 
     

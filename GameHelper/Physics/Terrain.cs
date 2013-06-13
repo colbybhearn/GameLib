@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using GameHelper.Objects;
+using JigLibX.Collision;
 using JigLibX.Geometry;
 using JigLibX.Physics;
-using JigLibX.Collision;
 using JigLibX.Utils;
-using GameHelper.Objects;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace GameHelper.Physics
 {

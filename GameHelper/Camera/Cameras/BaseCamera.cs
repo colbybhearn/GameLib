@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using GameHelper.Objects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using GameHelper.Physics;
-using GameHelper.Objects;
+using System.Collections.Generic;
 
 namespace GameHelper.Camera.Cameras
 {

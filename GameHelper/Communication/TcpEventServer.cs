@@ -1,10 +1,10 @@
-﻿using System;
+﻿using GameHelper.Multiplayer.Packets;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.Collections.Generic;
-using GameHelper.Multiplayer.Packets;
 
 namespace GameHelper.Communication
 {

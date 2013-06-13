@@ -1,11 +1,9 @@
+using GameHelper.Base;
+using GameHelper.Multiplayer.Packets;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using GameHelper.Multiplayer.Packets;
-using GameHelper;
-using GameHelper;
-using GameHelper.Base;
-using Microsoft.Xna.Framework;
 
 namespace GameHelper.Gui.Forms
 {    
