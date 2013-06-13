@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows.Forms;
+﻿using GameHelper.Base;
 using GameHelper.Camera.Cameras;
 using GameHelper.Collections;
+using GameHelper.Lighting;
+using GameHelper.Objects;
 using GameHelper.Physics;
-using JigLibX.Collision;
-using JigLibX.Geometry;
+using GameHelper.Physics.PhysicObjects;
 using JigLibX.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using GameHelper.Lighting;
-using GameHelper.Physics.PhysicsObjects;
-using GameHelper.Physics.PhysicObjects;
-using GameHelper.Objects;
-using GameHelper.Base;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace GameHelper.Gui.Forms.XnaView
 {

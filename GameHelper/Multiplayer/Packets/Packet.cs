@@ -83,7 +83,8 @@ namespace GameHelper.Multiplayer.Packets
                 }
             }
             catch(Exception E)
-            {                
+            {
+                Debug.WriteLine(E.StackTrace);
             }
             return null;
         }

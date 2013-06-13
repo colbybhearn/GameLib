@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GameHelper.Physics;
-using GameHelper.Camera.Cameras;
-using Microsoft.Xna.Framework;
+﻿using GameHelper.Camera.Cameras;
 using GameHelper.Objects;
+using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GameHelper.Camera
 {
@@ -80,6 +78,7 @@ namespace GameHelper.Camera
             }
             catch (Exception E)
             {
+                Debug.WriteLine(E.StackTrace);
             }
             finally
             {

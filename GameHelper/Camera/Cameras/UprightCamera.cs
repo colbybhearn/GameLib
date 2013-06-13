@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 
 namespace GameHelper.Camera.Cameras
 {
     public class UprightCamera : BaseCamera
     {
-        public Vector3 TargetPosition = new Vector3(); 
-        public float positionLagFactor = 1.0f;        
-        public Vector3 TargetLookAt;        
-        public float lookAtLagFactor = .1f;
+        // Commented out due to warning about hiding variables in BaseCamera. This changes how the camera behaves.
+        //public Vector3 TargetPosition = new Vector3(); 
+        //public float positionLagFactor = 1.0f;        
+        //public Vector3 TargetLookAt;        
+        //public float lookAtLagFactor = .1f;
 
-        bool useLhs;
+        bool useLhs = false;
         public UprightCamera()
         {
         }
