@@ -10,18 +10,20 @@ namespace GameHelper.Communication
 {
     public class SocketComm
     {
+        #region Properties
         Socket socket;
         Thread inputThread;
         Thread outputThread;
         Thread inputProcThread;
-        
+
         public delegate void PacketReceivedEventHandler(byte[] data);
         public event PacketReceivedEventHandler PacketReceived;
         public event GameHelper.Handlers.voidEH ClientDisconnected;
 
         bool ShouldBeRunning = false;
         ThreadQueue<byte[]> DataReceived = new ThreadQueue<byte[]>();
-        ThreadQueue<byte[]> DataToSendQueue;
+        ThreadQueue<byte[]> DataToSendQueue; 
+        #endregion
 
         public SocketComm(Socket s, bool clientSide, string socketAlias)
         {
@@ -57,19 +59,16 @@ namespace GameHelper.Communication
             DataToSendQueue.Enqueue(data);
         }
 
+        /* TODO
+         * Double check if this logic can be simplified in inputWorker
+         *  Specifically, check the "if length == -1" line
+         *  Check if count is required.
+         */
         private void inputWorker()
         {
             byte[] lenBytes = new byte[4];
             int length = -1;
-
-            int packetSizeCount = 0;
-
-            int packetSizeSum = 0;
-            int packetSizeAvg = 0;
-            int second = 0;
-            int printed = 0;
             int count = 0;
-            DateTime pre = new DateTime();
             socket.ReceiveBufferSize = 1000000;
             while (ShouldBeRunning)
             {
@@ -78,16 +77,11 @@ namespace GameHelper.Communication
 
                 if (length == -1 && socket.Available >= 4)
                 {
-                    pre = DateTime.Now;
                     count = socket.Receive(lenBytes);
                     length = BitConverter.ToInt32(lenBytes, 0);
 
-                    //Trace.WriteLine("Reading " + length + " / " + socket.Available);
                     if (length > 5000)
                         throw new FormatException("packet length " + length + " is unreasonably long.");
-                }
-                else
-                {
                 }
 
                 if (length > 0 && socket.Available >= length)
@@ -95,43 +89,25 @@ namespace GameHelper.Communication
                     byte[] data = new byte[length];
 
                     int datacount = socket.Receive(data);
-                    /*
-                    DateTime post = DateTime.Now;
-                    
-                    packetSizeSum += datacount + count;
-                    packetSizeCount++;
-                    
-                    second = DateTime.Now.Second;
-                    if (second != printed)
-                    {
-                        double ts = (post - pre).TotalSeconds;
-                        if (ts == 0)
-                            ts = .00001;
-                        packetSizeAvg = packetSizeSum / packetSizeCount;
-                        //Trace.WriteLine("SocketComm input bytes received: " + packetSizeSum + " Avg Packet Size:" + packetSizeAvg + ", Packet Count" + packetSizeCount + " took " + ts + " seconds, Rate=" + (float)packetSizeSum / ts + "Bps");
-                        packetSizeCount = 0;
-                        packetSizeSum = 0;
-                        printed = second;
-                    }*/
 
-                    if (data != null)
-                        CallPacketReceived(data);
                     length = -1;
+
+                    if (data == null)
+                        continue;
+
+                    CallPacketReceived(data);
                 }
                 else
-                {
-                    if (inputThread.Name.Contains("Client"))
-                    {
-                        //Debug.WriteLine("Client socketcomm sleeping");
-                    }
                     Thread.Sleep(1);
-                }
             }
 
             CallClientDisconnected();
             socket.Disconnect(false);
         }
 
+        /* TODO
+         * See why this isn't being used
+         */
         private void fasterTcpInputWorker()
         {
             int length = 1024;
@@ -168,6 +144,10 @@ namespace GameHelper.Communication
             DataReceived.Enqueue(b);
         }
 
+        /* TODO
+         * This looks nasty
+         * Fix it
+         */
         private void inputProcWorker()
         {
             byte[] aPacket;
@@ -220,22 +200,22 @@ namespace GameHelper.Communication
             }
         }
 
+        /* TODO
+         * Unused code
+         * Move to a library?
+         */
         private void BytesToString(byte[] bytes)
         {
             StringBuilder sb = new StringBuilder();
             foreach (byte b in bytes)
-                sb.Append(b.ToString("X2"));
+                sb.Append(b.ToString("X2")); // Hex
             //inputWorker.Trace.WriteLine(inputThread.Name +": "+bytes.Length +" : "+sb.ToString());
         }
 
         private void outputWorker()
         {
             List<byte> dataToSend = new List<byte>();
-            int sent = 0;
 
-            int packetSizeCount=0;
-            int packetSizeSum=0;
-            int packetSizeAvg=0;
             while (ShouldBeRunning)
             {
                 Thread.Sleep(1);
@@ -244,32 +224,18 @@ namespace GameHelper.Communication
 
                 dataToSend.Clear();
 
-                packetSizeSum = 0;
-                packetSizeCount = 0;
                 while (DataToSendQueue.myCount > 0)
                 {
-                    //packetSizeCount++;
-                    //packetSizeSum += DataToSendQueue.Peek().Length;
                     dataToSend.AddRange(DataToSendQueue.Dequeue());
                 }                
 
                 if (dataToSend.Count == 0)
                     continue;
-
-                //packetSizeAvg = packetSizeSum / packetSizeCount;
                 
                 try
                 {
-                    //DateTime pre = DateTime.Now;
                     //Send ALL bytes at once instead of "per packet", should be better
                     int r = socket.Send(dataToSend.ToArray());
-                    //DateTime post = DateTime.Now;
-                    sent += r;
-                    
-                    //double ts = (post - pre).TotalSeconds;
-                    //Trace.WriteLine("SocketComm output bytes actually sent: " + sent + " took " +ts + " seconds, Avg Packet Size:" + packetSizeAvg+ ", Packet Count"+packetSizeCount + " Rate="+(float)r/ts +"Bps");
-                    //Trace.WriteLine("SocketComm output bytes actually sent: " + sent );
-                    sent = 0;
                 }
                 catch (Exception E)
                 {
