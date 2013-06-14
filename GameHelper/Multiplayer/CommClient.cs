@@ -74,7 +74,7 @@ namespace GameHelper.Multiplayer
             while (ShouldBeRunning)
             {
                 
-                while (InputQueue.myCount > 0)            
+                while (InputQueue.Count > 0)            
                 {
                     ProcessInputPacket(InputQueue.Dequeue());
                     count++;

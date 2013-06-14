@@ -14,20 +14,18 @@ namespace GameHelper.Collections
     public class ThreadQueue<T> : Queue<T>
     {
         public ThreadQueue()
-            : base ()
+            : base()
         {
         }
 
-        public int myCount
+        new public int Count
         {
             get
             {
-                int c = 0;
                 lock (this)
                 {
-                    c= this.Count;
+                    return base.Count;
                 }
-                return c;
             }
         }
 
@@ -41,12 +39,10 @@ namespace GameHelper.Collections
 
         new public T Dequeue()
         {
-            T o;
             lock (this)
             {
-                o = base.Dequeue();
+                return base.Dequeue();
             }
-            return o;
         }
 
         public T DequeueUnsafe()

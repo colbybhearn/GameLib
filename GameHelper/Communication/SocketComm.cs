@@ -14,15 +14,15 @@ namespace GameHelper.Communication
         Socket socket;
         Thread inputThread;
         Thread outputThread;
-        Thread inputProcThread;
+        //Thread inputProcThread;
 
         public delegate void PacketReceivedEventHandler(byte[] data);
         public event PacketReceivedEventHandler PacketReceived;
         public event GameHelper.Handlers.voidEH ClientDisconnected;
 
         bool ShouldBeRunning = false;
-        ThreadQueue<byte[]> DataReceived = new ThreadQueue<byte[]>();
-        ThreadQueue<byte[]> DataToSendQueue; 
+        //ThreadQueue<byte[]> DataReceived = new ThreadQueue<byte[]>();
+        ThreadQueue<byte[]> DataToSendQueue;
         #endregion
 
         public SocketComm(Socket s, bool clientSide, string socketAlias)
@@ -32,7 +32,7 @@ namespace GameHelper.Communication
             socket = s;
             inputThread = new Thread(new ThreadStart(inputWorker));
             outputThread = new Thread(new ThreadStart(outputWorker));
-            inputProcThread = new Thread(new ThreadStart(inputProcWorker));
+            //inputProcThread = new Thread(new ThreadStart(inputProcWorker));
             if (clientSide)
             {
                 inputThread.Name = "Client Socket Input Worker (" + socketAlias + ")";
@@ -46,7 +46,7 @@ namespace GameHelper.Communication
             
             inputThread.Start();
             outputThread.Start();
-            inputProcThread.Start();
+            //inputProcThread.Start();
         }
 
         public void Disconnect()
@@ -60,24 +60,33 @@ namespace GameHelper.Communication
         }
 
         /* TODO
-         * Double check if this logic can be simplified in inputWorker
-         *  Specifically, check the "if length == -1" line
-         *  Check if count is required.
+         * Test new code
          */
         private void inputWorker()
         {
             byte[] lenBytes = new byte[4];
-            int length = -1;
-            int count = 0;
+            int dataLength = -1;
+            //int count = 0;
             socket.ReceiveBufferSize = 1000000;
-            while (ShouldBeRunning)
+            socket.Blocking = true; // JAP 6-14-2013 Part of new code
+            while (ShouldBeRunning && socket.Connected)
             {
-                if (!socket.Connected)
-                    break;
+                socket.Receive(lenBytes);
+                dataLength = BitConverter.ToInt32(lenBytes, 0);
+                if (dataLength > 0)
+                {
+                    byte[] data = new byte[dataLength];
+                    socket.Receive(data);
 
+                    CallPacketReceived(data);
+                }
+
+                /* JAP 6-14-2013
+                 * Commented this code until above new code can be tested.
                 if (length == -1 && socket.Available >= 4)
                 {
-                    count = socket.Receive(lenBytes);
+                    //count = socket.Receive(lenBytes);
+                    socket.Receive(lenBytes);
                     length = BitConverter.ToInt32(lenBytes, 0);
 
                     if (length > 5000)
@@ -87,27 +96,28 @@ namespace GameHelper.Communication
                 if (length > 0 && socket.Available >= length)
                 {
                     byte[] data = new byte[length];
+                    socket.Receive(data);
 
-                    int datacount = socket.Receive(data);
+                    //int datacount = socket.Receive(data);
 
                     length = -1;
 
-                    if (data == null)
-                        continue;
-
+                    //if (data != null)
                     CallPacketReceived(data);
                 }
                 else
                     Thread.Sleep(1);
+                */
             }
 
             CallClientDisconnected();
             socket.Disconnect(false);
         }
+        
 
         /* TODO
-         * See why this isn't being used
-         */
+         * JAP 6-14-2013 - Check with Colby and delete code
+        
         private void fasterTcpInputWorker()
         {
             int length = 1024;
@@ -138,16 +148,13 @@ namespace GameHelper.Communication
             CallClientDisconnected();
             socket.Disconnect(false);
         }
-        
+
+
         private void CallDataReceived(byte[] b)
         {
             DataReceived.Enqueue(b);
         }
-
-        /* TODO
-         * This looks nasty
-         * Fix it
-         */
+        
         private void inputProcWorker()
         {
             byte[] aPacket;
@@ -198,7 +205,7 @@ namespace GameHelper.Communication
                 //Trace.WriteLine("sleeping");
                 Thread.Sleep(10);
             }
-        }
+        }*/
 
         /* TODO
          * Unused code
@@ -209,22 +216,19 @@ namespace GameHelper.Communication
             StringBuilder sb = new StringBuilder();
             foreach (byte b in bytes)
                 sb.Append(b.ToString("X2")); // Hex
-            //inputWorker.Trace.WriteLine(inputThread.Name +": "+bytes.Length +" : "+sb.ToString());
         }
 
         private void outputWorker()
         {
             List<byte> dataToSend = new List<byte>();
 
-            while (ShouldBeRunning)
+            while (ShouldBeRunning && socket.Connected)
             {
                 Thread.Sleep(1);
-                if (!socket.Connected)
-                    break;
 
                 dataToSend.Clear();
 
-                while (DataToSendQueue.myCount > 0)
+                while (DataToSendQueue.Count > 0)
                 {
                     dataToSend.AddRange(DataToSendQueue.Dequeue());
                 }                
@@ -239,7 +243,7 @@ namespace GameHelper.Communication
                 }
                 catch (Exception E)
                 {
-                    System.Diagnostics.Debug.WriteLine(E.StackTrace);
+                    Debug.WriteLine(E.StackTrace);
                 }
             }
         }
