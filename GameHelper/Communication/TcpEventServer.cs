@@ -30,6 +30,7 @@ namespace GameHelper.Communication
 
         public event Handlers.IntPacketEH PacketReceived;
         public event Handlers.IntEH ClientAccepted;
+        public event Handlers.IntEH ClientDisconnected;
 
         #endregion
 
@@ -38,13 +39,13 @@ namespace GameHelper.Communication
         public TcpEventServer(string ip, int port)
         {
             listenIpAddress = IPAddress.Parse(ip);
-            this.listenPort = port;
+            listenPort = port;
             ListenerThread = new Thread(new ThreadStart(ServerWorker));
         }
 
         public void Start()
         {
-            this.ShouldBeRunning = true;
+            ShouldBeRunning = true;
             ListenerThread.Start();
             Debug.WriteLine("Lobby Listener: ServerListener.Start() finished: " + listenPort.ToString());
         }
@@ -58,6 +59,7 @@ namespace GameHelper.Communication
 
         #endregion
 
+        #region Socket Listeners
         private void ServerWorker()
         {
             try
@@ -77,9 +79,7 @@ namespace GameHelper.Communication
                 {
                     if (Listener.Pending())
                     {
-                        Socket socket = Listener.AcceptSocket();
-                        socket.NoDelay = true;
-                        CallClientAccepted(socket);
+                        AcceptNewClient();
                     }
                     Thread.Sleep(10);
                 }
@@ -89,37 +89,59 @@ namespace GameHelper.Communication
                 string s = "LobbyListener Error: " + ex.StackTrace;
                 System.Diagnostics.Debug.WriteLine(s);
             }
-               Listener.Stop();
+            Listener.Stop();
         }
-        
-        public void CallClientAccepted(Socket s)
+
+        public void AcceptNewClient()
         {
+            Socket socket = Listener.AcceptSocket();
+            socket.NoDelay = true;
+
             nextClientId++;
 
-            ClientInfoSocket socket = new ClientInfoSocket(s, nextClientId);
-            socket.ClientDisconnected += new Handlers.IntEH(ClientDisconnected);
-            socket.PacketReceived += new ClientInfoSocket.PacketReceivedEventHandler(Receive);
-            Clients.Add(nextClientId, socket);
-            //ClientInfoRequestPacket cirp = new ClientInfoRequestPacket(id);
-            //ci.Send(cirp);
+            ClientInfoSocket ciSocket = new ClientInfoSocket(socket, nextClientId);
+            ciSocket.ClientDisconnected += new Handlers.IntEH(socket_ClientDisconnected);
+            ciSocket.PacketReceived += new ClientInfoSocket.PacketReceivedEventHandler(socket_PacketReceived);
+            Clients.Add(nextClientId, ciSocket);
 
             if (ClientAccepted != null)
                 ClientAccepted(nextClientId);
         }
+        #endregion
 
-        public void ClientDisconnected(int id)
+        #region Socket Callbacks
+        public void socket_PacketReceived(int id, byte[] data)
         {
-            // TODO
+            if (PacketReceived == null)
+                return;
+
+            Packet p = Packet.Read(data);
+            if (p == null)
+                return;
+
+            PacketReceived(id, p);
         }
 
+        public void socket_ClientDisconnected(int id)
+        {
+            if (ClientDisconnected == null)
+                return;
+
+            ClientDisconnected(id);
+        } 
+        #endregion
+
+        #region Send Packets
         public void Send(Packet p)
         {
             // To everyone
             byte[] data = p.Serialize();
             foreach (SocketComm s in Clients.Values)
             {
-                if (s != null)
-                    s.Send(data);
+                if (s == null)
+                    return;
+
+                s.Send(data);
             }
         }
 
@@ -127,10 +149,12 @@ namespace GameHelper.Communication
         {
             // To Specific id
             ClientInfoSocket s;
-            if(Clients.TryGetValue(id, out s))
+            if (Clients.TryGetValue(id, out s))
             {
-                if(s != null)
-                    s.Send(p.Serialize());
+                if (s == null)
+                    return;
+
+                s.Send(p.Serialize());
             }
         }
 
@@ -145,18 +169,7 @@ namespace GameHelper.Communication
                     continue;
                 s.Send(p.Serialize());
             }
-        }
-
-        public void Receive(int id, byte[] data)
-        {
-            if (PacketReceived == null)
-                return;
-
-            Packet p = Packet.Read(data);
-            if (p == null)
-                return;
-
-            PacketReceived(id, p);
-        }
+        } 
+        #endregion
     }
 }
