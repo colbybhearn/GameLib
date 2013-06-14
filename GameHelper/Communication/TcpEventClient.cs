@@ -1,6 +1,7 @@
 ﻿using GameHelper.Collections;
 using GameHelper.Multiplayer.Packets;
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 
@@ -8,16 +9,13 @@ namespace GameHelper.Communication
 {
     class TcpEventClient
     {
+        #region Properties
         SocketComm socket;
-        public event GameHelper.Handlers.PacketReceivedEH PacketReceived;
-        public event GameHelper.Handlers.voidEH Disconnected;
+        public event Handlers.PacketReceivedEH PacketReceived;
+        public event Handlers.voidEH Disconnected;
+        #endregion
 
-        public TcpEventClient()
-        {
-            
-
-        }
-
+        #region Connection Methods
         public bool Connect(IPEndPoint remoteEndPoint)
         {
             TcpClient client = new TcpClient();
@@ -33,35 +31,44 @@ namespace GameHelper.Communication
             catch (Exception E)
             {
                 connected = false;
-                System.Diagnostics.Debug.WriteLine(E.StackTrace);
+                Debug.WriteLine(E.StackTrace);
             }
             return connected;
         }
 
+        public void Stop()
+        {
+            if (socket == null)
+                return;
+
+            socket.Disconnect();
+        } 
+        #endregion
+
+        #region Socket Callbacks
         void socket_PacketReceived(byte[] data)
         {
+            if (PacketReceived == null)
+                return;
+
             Packet p = Packet.Read(data);
-            if (p != null && PacketReceived != null)
-                PacketReceived(p);
+            if (p == null)
+                return;
+
+            PacketReceived(p);
         }
 
         void socket_ClientDisconnected()
         {
-            if(Disconnected == null)
+            if (Disconnected == null)
                 return;
             Disconnected();
-        }
-
-        public void Stop()
-        {
-            if(socket != null)
-                socket.Disconnect();
-        }
+        } 
+        #endregion
 
         public void Send(Packet packet)
         {
             Counter.AddTick("pps_out");
-            //Counter.AddTick("average_pps_out", Counter.GetAverageValue("pps_out"));
 
             if (socket == null)
                 return;

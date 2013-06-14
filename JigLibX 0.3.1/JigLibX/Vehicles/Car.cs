@@ -331,14 +331,6 @@ namespace JigLibX.Vehicles
         }
 
         /// <summary>
-        /// Allow access to all the wheels
-        /// </summary>
-        public List<Wheel> Wheels
-        {
-            get { return wheels; }
-        }
-
-        /// <summary>
         /// Accelerate control - values -1/0 to 1
         /// </summary>
         public float Accelerate

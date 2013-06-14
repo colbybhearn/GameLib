@@ -5,6 +5,12 @@ using System.Text;
 
 namespace GameHelper.Collections
 {
+    /* Warning!
+     * Do not store a ThreadQueue in a Queue
+     * If you do this and call Enqueue or Dequeue, it will call Queue.Enqueue and Queue.Dequeue
+     * And NOT call the Thread Safe ThreadQueue.Enqueue and Dequeue.
+     */
+    
     public class ThreadQueue<T> : Queue<T>
     {
         public ThreadQueue()
@@ -25,7 +31,7 @@ namespace GameHelper.Collections
             }
         }
 
-        public void Enqueue(T o)
+        new public void Enqueue(T o)
         {
             lock(this)
             {
@@ -33,7 +39,7 @@ namespace GameHelper.Collections
             }
         }
 
-        public T Dequeue()
+        new public T Dequeue()
         {
             T o;
             lock (this)

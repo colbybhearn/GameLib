@@ -18,32 +18,37 @@ namespace GameHelper.Communication
          */
 
         #region Properties
-        string sIPAddress;
-        int iPort;
-        bool ShouldBeRunning=false;
-        IPAddress ipAd;
-        TcpListener myListener;
-        Thread ServerListener;
+        bool ShouldBeRunning = false;
+        IPAddress listenIpAddress;
+        int listenPort;
+
+        int nextClientId = 0;
+
+        TcpListener Listener;
+        Thread ListenerThread;
         SortedList<int, ClientInfoSocket> Clients = new SortedList<int, ClientInfoSocket>();
-        public event GameHelper.Handlers.IntPacketEH PacketReceived;
+
+        public event Handlers.IntPacketEH PacketReceived;
+        public event Handlers.IntEH ClientAccepted;
 
         #endregion
 
         #region Initialization
 
-        public TcpEventServer( string IP, int port)
+        public TcpEventServer(string ip, int port)
         {
-            ipAd = IPAddress.Parse(IP);
-            this.iPort = port;
-            ServerListener = new Thread(new ThreadStart(ServerWorker));
-            
+            listenIpAddress = IPAddress.Parse(ip);
+            this.listenPort = port;
+            ListenerThread = new Thread(new ThreadStart(ServerWorker));
         }
+
         public void Start()
         {
             this.ShouldBeRunning = true;
-            ServerListener.Start();
-            Debug.WriteLine("Lobby Listener: ServerListener.Start() finished: " + iPort.ToString());
+            ListenerThread.Start();
+            Debug.WriteLine("Lobby Listener: ServerListener.Start() finished: " + listenPort.ToString());
         }
+
         public void Stop()
         {
             this.ShouldBeRunning = false;
@@ -61,19 +66,18 @@ namespace GameHelper.Communication
                 Debug.WriteLine("Lobby Listener: creating Listener");
 
                 // Initializes the Listener 
-                // myList = new TcpListener(ipAd, iPort);
-                myListener = new TcpListener(IPAddress.Any, iPort);
+                Listener = new TcpListener(IPAddress.Any, listenPort);
                 Debug.WriteLine("Lobby Listener: starting Listener");
                 // Start Listeneting at the specified port         
-                myListener.Start();
-                Debug.WriteLine("Lobby Listener: Waiting to Accept on: " + iPort.ToString());
+                Listener.Start();
+                Debug.WriteLine("Lobby Listener: Waiting to Accept on: " + listenPort.ToString());
 
                 // poll for pending connections
                 while (ShouldBeRunning)
                 {
-                    if (myListener.Pending())
+                    if (Listener.Pending())
                     {
-                        Socket socket = myListener.AcceptSocket();
+                        Socket socket = Listener.AcceptSocket();
                         socket.NoDelay = true;
                         CallClientAccepted(socket);
                     }
@@ -85,15 +89,11 @@ namespace GameHelper.Communication
                 string s = "LobbyListener Error: " + ex.StackTrace;
                 System.Diagnostics.Debug.WriteLine(s);
             }
-               myListener.Stop();
+               Listener.Stop();
         }
         
-        //public delegate void SocketEH(Socket s);
-        public event GameHelper.Handlers.IntEH ClientAccepted;
-        int nextClientId = 0;
         public void CallClientAccepted(Socket s)
         {
-
             nextClientId++;
 
             ClientInfoSocket socket = new ClientInfoSocket(s, nextClientId);
@@ -137,7 +137,6 @@ namespace GameHelper.Communication
         public void SendToAllButOne(Packet p, int id)
         {
             // Avoid the Specified id
-            
             foreach (ClientInfoSocket s in Clients.Values)
             {
                 if (s == null)
@@ -150,9 +149,14 @@ namespace GameHelper.Communication
 
         public void Receive(int id, byte[] data)
         {
+            if (PacketReceived == null)
+                return;
+
             Packet p = Packet.Read(data);
-            if (p != null && PacketReceived != null)
-                PacketReceived(id, p);
+            if (p == null)
+                return;
+
+            PacketReceived(id, p);
         }
     }
 }

@@ -9,11 +9,9 @@ using System.Windows.Forms;
 
 namespace GameHelper.Gui.Forms
 {
-    /*
-   * I had to reference the WindowsGameLibrary from Clientapp in order for the ContentManager to load any models when invoked from the client (it worked fine in XNA_Panel and the missing reference was the only difference)
-   * 
-   * 
-   */
+    /* I had to reference the WindowsGameLibrary from Clientapp in order for the ContentManager to load
+     * any models when invoked from the client (it worked fine in XNA_Panel and the missing reference was the only difference)
+     */
 
     public partial class frmClientBase : Form
     {
@@ -25,8 +23,7 @@ namespace GameHelper.Gui.Forms
         public string sAlias;
         public string sIPAddress;
 
-    
-        System.Windows.Forms.Timer ProcessPacketTimer;
+        //System.Windows.Forms.Timer ProcessPacketTimer;
 
         ArrayList ActiveGames = new ArrayList();
         ArrayList GamesToPlay = new ArrayList();
@@ -40,7 +37,6 @@ namespace GameHelper.Gui.Forms
         #endregion
 
         #region Constructor
-
 
 
         public frmClientBase(ClientBase g)
@@ -117,12 +113,8 @@ namespace GameHelper.Gui.Forms
             //this.Controls.Add(this.XnaPanelMain);
         }
 
-        
-
 
         #endregion
-
-        
 
         #region Form Event Handlers
 
@@ -157,6 +149,17 @@ namespace GameHelper.Gui.Forms
             game.Stop();
         }
 
+        private void txtChatBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void tsmiSettings_Click(object sender, EventArgs e)
+        {
+            game.EditSettings();
+        }
+
+
         #endregion
 
         #region Timer Ticks
@@ -176,12 +179,6 @@ namespace GameHelper.Gui.Forms
         }
 
         #endregion
-
-        private void txtChatBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
 
         #region Mouse Input
         private void pnlMouseEnter(object sender, EventArgs e)
@@ -211,10 +208,5 @@ namespace GameHelper.Gui.Forms
             game.AdjustZoom(e.Delta);
         }
         #endregion
-
-        private void tsmiSettings_Click(object sender, EventArgs e)
-        {
-            game.EditSettings();
-        }
     }
 }
