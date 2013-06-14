@@ -7,7 +7,7 @@ namespace GameHelper.Communication
         // Using new keywords suppresses warnings about "hiding" the SocketComm's versions
         new public delegate void PacketReceivedEventHandler(int id, byte[] data);
         new public event PacketReceivedEventHandler PacketReceived;
-        new public event GameHelper.Handlers.IntEH ClientDisconnected;
+        new public event Handlers.IntEH ClientDisconnected;
         public int ClientID;
 
         public ClientInfoSocket(Socket s, int id) 
@@ -16,18 +16,18 @@ namespace GameHelper.Communication
             ClientID = id;
         }
 
-        protected override void CallClientDisconnected()
-        {
-            if (ClientDisconnected == null)
-                return;
-            ClientDisconnected(ClientID);
-        }
-
         public override void CallPacketReceived(byte[] data)
         {
             if (PacketReceived == null)
                 return;
             PacketReceived(ClientID, data);
+        }
+
+        protected override void CallClientDisconnected()
+        {
+            if (ClientDisconnected == null)
+                return;
+            ClientDisconnected(ClientID);
         }
     }
 }

@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
+﻿using GameHelper.Collections;
 using GameHelper.Communication;
 using GameHelper.Multiplayer.Packets;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using System.Diagnostics;
-using GameHelper.Collections;
+using System.Net;
+using System.Threading;
 
 namespace GameHelper.Multiplayer
 {
@@ -39,8 +38,8 @@ namespace GameHelper.Multiplayer
 
         public CommServer(int lobbyport)
         {
-            string a = Dns.GetHostName();
-            IPHostEntry ipEntry = Dns.GetHostEntry(a);
+            string hostName = Dns.GetHostName();
+            IPHostEntry ipEntry = Dns.GetHostEntry(hostName);
             IPAddress[] ips = ipEntry.AddressList;
             string ip = ips[0].ToString();
 

@@ -66,6 +66,7 @@ namespace GameHelper.Communication
         } 
         #endregion
 
+        #region Send Packet
         public void Send(Packet packet)
         {
             Counter.AddTick("pps_out");
@@ -74,6 +75,7 @@ namespace GameHelper.Communication
                 return;
 
             socket.Send(packet.Serialize());
-        }
+        } 
+        #endregion
     }
 }

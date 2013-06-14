@@ -248,19 +248,18 @@ namespace GameHelper.Communication
             }
         }
 
+        public virtual void CallPacketReceived(byte[] data)
+        {
+            if (PacketReceived == null)
+                return;
+            PacketReceived(data);
+        }
+
         protected virtual void CallClientDisconnected()
         {
             if (ClientDisconnected == null)
                 return;
             ClientDisconnected();
-        }
-
-        public virtual void CallPacketReceived(byte[] data)
-        {
-            //BytesToString(data);
-            if (PacketReceived == null)
-                return;
-            PacketReceived(data);
         }
     }
 }

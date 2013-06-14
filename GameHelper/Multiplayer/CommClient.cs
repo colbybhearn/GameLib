@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GameHelper.Collections;
+using GameHelper.Communication;
+using GameHelper.Multiplayer.Packets;
+using Microsoft.Xna.Framework;
+using System;
 using System.Diagnostics;
 using System.Net;
 using System.Threading;
-using GameHelper.Multiplayer.Packets;
-using Microsoft.Xna.Framework;
-using GameHelper.Communication;
-using GameHelper.Collections;
 
 namespace GameHelper.Multiplayer
 {
