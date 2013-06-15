@@ -28,6 +28,7 @@ namespace GameHelper.Communication
             ShouldBeRunning = true;
             DataToSendQueue = new ThreadQueue<byte[]>();
             socket = s;
+            socket.NoDelay = true;
             inputThread = new Thread(new ThreadStart(inputWorker));
             outputThread = new Thread(new ThreadStart(outputWorker));
             if (clientSide)

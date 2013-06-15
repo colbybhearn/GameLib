@@ -95,7 +95,6 @@ namespace GameHelper.Communication
         public void AcceptNewClient()
         {
             Socket socket = Listener.AcceptSocket();
-            socket.NoDelay = true;
 
             nextClientId++;
 
