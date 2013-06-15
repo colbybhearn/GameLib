@@ -55,9 +55,14 @@ namespace GameHelper.Input
                 // we don't care, we need a real key to go with it!
                 return;
             binding.Key = pressed[0];
-            binding.Shift = curr.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftShift) || curr.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightShift);
-            binding.Ctrl = curr.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) || curr.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightControl);
-            binding.Alt = curr.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) || curr.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightAlt);
+
+            if (curr.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftShift) || curr.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightShift))
+                binding.Modifiers |= KeyModifier.Shift;
+            if (curr.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftControl) || curr.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightControl))
+                binding.Modifiers |= KeyModifier.Control;
+            if (curr.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) || curr.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.RightAlt))
+                binding.Modifiers |= KeyModifier.Alt;
+
             UpdateBindingKeyAlias();
             // take it out of edit mode!
             Editing = false;

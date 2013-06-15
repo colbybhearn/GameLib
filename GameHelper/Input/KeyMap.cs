@@ -18,6 +18,16 @@ namespace GameHelper.Input
         [Description("On Release")]         Released, // just released since last update
     }
 
+    [Flags]
+    public enum KeyModifier
+    {
+        [Description("No modifier allowed")]        None    = 1,
+        [Description("Requires alt modifier")]      Alt     = 2,
+        [Description("Requires control modifier")]  Control = 4,
+        [Description("Requires shift modifier")]    Shift   = 8,
+        [Description("Any modifier allowed")]       Any     = 15,
+    }
+
     public delegate void KeyBindingDelegate();
 
     /// <summary>
@@ -31,10 +41,16 @@ namespace GameHelper.Input
         [DataMember]
         public string Alias;
         [DataMember]
-        public SortedList<string, KeyBinding> KeyBindings { get; set; }
+        public SortedList<string, KeyBinding> KeyBindings { get; private set; }
 
         public KeyMap()
         {
+        }
+
+        public KeyMap(string alias)
+        {
+            Alias = alias;
+            KeyBindings = new SortedList<string, KeyBinding>();
         }
 
         public KeyMap(string alias, List<KeyBinding> defaultBindings)
@@ -51,21 +67,22 @@ namespace GameHelper.Input
             KeyBindings = new SortedList<string, KeyBinding>(other.KeyBindings);
         }
 
+        public void AddKeyBinding(KeyBinding kb)
+        {
+            KeyBindings.Add(kb.Alias, kb);
+        }
+
         public void Check(KeyboardState last, KeyboardState current)
         {
-            // if this keymap is not enabled,
-            if (!Enabled)
-                // then don't bother checking
+            if (Enabled == false)
                 return; 
-            // for each binding,
+
             foreach (KeyBinding kb in KeyBindings.Values)
-                // check if it is happening now
                 kb.Check(last, current);
         }
 
         internal void LoadOverrides(KeyMap savedkm)
         {
-            // for each saved preference,
             foreach (KeyBinding saved in savedkm.KeyBindings.Values)
             {
                 // if the game can use that preference,
@@ -74,11 +91,8 @@ namespace GameHelper.Input
                     // get the default for that input, 
                     KeyBinding kb = KeyBindings[saved.Alias];
                     // and totally override it with the saved preference
-                    kb.Alt = saved.Alt;
-                    kb.Ctrl = saved.Ctrl;
                     kb.Key = saved.Key;
-                    //kb.KeyEvent = saved.KeyEvent;
-                    kb.Shift = saved.Shift;
+                    kb.Modifiers = saved.Modifiers;
                 }
             }
         }

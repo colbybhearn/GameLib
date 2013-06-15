@@ -15,36 +15,44 @@ namespace GameHelper.Input
         public Keys Key { get; set; }
         
         public KeyEvent KeyEvent { get; set; }
+
         [XmlIgnore]
         public KeyBindingDelegate Callback { get; set; }
+
+        [DataMember]
+        public KeyModifier Modifiers { get; set; }
+
         [DataMember]
         public string Alias { get; set; }
-        [DataMember]
+
+        /*[DataMember]
         public bool Ctrl { get; set; }
         [DataMember]
         public bool Shift { get; set; }
         [DataMember]
-        public bool Alt { get; set; }
+        public bool Alt { get; set; }*/
 
-        public KeyBinding()
-        {
-        }
+        public KeyBinding() { }
 
-        public KeyBinding(string alias, Keys k, bool ctrl, bool shift, bool alt, KeyEvent kevent)
+        public KeyBinding(string alias, Keys k, KeyModifier mods, KeyEvent kevent)
         {
             Alias = alias;
             Key = k;
-            Ctrl = ctrl;
-            Shift = shift;
-            Alt = alt;
+            Modifiers = mods;
             KeyEvent = kevent;
         }
 
-        public KeyBinding(string alias, Keys k, bool ctrl, bool shift, bool alt, KeyEvent kevent, KeyBindingDelegate kdel)
-            : this(alias, k, ctrl, shift, alt, kevent)
+        public KeyBinding(string alias, Keys k, KeyModifier mods, KeyEvent kevent, KeyBindingDelegate kdel)
+            : this(alias, k, mods, kevent)
         {
             Callback = kdel;
         }
+
+        public KeyBinding(string alias, Keys k, KeyEvent kevent)
+            : this(alias, k, KeyModifier.None, kevent) { }
+
+        public KeyBinding(string alias, Keys k, KeyEvent kevent, KeyBindingDelegate kdel)
+            : this(alias, k, KeyModifier.None, kevent, kdel) { }
 
         private void CallDelegate()
         {
@@ -89,23 +97,37 @@ namespace GameHelper.Input
 
         private bool matchMods(KeyboardState curr)
         {
+            // Don't care!
+            if (Modifiers.HasFlag(KeyModifier.Any))
+                return true;
+
+            // if this binding should have no modifiers then make sure all of the modifier keys are up
+            if (Modifiers.HasFlag(KeyModifier.None))
+            {
+                if (curr.IsKeyDown(Keys.LeftControl) || curr.IsKeyDown(Keys.RightControl))
+                    return false;
+                if (curr.IsKeyDown(Keys.LeftShift) || curr.IsKeyDown(Keys.RightShift))
+                    return false;
+                if (curr.IsKeyDown(Keys.LeftShift) || curr.IsKeyDown(Keys.RightShift))
+                    return false;
+            }
+
             // if this binding uses the Control key,
-            if (Ctrl)
+            if (Modifiers.HasFlag(KeyModifier.Control))
                 // and neither of the Left Control or Right Control keys are down,
-                if (!(curr.IsKeyDown(Keys.LeftControl)
-                    || curr.IsKeyDown(Keys.RightControl)))
+                if (!(curr.IsKeyDown(Keys.LeftControl) || curr.IsKeyDown(Keys.RightControl)))
                     // then it's not a match
                     return false;
 
             // if this binding uses the Shift key,
-            if (Shift)
+            if (Modifiers.HasFlag(KeyModifier.Shift))
                 // and neither of the Left Shift and Right Shift keys are down,
                 if (!(curr.IsKeyDown(Keys.LeftShift) || curr.IsKeyDown(Keys.RightShift)))
                     // then it's not a match
                     return false;
 
             // if this binding uses the Alt key,
-            if (Alt)
+            if (Modifiers.HasFlag(KeyModifier.Alt))
                 // and neither of the Left Alt and Right Alt keys are down,
                 if (!(curr.IsKeyDown(Keys.LeftAlt) || curr.IsKeyDown(Keys.RightAlt)))
                     // then it's not a match
@@ -126,11 +148,11 @@ namespace GameHelper.Input
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            if (Ctrl)
+            if (Modifiers.HasFlag(KeyModifier.Control))
                 sb.Append("Ctrl + ");
-            if (Shift)
+            if (Modifiers.HasFlag(KeyModifier.Shift))
                 sb.Append("Shift + ");
-            if (Alt)
+            if (Modifiers.HasFlag(KeyModifier.Alt))
                 sb.Append("Alt + ");
             sb.Append(Key.ToString());
             return sb.ToString();
