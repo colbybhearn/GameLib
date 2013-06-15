@@ -11,38 +11,61 @@ namespace GameHelper.Multiplayer
 {
     public class CommClient
     {
+        /* Notes
+         * This is added after-the-fact 6-14-2013 JAP
+         * The CommClient should receive information about objects from the server.
+         * The CommClient should communicate player actions to the server.
+         */
+
+        #region Properties
         public int iPort;
         public string sAlias;
         IPAddress a;
-        GameHelper.Communication.TcpEventClient client;
+
+        TcpEventClient client;
         ServerInfo Server;
-        bool ShouldBeRunning = false;
+
         ThreadQueue<Packet> InputQueue = new ThreadQueue<Packet>();
         Thread inputThread;
 
+        bool ShouldBeRunning = false;
+
+        public event Handlers.voidEH Disconnected;
+        public event Handlers.IntEH PlayerDisconnected;
+        public event Handlers.IntEH ObjectDeleteReceived;
+        public event Handlers.ObjectAttributeEH ObjectAttributeReceived;
+        public event Handlers.ClientConnectedEH OtherClientConnectedToServer;
+        public event Handlers.ObjectActionEH ObjectActionReceived;
+        public event Handlers.ObjectUpdateEH ObjectUpdateReceived;
+        public event Handlers.ObjectAddedResponseEH ObjectAddedReceived;
+        public event Handlers.ChatMessageEH ChatMessageReceived;
+        public event Handlers.IntEH ClientInfoRequestReceived;
+        #endregion
+
+        #region Initilization
         public CommClient(string ip, int port, string alias)
         {
-            if (!IPAddress.TryParse(ip, out a))
+            if (IPAddress.TryParse(ip, out a) == false)
                 throw new ArgumentException("Unparsable IP");
-            
+
             iPort = port;
             sAlias = alias;
             Server = new ServerInfo(new IPEndPoint(a, iPort));
         }
 
-        bool connected = false;
         public bool Connect()
         {
+            bool connected = false;
             Debug.WriteLine("Client: Connection " + Server.endPoint.Address.ToString() + " " + iPort);
-            
+
             try
             {
                 ShouldBeRunning = true;
                 inputThread = new Thread(new ThreadStart(inputWorker));
                 inputThread.Start();
                 client = new TcpEventClient();
-                client.PacketReceived += new GameHelper.Handlers.PacketReceivedEH(PacketReceived);
-                client.Disconnected += new Handlers.voidEH(client_ThisClientDisconnectedFromServer);                
+                client.PacketReceived += new Handlers.PacketReceivedEH(client_PacketReceived);
+                client.Disconnected += new Handlers.voidEH(client_Disconnected);
                 connected = client.Connect(Server.endPoint);
             }
             catch (Exception ex)
@@ -54,37 +77,36 @@ namespace GameHelper.Multiplayer
             return connected;
         }
 
-        public event Handlers.voidEH ThisClientDisconnectedFromServer;
-        void client_ThisClientDisconnectedFromServer()
+        public void Stop()
         {
-            if (ThisClientDisconnectedFromServer == null)
+            ShouldBeRunning = false;
+            client.Stop();
+        } 
+        #endregion
+
+        #region TcpEventClient Callbacks
+        void client_Disconnected()
+        {
+            if (Disconnected == null)
                 return;
-            ThisClientDisconnectedFromServer();
+            Disconnected();
         }
 
-        void PacketReceived(GameHelper.Multiplayer.Packets.Packet p)
+        void client_PacketReceived(Packet packet)
         {
-            InputQueue.Enqueue(p);             
-        }
+            InputQueue.Enqueue(packet);
+        } 
+        #endregion
 
+        #region Packet Input
         private void inputWorker()
         {
-            int count = 0; // Using this since its possible one can get added to the queue while another is being processed
             while (ShouldBeRunning)
             {
-                
-                while (InputQueue.Count > 0)            
-                {
+                while (InputQueue.Count > 0)
                     ProcessInputPacket(InputQueue.Dequeue());
-                    count++;
-                }
-                
-                if (count > 0)
-                {
-                    //Counter.AddTick("pps_in", maxThisSecond);
-                    //Counter.AddTick("average_pps_in", Counter.GetAverageValue("pps_in"));
-                }
-                Thread.Sleep(1);                
+
+                Thread.Sleep(1);
             }
         }
 
@@ -122,7 +144,7 @@ namespace GameHelper.Multiplayer
             else if (packet is ClientDisconnectPacket)
             {
                 ClientDisconnectPacket cdp = packet as ClientDisconnectPacket;
-                CallOtherClientDisconnectedFromServer(cdp.id);
+                CallPlayerDisconnected(cdp.id);
             }
             else if (packet is ClientConnectedPacket)
             {
@@ -142,15 +164,14 @@ namespace GameHelper.Multiplayer
             }
         }
 
-        public event Handlers.IntEH OtherClientDisconnectedFromServer;
-        private void CallOtherClientDisconnectedFromServer(int id)
+        #region Process Packet Callbacks
+        private void CallPlayerDisconnected(int id)
         {
-            if (OtherClientDisconnectedFromServer == null)
+            if (PlayerDisconnected == null)
                 return;
-            OtherClientDisconnectedFromServer(id);
+            PlayerDisconnected(id);
         }
-        
-        public event Handlers.IntEH ObjectDeleteReceived;
+
         private void CallObjectDeleteReceived(ObjectDeletedPacket odp)
         {
             if (ObjectDeleteReceived == null)
@@ -158,7 +179,6 @@ namespace GameHelper.Multiplayer
             ObjectDeleteReceived(odp.objectId);
         }
 
-        public event Handlers.ObjectAttributeEH ObjectAttributeReceived;
         private void CallObjectAttributeReceived(ObjectAttributePacket oap)
         {
             if (ObjectAttributeReceived == null)
@@ -166,15 +186,13 @@ namespace GameHelper.Multiplayer
             ObjectAttributeReceived(oap);
         }
 
-        public event Handlers.ClientConnectedEH OtherClientConnectedToServer;
         private void CallOtherClientConnectedToServer(int id, string alias)
         {
-            if(OtherClientConnectedToServer == null)
+            if (OtherClientConnectedToServer == null)
                 return;
             OtherClientConnectedToServer(id, alias);
         }
 
-        public event GameHelper.Handlers.ObjectActionEH ObjectActionReceived;
         private void CallObjectActionReceived(int id, object[] parameters)
         {
             if (ObjectActionReceived == null)
@@ -182,8 +200,6 @@ namespace GameHelper.Multiplayer
             ObjectActionReceived(id, parameters);
         }
 
-
-        public event GameHelper.Handlers.ObjectUpdateEH ObjectUpdateReceived;
         private void CallObjectUpdateReceived(int id, string asset, Vector3 pos, Matrix orient, Vector3 vel)
         {
             if (ObjectUpdateReceived == null)
@@ -191,7 +207,6 @@ namespace GameHelper.Multiplayer
             ObjectUpdateReceived(id, asset, pos, orient, vel);
         }
 
-        public event GameHelper.Handlers.ObjectAddedResponseEH ObjectAddedReceived;
         private void CallObjectRequestResponseReceived(int owner, int id, string asset)
         {
             if (ObjectAddedReceived == null)
@@ -199,8 +214,6 @@ namespace GameHelper.Multiplayer
             ObjectAddedReceived(owner, id, asset);
         }
 
-        
-        public event GameHelper.Handlers.ChatMessageEH ChatMessageReceived;
         private void CallChatMessageReceived(ChatMessage cm)
         {
             if (ChatMessageReceived == null)
@@ -208,25 +221,20 @@ namespace GameHelper.Multiplayer
             ChatMessageReceived(cm);
         }
 
-        public event GameHelper.Handlers.IntEH ClientInfoRequestReceived;
         private void CallClientInfoRequestReceived(int id)
         {
             if (ClientInfoRequestReceived == null)
                 return;
             ClientInfoRequestReceived(id);
         }
+        #endregion 
+        #endregion
 
-
-        public void Stop()
-        {
-            ShouldBeRunning = false;
-            client.Stop();
-            
-        }
-
+        #region Packet Sending
         public void SendChatPacket(string msg, int player)
         {
             // TODO, fix
+            // JAP 6-14-2013 - What needs to be fixed here? The TODO is very old.
             client.Send(new ChatPacket(msg, player));
         }
 
@@ -235,8 +243,14 @@ namespace GameHelper.Multiplayer
             client.Send(new ObjectRequestPacket(assetname));
         }
 
+        /* TODO
+         * Remove?
+         * This is not used, nor should it, based on what a CommClient is.
+         */
+        [Obsolete]
         public void SendObjectUpdate(int id, Vector3 pos, Matrix orient, Vector3 vel)
-        {//NEVER USED?
+        {
+            // NEVER USED?
             // the 0 here is WRONG if this IS ever Used
             client.Send(new ObjectUpdatePacket(id, string.Empty, pos, orient, vel));
         }
@@ -249,6 +263,7 @@ namespace GameHelper.Multiplayer
         public void Send(Packet clientReadyPacket)
         {
             client.Send(clientReadyPacket);
-        }
+        } 
+        #endregion
     }
 }

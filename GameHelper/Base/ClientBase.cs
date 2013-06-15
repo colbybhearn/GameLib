@@ -55,9 +55,9 @@ namespace GameHelper.Base
             commClient.ObjectAddedReceived += new Handlers.ObjectAddedResponseEH(commClient_ObjectAddedReceived);
             commClient.ObjectActionReceived += new Handlers.ObjectActionEH(commClient_ObjectActionReceived);
             commClient.ObjectUpdateReceived += new Handlers.ObjectUpdateEH(commClient_ObjectUpdateReceived);
-            commClient.ThisClientDisconnectedFromServer += new Handlers.voidEH(commClient_ThisClientDisconnectedFromServer);
+            commClient.Disconnected += new Handlers.voidEH(commClient_ThisClientDisconnectedFromServer);
             commClient.OtherClientConnectedToServer += new Handlers.ClientConnectedEH(commClient_OtherClientConnected);
-            commClient.OtherClientDisconnectedFromServer += new Handlers.IntEH(commClient_OtherClientDisconnectedFromServer);
+            commClient.PlayerDisconnected += new Handlers.IntEH(commClient_OtherClientDisconnectedFromServer);
             commClient.ObjectAttributeReceived += new Handlers.ObjectAttributeEH(base.commClient_ObjectAttributeReceived);
             commClient.ObjectDeleteReceived += new Handlers.IntEH(commClient_ObjectDeleteReceived);
         }
