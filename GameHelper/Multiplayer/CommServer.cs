@@ -29,13 +29,16 @@ namespace GameHelper.Multiplayer
 
     public class CommServer
     {
-        // list of client information with socket to communicate back
+
+        #region Properties
         List<int> Clients = new List<int>();
         TcpEventServer tcpServer;
         ThreadQueue<ClientPacketInfo> InputQueue = new ThreadQueue<ClientPacketInfo>();
         Thread inputThread;
-        bool ShouldBeRunning = false;
+        bool ShouldBeRunning = false; 
+        #endregion
 
+        #region Initilization
         public CommServer(int lobbyport)
         {
             string hostName = Dns.GetHostName();
@@ -44,8 +47,9 @@ namespace GameHelper.Multiplayer
             string ip = ips[0].ToString();
 
             tcpServer = new TcpEventServer(ip, lobbyport);
-            tcpServer.ClientAccepted += new GameHelper.Handlers.IntEH(listener_ClientAccepted);
+            tcpServer.ClientAccepted += new Handlers.IntEH(ClientAccepted);
             tcpServer.PacketReceived += new Handlers.IntPacketEH(PacketReceived);
+            tcpServer.ClientDisconnected += new Handlers.IntEH(ClientDisconnected);
         }
 
         public void Start()
@@ -61,20 +65,25 @@ namespace GameHelper.Multiplayer
             ShouldBeRunning = false;
             tcpServer.Stop();
             Clients.Clear();
-        }
+        } 
+        #endregion
 
-        void listener_ClientAccepted(int id)
+        #region TCP Server Callbacks
+        void ClientAccepted(int id)
         {
             ClientInfoRequestPacket cirp = new ClientInfoRequestPacket(id);
             tcpServer.Send(cirp, id);
             Clients.Add(id);
         }
 
-        void ci_ClientDisconnected(int id)
+        void ClientDisconnected(int id)
         {
             BroadcastPacket(new ClientDisconnectPacket(id));
             Clients.Remove(id);
-        }
+        } 
+        #endregion
+
+        #region Packet Receiving
 
         private void inputWorker()
         {
@@ -88,11 +97,9 @@ namespace GameHelper.Multiplayer
             }
         }
 
-        #region Packet Receiving
-
         void PacketReceived(int id, Packet p)
         {
-            if (!Clients.Contains(id))
+            if (Clients.Contains(id) == false)
                 return;
             ClientPacketInfo cpi = new ClientPacketInfo(id, p);
             InputQueue.Enqueue(cpi);
@@ -102,7 +109,9 @@ namespace GameHelper.Multiplayer
         {
             if (cpi == null)
                 return;
+
             Packet packet = cpi.packet;
+
             if (packet is ClientInfoResponsePacket)
             {
                 Trace.WriteLine("Received Client info Response");
@@ -149,10 +158,11 @@ namespace GameHelper.Multiplayer
             }
         }
 
-        public event GameHelper.Handlers.IntStringEH ClientReadyReceived;
+        public event Handlers.IntStringEH ClientReadyReceived;
         private void CallClientReadyReceived(int id, string alias)
         {
-            if (ClientReadyReceived == null) return;
+            if (ClientReadyReceived == null)
+                return;
             ClientReadyReceived(id, alias);
         }
 
@@ -165,7 +175,7 @@ namespace GameHelper.Multiplayer
         }
 
 
-        public event GameHelper.Handlers.ObjectActionEH ObjectActionReceived;
+        public event Handlers.ObjectActionEH ObjectActionReceived;
         private void CallObjectActionReceived(int id, object[] parameters)
         {
             if (ObjectActionReceived == null)
@@ -173,7 +183,7 @@ namespace GameHelper.Multiplayer
             ObjectActionReceived(id, parameters);
         }
 
-        public event GameHelper.Handlers.ObjectRequestEH ObjectRequestReceived;
+        public event Handlers.ObjectRequestEH ObjectRequestReceived;
         private void CallObjectRequestReceived(int clientId, string asset)
         {
             if (ObjectRequestReceived == null)
@@ -181,7 +191,7 @@ namespace GameHelper.Multiplayer
             ObjectRequestReceived(clientId, asset);
         }
 
-        public event GameHelper.Handlers.ChatMessageEH ChatMessageReceived;
+        public event Handlers.ChatMessageEH ChatMessageReceived;
         private void CallChatMessageReceived(ChatMessage cm)
         {
             if (ChatMessageReceived == null)
@@ -189,7 +199,7 @@ namespace GameHelper.Multiplayer
             ChatMessageReceived(cm);
         }
 
-        public event GameHelper.Handlers.IntStringEH ClientConnected;
+        public event Handlers.IntStringEH ClientConnected;
         private void CallClientConnected(int id, string alias)
         {
             if (ClientConnected == null)
@@ -197,7 +207,7 @@ namespace GameHelper.Multiplayer
             ClientConnected(id, alias);
         }
 
-        public event GameHelper.Handlers.ObjectUpdateEH ObjectUpdateReceived;
+        public event Handlers.ObjectUpdateEH ObjectUpdateReceived;
         private void CallObjectUpdateReceived(int id, string asset, Vector3 pos, Matrix orient, Vector3 vel)
         {
             if (ObjectUpdateReceived == null)
@@ -223,6 +233,9 @@ namespace GameHelper.Multiplayer
             tcpServer.Send(p, clientID);
         }
 
+        /* TODO
+         * Should this be in the general CommServer?
+         */
         public void BroadcastChatMessage(string msg, int player)
         {
             BroadcastPacket(new ChatPacket(msg, player));
@@ -235,15 +248,19 @@ namespace GameHelper.Multiplayer
 
         public void BroadcastObjectAddedPacket(int clientid, int objectId, string asset)
         {
-            if (!Clients.Contains(clientid))
+            if (Clients.Contains(clientid) == false)
                 return;
             tcpServer.Send(new ObjectAddedPacket(clientid, objectId, asset));
         }
 
         public void SendObjectAddedPacket(int receivingClient, int owner, int objectId, string asset)
         {
-            if (!Clients.Contains(owner) || !Clients.Contains(receivingClient))
+            if (Clients.Contains(owner) == false)
                 return;
+
+            if (Clients.Contains(receivingClient) == false)
+                return;
+
             tcpServer.Send(new ObjectAddedPacket(owner, objectId, asset), receivingClient);
         }
 

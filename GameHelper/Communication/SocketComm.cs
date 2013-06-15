@@ -28,7 +28,6 @@ namespace GameHelper.Communication
             ShouldBeRunning = true;
             DataToSendQueue = new ThreadQueue<byte[]>();
             socket = s;
-            socket.NoDelay = true;
             inputThread = new Thread(new ThreadStart(inputWorker));
             outputThread = new Thread(new ThreadStart(outputWorker));
             if (clientSide)
@@ -56,6 +55,7 @@ namespace GameHelper.Communication
             DataToSendQueue.Enqueue(data);
         }
 
+        #region Worker Functions
         /* TODO
          * Test new code
          */
@@ -86,20 +86,11 @@ namespace GameHelper.Communication
             socket.Disconnect(false);
         }
 
-        /* TODO
-         * Unused code
-         * Move to a library?
-         */
-        private void BytesToString(byte[] bytes)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in bytes)
-                sb.Append(b.ToString("X2")); // Hex
-        }
-
         private void outputWorker()
         {
             List<byte> dataToSend = new List<byte>();
+
+            socket.NoDelay = true;
 
             while (ShouldBeRunning && socket.Connected)
             {
@@ -110,11 +101,11 @@ namespace GameHelper.Communication
                 while (DataToSendQueue.Count > 0)
                 {
                     dataToSend.AddRange(DataToSendQueue.Dequeue());
-                }                
+                }
 
                 if (dataToSend.Count == 0)
                     continue;
-                
+
                 try
                 {
                     //Send ALL bytes at once instead of "per packet", should be better
@@ -125,8 +116,10 @@ namespace GameHelper.Communication
                     Debug.WriteLine(E.StackTrace);
                 }
             }
-        }
+        } 
+        #endregion
 
+        #region Callbacks
         public virtual void CallPacketReceived(byte[] data)
         {
             if (PacketReceived == null)
@@ -139,6 +132,18 @@ namespace GameHelper.Communication
             if (ClientDisconnected == null)
                 return;
             ClientDisconnected();
+        }
+        #endregion
+
+        /* TODO
+         * Unused code
+         * Move to a library?
+         */
+        private void BytesToString(byte[] bytes)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in bytes)
+                sb.Append(b.ToString("X2")); // Hex
         }
     }
 }
