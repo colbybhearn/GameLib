@@ -19,6 +19,7 @@ namespace GameHelper.Objects
         public bool isOnServer;
         public bool isOnClient;
         public AssetType aType;
+        public AssetConfig config;
         public string assetName;
         public Matrix Orientation
         {
@@ -30,9 +31,8 @@ namespace GameHelper.Objects
             {
                 Body.Orientation = value;
             }
-
         }
-        public Vector3 Scale { get; set; }
+        //public Vector3 Scale { get; set; }
         public bool Selected;
         public GameHelper.Input.ActionManager actionManager = new GameHelper.Input.ActionManager();
         public List<Controller> controllers = new List<Controller>();
@@ -150,7 +150,7 @@ namespace GameHelper.Objects
         public void CommonInit(Vector3 pos, Vector3 scale, Model model, bool moveable, int asset)
         {
             Position = pos;
-            Scale = scale;
+            config.Scale = scale;
             Model = model;
             Body.Immovable = !moveable;
             // Enumerated AssetTypes are the only integers/Enums
@@ -160,6 +160,15 @@ namespace GameHelper.Objects
 
             // asset names are loaded at runtime
             
+            // MOVED TO BEFORE INTEGRATE
+            //FinalizeBody();
+        }
+
+        public void CommonInit(Vector3 pos, Matrix orient, bool moveable)
+        {
+            Position = pos;
+            Orientation = orient;
+            Body.Immovable = !moveable;
             // MOVED TO BEFORE INTEGRATE
             //FinalizeBody();
         }
@@ -237,6 +246,7 @@ namespace GameHelper.Objects
 
         public virtual void Draw(ref Matrix View, ref Matrix Projection)
         {
+            string s = this.assetName;
             if (Model == null)
                 return;
             Matrix[] transforms = new Matrix[Model.Bones.Count];
@@ -335,7 +345,7 @@ namespace GameHelper.Objects
         /// <returns></returns>
         public Matrix GetWorldMatrix()
         {
-            return Matrix.CreateScale(Scale) * Skin.GetPrimitiveLocal(0).Transform.Orientation * Body.Orientation * Matrix.CreateTranslation(Body.Position);
+            return Matrix.CreateScale(config.Scale) * Skin.GetPrimitiveLocal(0).Transform.Orientation * Body.Orientation * Matrix.CreateTranslation(Body.Position);
         }
 
         
@@ -453,6 +463,17 @@ namespace GameHelper.Objects
             {
                 return Body.IsActive;
             }
+        }
+
+        public virtual AssetConfig LoadConfig(string file)
+        {
+            config.LoadFromFile(file);
+            return config;
+        }
+
+        public void ApplyConfig(AssetConfig aConfig)
+        {
+            config = aConfig;
         }
     }
 }

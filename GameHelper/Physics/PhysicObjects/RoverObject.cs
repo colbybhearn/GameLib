@@ -221,7 +221,7 @@ namespace GameHelper.Physics.PhysicsObjects
             radarRotation += diffSeconds * rotationsPerSecond * stepsPerRotation * radiansPerStep;
             radarRotation %= (2.0f*(float)Math.PI);
 
-            Matrix world =  Matrix.CreateScale(Scale * 1.4f) *
+            Matrix world =  Matrix.CreateScale(config.Scale * 1.4f) *
                             Matrix.CreateRotationY(radarRotation) * // rotate the dish
                             Matrix.CreateTranslation(offsetPos) * 
                             rover.Chassis.Body.Orientation * 
@@ -280,7 +280,7 @@ namespace GameHelper.Physics.PhysicsObjects
                     rover.Chassis.Body.Orientation * // orient with the rover
                     Matrix.CreateTranslation(rover.Chassis.Body.Position); // move to the rover (Step 1)*/
 
-            Matrix world =  Matrix.CreateScale(Scale) * 
+            Matrix world = Matrix.CreateScale(config.Scale) * 
                             rig.GetTranformationMatrix((int)RigParts.LaserBox) *
                             rover.Chassis.Body.Orientation * // orient with the rover
                             Matrix.CreateTranslation(rover.Chassis.Body.Position); // move to the rover (Step 1)*/
@@ -328,8 +328,8 @@ namespace GameHelper.Physics.PhysicsObjects
             #endregion
 
             #region Rotation Arm A
-            
-            world = Matrix.CreateScale(Scale) *
+
+            world = Matrix.CreateScale(config.Scale) *
                     //Matrix.CreateScale(Scale * 1.4f) *
                     rig.GetTranformationMatrix((int)RigParts.CameraArmA) *
                     rover.Chassis.Body.Orientation * // orient with the rover
@@ -354,8 +354,8 @@ namespace GameHelper.Physics.PhysicsObjects
             #endregion
 
             #region Rotation Arm B
-            
-            world = Matrix.CreateScale(Scale) *
+
+            world = Matrix.CreateScale(config.Scale) *
                     rig.GetTranformationMatrix((int)RigParts.CameraArmB) *
                     rover.Chassis.Body.Orientation * // orient with the rover
                     Matrix.CreateTranslation(rover.Chassis.Body.Position); // move to the rover (Step 1)
@@ -376,8 +376,8 @@ namespace GameHelper.Physics.PhysicsObjects
             #endregion
 
             #region Camera
-            
-            world = Matrix.CreateScale(Scale) *
+
+            world = Matrix.CreateScale(config.Scale) *
                     rig.GetTranformationMatrix((int)RigParts.CameraBox) *
                     rover.Chassis.Body.Orientation * // orient with the rover
                     Matrix.CreateTranslation(rover.Chassis.Body.Position); // move to the rover (Step 1)
@@ -447,7 +447,7 @@ namespace GameHelper.Physics.PhysicsObjects
 
         public Matrix GetRoverCamWorldMatrix()
         {
-            return Matrix.CreateScale(Scale) *
+            return Matrix.CreateScale(config.Scale) *
                     rig.GetTranformationMatrix((int)RigParts.CameraBox) *
                     rover.Chassis.Body.Orientation * // orient with the rover
                     Matrix.CreateTranslation(rover.Chassis.Body.Position); // move to the rover (Step 1)

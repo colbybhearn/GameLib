@@ -242,19 +242,6 @@ namespace GameHelper.Base
             }
         }
 
-        public void LoadModel(ref Model m, string name, Enum e, GetGobjectDelegate creatorCallback)
-        {
-            try
-            {
-                m = Content.Load<Model>(name);
-                assetManager.AddAssetType(e, creatorCallback);
-            }
-            catch (Exception E)
-            {
-                System.Diagnostics.Debug.WriteLine(E.StackTrace);
-            }
-        }
-
         /// <summary>
         /// Should do scene and object initialization common to client and server
         /// </summary>
@@ -284,8 +271,8 @@ namespace GameHelper.Base
                 try
                 {
                     // some video cards can't handle the >16 bit index type of the terrain
-                    HeightmapObject heightmapObj = new HeightmapObject(terrainModel, Vector2.Zero, new Vector3(0, 0, 0));
-                    objectsToAdd.Add(heightmapObj.ID, heightmapObj);
+                    //HeightmapObject heightmapObj = new HeightmapObject(terrainModel, Vector2.Zero, new Vector3(0, 0, 0));
+                    //objectsToAdd.Add(heightmapObj.ID, heightmapObj);
                 }
                 catch (Exception E)
                 {

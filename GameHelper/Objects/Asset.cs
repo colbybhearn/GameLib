@@ -20,6 +20,7 @@ namespace GameHelper.Objects
         public Vector3 Scale;
         public Color Color;
         public Model model;
+        public AssetConfig config;
 
         public Asset(string name, Vector3 scale, Model m)
         {
@@ -27,6 +28,15 @@ namespace GameHelper.Objects
             model = m;
             Scale = scale;
             Color = Color.Gray;
+        }
+
+        /// <summary>
+        /// this method should be overloaded in the specific asset config class for each asset and load the setting in the file into memory
+        /// </summary>
+        /// <param name="file"></param>
+        public virtual void LoadConfigFromFile(string file)
+        {
+            config.LoadFromFile(file);
         }
     }
 }
