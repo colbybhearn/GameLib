@@ -5,10 +5,10 @@ using System;
 using GameHelper.Objects;
 namespace GameHelper.Camera.Cameras
 {
-    public class ChaseCamera : UprightCamera
+    public class ChaseCameraUpright : UprightCamera
     {
         
-        public ChaseCamera()
+        public ChaseCameraUpright()
         {
             positionLagFactor = .25f;
             lookAtLagFactor = .2f;

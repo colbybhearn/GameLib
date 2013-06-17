@@ -81,7 +81,8 @@
     <Compile Include="Base\ServerBase.cs" />
     <Compile Include="Camera\Cameras\BaseCamera.cs" />
     <Compile Include="Camera\CameraManager.cs" />
-    <Compile Include="Camera\Cameras\ChaseCamera.cs" />
+    <Compile Include="Camera\Cameras\ChaseCameraUpright.cs" />
+    <Compile Include="Camera\Cameras\ChaseCameraRelative.cs" />
     <Compile Include="Camera\Cameras\FirstPersonCamera.cs" />
     <Compile Include="Camera\Cameras\FreeCamera.cs" />
     <Compile Include="Camera\Cameras\UprightCamera.cs" />

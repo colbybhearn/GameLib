@@ -234,7 +234,7 @@ namespace GameHelper.Objects
         /// <param name="CreateCallback"></param>
         /// <param name="scale"></param>
         //public void AddAssetType(Enum e, GetGobjectDelegate CreateCallback, Vector3 scale, AssetConfig config)
-        public void AddAssetType(Enum e, GetGobjectDelegate CreateCallback, Vector3 scale, Type typeOfGobject)
+        public void AddAssetType(Enum e, Vector3 scale, Type typeOfGobject)
         {
             if (AssetTypesByName.ContainsKey(e.ToString()))
                 return;
@@ -252,9 +252,9 @@ namespace GameHelper.Objects
         /// <param name="CreateCallback"></param>
         /// <param name="scale"></param>
         //public void AddAssetType(Enum e, GetGobjectDelegate CreateCallback, float scale, AssetConfig config)
-        public void AddAssetType(Enum e, GetGobjectDelegate CreateCallback, float scale, Type typeOfGobject)
+        public void AddAssetType(Enum e, float scale, Type typeOfGobject)
         {
-            AddAssetType(e, CreateCallback, new Vector3(scale, scale, scale), typeOfGobject);
+            AddAssetType(e, new Vector3(scale, scale, scale), typeOfGobject);
         }
 
         /// <summary>
@@ -263,9 +263,9 @@ namespace GameHelper.Objects
         /// <param name="name"></param>
         /// <param name="CreateCallback"></param>
         //public void AddAssetType(Enum e, GetGobjectDelegate CreateCallback, AssetConfig config)
-        public void AddAssetType(Enum e, GetGobjectDelegate CreateCallback, Type typeOfGobject)
+        public void AddAssetType(Enum e, Type typeOfGobject)
         {
-            AddAssetType(e, CreateCallback, 1.0f, typeOfGobject);
+            AddAssetType(e, 1.0f, typeOfGobject);
         }
         /// <summary>
         /// returns an instance of the specified asset type
