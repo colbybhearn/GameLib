@@ -12,8 +12,8 @@ namespace GameHelper.Input
 {
     public partial class Settings : Form
     {
-        public KeyMapCollection keyMaps;
-        public Settings(KeyMapCollection kmc)
+        public ButtonMapCollection keyMaps;
+        public Settings(ButtonMapCollection kmc)
         {
             InitializeComponent();
             keyMaps = kmc;
@@ -25,13 +25,13 @@ namespace GameHelper.Input
         /// </summary>
         public void AddKeyBindingGuiControls()
         {
-            for (int kmi = 0; kmi < keyMaps.keyMaps.Count; kmi++)
+            for (int kmi = 0; kmi < keyMaps.buttonMaps.Count; kmi++)
             {
                 FlowLayoutTabPage fltp = new FlowLayoutTabPage();
                 tcControlGroups.TabPages.Add(fltp);
-                KeyMap km = keyMaps.keyMaps.Values[kmi];
+                ButtonMap km = keyMaps.buttonMaps.Values[kmi];
                 fltp.Text = km.Alias;
-                foreach (Input.KeyBinding kb in km.KeyBindings.Values)
+                foreach (Input.KeyBinding kb in km.ButtonBindings.Values)
                 {
                     KeyBindingControl kbc = new KeyBindingControl(kb);
                     
