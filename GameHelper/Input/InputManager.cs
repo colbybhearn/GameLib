@@ -63,35 +63,37 @@ namespace GameHelper.Input
 
         public InputMode Mode { get; set; }
 
-        KeyboardState lastState = new KeyboardState();
-        KeyboardState currentState = new KeyboardState();
+        InputState inputState;
+        //KeyboardState lastState = new KeyboardState();
+        //KeyboardState currentState = new KeyboardState();
         //public KeyMap keyMap;
         public SortedList<InputMode, Delegate> InputModeDelegates;
         public String game;
         Settings frmSettings;
-        KeyMapCollection keyMaps = new KeyMapCollection();
+        ButtonMapCollection keyMaps = new ButtonMapCollection();
 
-        public InputManager(String gameName, KeyMapCollection defaultKeyMapcollection)
+        public InputManager(String gameName, ButtonMapCollection defaultKeyMapcollection)
         {
             game = gameName;
-            keyMaps = KeyMapCollection.Load(game, defaultKeyMapcollection);
+            keyMaps = ButtonMapCollection.Load(game, defaultKeyMapcollection);
             Mode = InputMode.Mapped;
             InputModeDelegates = new SortedList<InputMode, Delegate>();
+            inputState = new InputState();
         }
 
         public void DisableAllKeyMaps()
         {
-            keyMaps.DisableAllKeyGroups();
+            keyMaps.DisableAllButtonMaps();
         }
 
         public void EnableKeyMap(string id)
         {
-            keyMaps.EnableKeyGroups(id);
+            keyMaps.EnableButtonMap(id);
         }
 
         public void DisableKeyMap(string id)
         {
-            keyMaps.DisableKeyGroups(id);
+            keyMaps.DisableButtonMap(id);
         }
 
         public void AddInputMode(InputMode m, Delegate d)
@@ -100,28 +102,30 @@ namespace GameHelper.Input
         }
 
         public void Update()
-        {            
-            currentState = Keyboard.GetState();
+        {
+            inputState.Update();
+
             switch(Mode)
             {
+                    /* TODO
+                     * InputMode.Setup and InputMode.Chat not updated to use new InputState with GamePadBindings
+                     */
                 case InputMode.Setup:
-                    frmSettings.ProcessKey(currentState);
+                    frmSettings.ProcessKey(inputState.KeyboardState);
                     break;
                 case InputMode.Chat:
                     Delegate d;
                     if(InputModeDelegates.TryGetValue(Mode, out d))
-                        ((ChatDelegate)d)(GetPressedKeysWithShift(lastState, currentState));
+                        ((ChatDelegate)d)(GetPressedKeysWithShift(inputState.KeyboardStateLast, inputState.KeyboardState));
                     break;
                 case InputMode.Mapped:
-                    foreach (KeyMap map in keyMaps.keyMaps.Values)
+                    foreach (ButtonMap map in keyMaps.buttonMaps.Values)
                     {
                         if (map != null)
-                            map.Check(lastState, currentState);
+                            map.Check(inputState);
                     }
                     break;
             }
-        
-            lastState = currentState;
         }
 
         //Will always contain shift if shift is held
@@ -140,7 +144,7 @@ namespace GameHelper.Input
         
         public void Save()
         {
-            KeyMapCollection.Save(keyMaps);
+            ButtonMapCollection.Save(keyMaps);
             //KeyMap.SaveKeyMap(keyMap);
         }
         

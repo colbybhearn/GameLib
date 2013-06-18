@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
@@ -11,12 +8,12 @@ namespace GameHelper.Input
 {
     // DataContract serialization allows IDictionary implementers to be serialized! WooHoo
     [DataContract]
-    public class KeyMapCollection
+    public class ButtonMapCollection
     {
         [DataMember]
         public string Game;
         [DataMember]
-        public SortedList<string, KeyMap> keyMaps = new SortedList<string, KeyMap>(); // this can't be serialized with XMLSerializer, so DataContract serialization has been used.
+        public SortedList<string, ButtonMap> buttonMaps = new SortedList<string, ButtonMap>(); // this can't be serialized with XMLSerializer, so DataContract serialization has been used.
 
         private string FilePath
         {
@@ -26,60 +23,60 @@ namespace GameHelper.Input
             }
         }
 
-        public KeyMapCollection()
+        public ButtonMapCollection()
         {
         }
 
-        public KeyMapCollection(KeyMapCollection other)
+        public ButtonMapCollection(ButtonMapCollection other)
         {
             Game = other.Game;
-            keyMaps = new SortedList<string, KeyMap>(other.keyMaps);
+            buttonMaps = new SortedList<string, ButtonMap>(other.buttonMaps);
         }
 
-        public KeyMapCollection(SortedList<string, KeyMap> maps)
+        public ButtonMapCollection(SortedList<string, ButtonMap> maps)
         {
-            keyMaps = maps;
+            buttonMaps = maps;
         }
 
         /// <summary>
         /// Adds a keymap to the collection
         /// </summary>
         /// <param name="keyMap"></param>
-        public void AddMap(KeyMap keyMap)
+        public void AddMap(ButtonMap keyMap)
         {
             string alias = keyMap.Alias;
-            if (keyMaps.ContainsKey(alias))
-                throw new ArgumentException("A keymapgroup by the name " + alias + " already exists. Use a different name.");
-            keyMaps.Add(alias, keyMap);
+            if (buttonMaps.ContainsKey(alias))
+                throw new ArgumentException("A Button Map group by the name " + alias + " already exists. Use a different name.");
+            buttonMaps.Add(alias, keyMap);
         }
 
-        public void DisableAllKeyGroups()
+        public void DisableAllButtonMaps()
         {
-            foreach (KeyMap map in keyMaps.Values)
+            foreach (ButtonMap map in buttonMaps.Values)
                 map.Enabled = false;
         }
 
-        public void EnableKeyGroups(string alias)
+        public void EnableButtonMap(string alias)
         {
-            if (keyMaps.ContainsKey(alias))
-                keyMaps[alias].Enabled = true;
+            if (buttonMaps.ContainsKey(alias))
+                buttonMaps[alias].Enabled = true;
         }
 
-        public void DisableKeyGroups(string alias)
+        public void DisableButtonMap(string alias)
         {
-            if (keyMaps.ContainsKey(alias))
-                keyMaps[alias].Enabled = false;
+            if (buttonMaps.ContainsKey(alias))
+                buttonMaps[alias].Enabled = false;
         }
 
-        public static void Save(KeyMapCollection kmc)
+        public static void Save(ButtonMapCollection bmc)
         {
-            DataContractSerializer x = new DataContractSerializer(typeof(KeyMapCollection));
+            DataContractSerializer x = new DataContractSerializer(typeof(ButtonMapCollection));
             StreamWriter stm = null;
             StringWriter sw = new StringWriter();
             XmlTextWriter tw = new XmlTextWriter(sw);
             try
             {
-                string filepath = kmc.FilePath;                
+                string filepath = bmc.FilePath;                
                 if (!Directory.Exists(filepath))
                 {
                     string dirpath = Path.GetDirectoryName(filepath);
@@ -87,7 +84,7 @@ namespace GameHelper.Input
                 }
                 stm = new StreamWriter(filepath);
                 tw.Formatting = Formatting.Indented; // Make it human readable!
-                x.WriteObject(tw, kmc);
+                x.WriteObject(tw, bmc);
                 tw.Flush();
                 stm.Write(sw.ToString());
             }
@@ -104,23 +101,23 @@ namespace GameHelper.Input
             }
         }
 
-        public static KeyMapCollection Load(string game, KeyMapCollection defaultKeyMap)
+        public static ButtonMapCollection Load(string game, ButtonMapCollection defaultButtonMap)
         {
-            DataContractSerializer x = new DataContractSerializer(typeof(KeyMapCollection));
-            KeyMapCollection finalCollection = new KeyMapCollection(defaultKeyMap);
+            DataContractSerializer x = new DataContractSerializer(typeof(ButtonMapCollection));
+            ButtonMapCollection finalCollection = new ButtonMapCollection(defaultButtonMap);
             StreamReader stm = null;
             try
             {
-                string filepath = KeyMapCollection.GetSettingsPath(game);
+                string filepath = ButtonMapCollection.GetSettingsPath(game);
                 stm = new StreamReader(filepath);
 
-                KeyMapCollection savedCollection = (KeyMapCollection)x.ReadObject(stm.BaseStream);
+                ButtonMapCollection savedCollection = (ButtonMapCollection)x.ReadObject(stm.BaseStream);
 
-                foreach (KeyMap finalkm in finalCollection.keyMaps.Values)
+                foreach (ButtonMap finalkm in finalCollection.buttonMaps.Values)
                     // if tha keymap by this name exists on disk
-                    if (savedCollection.keyMaps.ContainsKey(finalkm.Alias))
+                    if (savedCollection.buttonMaps.ContainsKey(finalkm.Alias))
                     {
-                        KeyMap savedkm = savedCollection.keyMaps[finalkm.Alias];
+                        ButtonMap savedkm = savedCollection.buttonMaps[finalkm.Alias];
                         // load those preferences, overriding the defaults
                         finalkm.LoadOverrides(savedkm);
                     }
