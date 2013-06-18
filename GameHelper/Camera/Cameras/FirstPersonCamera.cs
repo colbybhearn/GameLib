@@ -25,7 +25,7 @@ namespace GameHelper.Camera.Cameras
             Vector3 orientAdjustment = Vector3.Zero;
             Vector3 positionAdjustment = Vector3.Zero;
             
-            Gobject gob = GetFirstGobject();
+            Entity gob = GetFirstGobject();
             if (gob == null) return;
 
 

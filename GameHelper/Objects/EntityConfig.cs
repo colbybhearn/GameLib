@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameHelper.Objects
 {
-    public class AssetConfig
+    public class EntityConfig
     {
         //name, a model filename, the asset type, movement parameters, scale     
         public string AssetName;
@@ -24,23 +24,15 @@ namespace GameHelper.Objects
         public Model model;
         private string name;
 
-        public AssetConfig()
+        public EntityConfig()
         {
         }
 
-        public AssetConfig(string name)
+        public EntityConfig(string name)
         {
             this.name = name;
         }
-        //public AssetConfig config;
-
-        //public AssetConfig(string name, Vector3 scale, Model m)
-        //{
-        //    Name = name;
-        //    model = m;
-        //    Scale = scale;
-        //    Color = Color.Gray;
-        //}
+        
 
         /// <summary>
         /// this method should be overloaded in the specific asset config class for each asset and load the setting in the file into memory

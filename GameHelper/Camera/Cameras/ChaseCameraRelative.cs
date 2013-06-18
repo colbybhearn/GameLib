@@ -40,7 +40,7 @@ namespace GameHelper.Camera.Cameras
         public override void Update()
         {
             base.Update();
-            Gobject gob = GetFirstGobject();
+            Entity gob = GetFirstGobject();
             if (gob == null) return;
             // bodyPosition is the physical location of the body
             Vector3 bodyPosition = gob.BodyPosition();

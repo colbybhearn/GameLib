@@ -9,7 +9,7 @@ using GameHelper.Objects;
 
 namespace GameHelper.Physics.PhysicsObjects
 {
-    public class LunarVehicle : Gobject
+    public class LunarVehicle : Entity
     {
         BoostController VertJet;
         BoostController RotJetY;
@@ -27,10 +27,10 @@ namespace GameHelper.Physics.PhysicsObjects
             Skin.AddPrimitive(new Box(new Vector3(sides.X * -.5f, sides.Y * -1.45f, sides.Z * -.5f), orient, sides), (int)MaterialTable.MaterialID.NotBouncyNormal); // Legs
             CommonInit(position, scale / 2, model, true, asset);
 
-            VertJet = new BoostController(Body, Vector3.Up, Vector3.Zero);
-            RotJetX = new BoostController(Body, Vector3.Zero, Vector3.UnitZ);
-            RotJetZ = new BoostController(Body, Vector3.Zero, Vector3.UnitX);
-            RotJetY = new BoostController(Body, Vector3.Zero, Vector3.UnitY);
+            VertJet = new BoostController(body, Vector3.Up, Vector3.Zero);
+            RotJetX = new BoostController(body, Vector3.Zero, Vector3.UnitZ);
+            RotJetZ = new BoostController(body, Vector3.Zero, Vector3.UnitX);
+            RotJetY = new BoostController(body, Vector3.Zero, Vector3.UnitY);
 
             PhysicsSystem.CurrentPhysicsSystem.AddController(VertJet);
             PhysicsSystem.CurrentPhysicsSystem.AddController(RotJetX);
@@ -110,8 +110,8 @@ namespace GameHelper.Physics.PhysicsObjects
             {
                 //Vector3 com = SetMass(2.0f);
                 //Skin.ApplyLocalTransform(new JigLibX.Math.Transform(-com, Matrix.Identity));
-                Body.MoveTo(Position, Matrix.Identity);
-                Body.EnableBody(); // adds to CurrentPhysicsSystem
+                body.MoveTo(Position, Matrix.Identity);
+                body.EnableBody(); // adds to CurrentPhysicsSystem
             }
             catch (Exception E)
             {

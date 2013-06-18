@@ -207,7 +207,7 @@ namespace GameHelper.Base
                 {
                     if (!gameObjects.ContainsKey(i))
                         continue;
-                    Gobject go = gameObjects[i];
+                    Entity go = gameObjects[i];
                     if (!go.actionManager.actionApplied)
                         continue;
 
@@ -242,7 +242,7 @@ namespace GameHelper.Base
                                 // TODO -  Should we continue instead of not updating this frame?
                             }
                             // (can't yet due to AddNewObject waiting until the next integrate to actually add it)
-                            Gobject go = gameObjects[oup.objectId];
+                            Entity go = gameObjects[oup.objectId];
                             if (go.hasNotDoneFirstInterpoladation)
                                 go.Interpoladate(oup.position, oup.orientation, oup.velocity, 1.0f); // Server knows best!
                             else
@@ -255,7 +255,7 @@ namespace GameHelper.Base
                             ObjectAttributePacket oap = p as ObjectAttributePacket;
                             if (gameObjects.ContainsKey(oap.objectId))
                             {
-                                Gobject go = gameObjects[oap.objectId];
+                                Entity go = gameObjects[oap.objectId];
                                 bool locallyOwnedAndOperated = false;
 
                                 if (go.OwningClientId == MyClientID)

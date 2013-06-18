@@ -10,14 +10,14 @@ using GameHelper.Objects;
 
 namespace GameHelper.Physics.PhysicsObjects
 {
-    class TriangleMeshObject : Gobject
+    class TriangleMeshObject : Entity
     {
         TriangleMesh triangleMesh;
 
         public TriangleMeshObject(Model model, Matrix orientation, Vector3 position)
             : base()
         {
-            Body = new Body();
+            body = new Body();
             Skin = new CollisionSkin(null);
 
             triangleMesh = new TriangleMesh();
@@ -34,7 +34,7 @@ namespace GameHelper.Physics.PhysicsObjects
             // Transform
             Skin.ApplyLocalTransform(new JigLibX.Math.Transform(position, orientation));
             // we also need to move this dummy, so the object is *rendered* at the correct positiob
-            Body.MoveTo(position, orientation);
+            body.MoveTo(position, orientation);
             CommonInit(position, new Vector3(1, 1, 1), model, false, 0);
         }
 

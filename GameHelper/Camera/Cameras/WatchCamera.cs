@@ -20,7 +20,7 @@ namespace GameHelper.Camera.Cameras
         public override void Update()
         {
             base.Update();
-            Gobject gob = GetFirstGobject();
+            Entity gob = GetFirstGobject();
             if (gob == null) return;
 
             LookAtLocation(gob.BodyPosition(), Vector3.Up);

@@ -10,7 +10,7 @@ using GameHelper.Objects;
 
 namespace GameHelper.Physics.PhysicsObjects
 {
-    public class Aircraft : Gobject
+    public class Aircraft : Entity
     {
 
         /* Flight dynamics
@@ -103,13 +103,13 @@ namespace GameHelper.Physics.PhysicsObjects
             Vector3 RightWingLiftLocation = 4 * Vector3.Right;
             RightWingLiftLocation.Z = CenterOfPressure.Z;
 
-            Thrust = new BoostController(Body, Vector3.Forward, 4 * Vector3.Forward, Vector3.Zero);
-            LiftLeft = new BoostController(Body, Vector3.Up, LeftWingLiftLocation, Vector3.Zero);  // this could be totally different than a force at a position (midwing)
-            LiftRight = new BoostController(Body, Vector3.Up, RightWingLiftLocation, Vector3.Zero);
-            Elevator = new BoostController(Body, Vector3.Zero, Vector3.Backward * 3, Vector3.Zero);
-            Drag = new BoostController(Body, Vector3.Zero, Vector3.Zero, Vector3.Zero);
+            Thrust = new BoostController(body, Vector3.Forward, 4 * Vector3.Forward, Vector3.Zero);
+            LiftLeft = new BoostController(body, Vector3.Up, LeftWingLiftLocation, Vector3.Zero);  // this could be totally different than a force at a position (midwing)
+            LiftRight = new BoostController(body, Vector3.Up, RightWingLiftLocation, Vector3.Zero);
+            Elevator = new BoostController(body, Vector3.Zero, Vector3.Backward * 3, Vector3.Zero);
+            Drag = new BoostController(body, Vector3.Zero, Vector3.Zero, Vector3.Zero);
 
-            Yaw = new BoostController(Body, Vector3.Zero, Vector3.UnitY);
+            Yaw = new BoostController(body, Vector3.Zero, Vector3.UnitY);
             Drag.worldForce = true;
 
             AddController(Thrust);
@@ -127,9 +127,9 @@ namespace GameHelper.Physics.PhysicsObjects
             try
             {
                 Vector3 com = SetMass(1.0f);
-                Body.MoveTo(Position, Matrix.Identity);
+                body.MoveTo(Position, Matrix.Identity);
                 //Skin.ApplyLocalTransform(new JigLibX.Math.Transform(-com, Matrix.Identity));
-                Body.EnableBody(); // adds to CurrentPhysicsSystem
+                body.EnableBody(); // adds to CurrentPhysicsSystem
             }
             catch (Exception E)
             {
@@ -211,7 +211,7 @@ namespace GameHelper.Physics.PhysicsObjects
             //dragForce = BodyVelocity().Length() * DragCoefficient;
             Drag.Force = Vector3.Normalize(-BodyVelocity());
             Matrix orient = BodyOrientation();
-            Drag.ForcePosition = Body.Position + Vector3.Transform(CenterOfPressure, orient);
+            Drag.ForcePosition = body.Position + Vector3.Transform(CenterOfPressure, orient);
             Drag.SetForceMagnitude(dragForce);
         }
         public void SetAilerons(float v)

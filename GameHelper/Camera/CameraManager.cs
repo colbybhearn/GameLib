@@ -54,7 +54,7 @@ namespace GameHelper.Camera
 
         }
 
-        public void SetGobjectList(int camId, List<Gobject> gobs)
+        public void SetGobjectList(int camId, List<Entity> gobs)
         {
             BaseCamera cam = GetCamera(camId);
             if (cam == null) return;
@@ -66,7 +66,7 @@ namespace GameHelper.Camera
             {
                 if (Views.ContainsKey(camId))
                 {
-                    foreach (Gobject gob in gobs)
+                    foreach (Entity gob in gobs)
                     {
                         if (gob == null)
                             continue;

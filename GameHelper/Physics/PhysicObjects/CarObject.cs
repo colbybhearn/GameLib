@@ -6,7 +6,7 @@ using GameHelper.Objects;
 
 namespace GameHelper.Physics.PhysicsObjects
 {
-    public class CarObject : Gobject
+    public class CarObject : Entity
     {
         private Car car;
         private Model wheel;
@@ -34,10 +34,10 @@ namespace GameHelper.Physics.PhysicsObjects
                 wheelZOffset, wheelRestingFrac, wheelDampingFrac,
                 wheelNumRays, driveTorque, gravity);
 
-            this.Body = car.Chassis.Body;
+            this.body = car.Chassis.Body;
             this.Skin= car.Chassis.Skin;
-            Body.CollisionSkin = Skin;
-            Body.ExternalData = this;
+            body.CollisionSkin = Skin;
+            body.ExternalData = this;
             this.wheel = wheels;
             CommonInit(pos, new Vector3(1, 1, 1), model, true, asset);
             SetCarMass(100.1f);
@@ -61,8 +61,8 @@ namespace GameHelper.Physics.PhysicsObjects
                 //Vector3 com = SetMass(2.0f);
                 //SetMass(2.0f);
                 //Skin.ApplyLocalTransform(new JigLibX.Math.Transform(-com, Matrix.Identity));
-                Body.MoveTo(Position, Matrix.Identity);
-                Body.EnableBody(); // adds to CurrentPhysicsSystem
+                body.MoveTo(Position, Matrix.Identity);
+                body.EnableBody(); // adds to CurrentPhysicsSystem
             }
             catch (Exception E)
             {
@@ -134,7 +134,7 @@ namespace GameHelper.Physics.PhysicsObjects
 
         private void SetCarMass(float mass)
         {
-            Body.Mass = mass;
+            body.Mass = mass;
             Vector3 min, max;
             car.Chassis.GetDims(out min, out max);
             Vector3 sides = max - min;
@@ -151,7 +151,7 @@ namespace GameHelper.Physics.PhysicsObjects
 
         public override Vector3 GetPositionAbove()
         {
-            return Body.Position + Vector3.UnitY * 4;
+            return body.Position + Vector3.UnitY * 4;
         }
 
         #region Input

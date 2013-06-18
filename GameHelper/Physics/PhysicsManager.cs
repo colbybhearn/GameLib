@@ -20,8 +20,8 @@ namespace GameHelper.Physics
         private System.Timers.Timer tmrPhysicsUpdate;
         private Stopwatch tmrPhysicsElapsed;
         private double lastPhysicsElapsed;
-        private SortedList<int, Gobject> gameObjects; // This member is accessed from multiple threads and needs to be locked
-        private SortedList<int, Gobject> ObjectsToAdd;
+        private SortedList<int, Entity> gameObjects; // This member is accessed from multiple threads and needs to be locked
+        private SortedList<int, Entity> ObjectsToAdd;
         private List<int> ObjectsToDelete; 
         public bool DebugPhysics { get; set; }
         public bool PhysicsEnabled { get; set; }
@@ -30,7 +30,7 @@ namespace GameHelper.Physics
 
         private List<Controller> GeneralControllers;
 
-        public PhysicsManager(ref SortedList<int, Gobject> gObjects, ref SortedList<int, Gobject> nObjects, ref List<int> dObjects, double updateInterval = 10)
+        public PhysicsManager(ref SortedList<int, Entity> gObjects, ref SortedList<int, Entity> nObjects, ref List<int> dObjects, double updateInterval = 10)
         {
             gameObjects = gObjects;
             ObjectsToAdd= nObjects;
@@ -105,7 +105,7 @@ namespace GameHelper.Physics
                         {
                             // Remove the body inbetween updates
                             // don't collide on it in the mean time
-                            Body b = gameObjects[id].Body;
+                            Body b = gameObjects[id].body;
                             b.DisableBody();
                             gameObjects.Remove(id);
                         }
@@ -196,7 +196,7 @@ namespace GameHelper.Physics
         /// </summary>
         /// <param name="gob"></param>
         /// <returns></returns>
-        public bool AddNewObject(Gobject gob)
+        public bool AddNewObject(Entity gob)
         {
             lock (gameObjects)
             {
@@ -231,18 +231,18 @@ namespace GameHelper.Physics
         }
 
         
-        public Gobject GetBox(Model model)
+        public Entity GetBox(Model model)
         {
             return GetBox(new Vector3(0, 0, 0), new Vector3(2, 2, 2), Matrix.Identity, model, true);
         }
-        public Gobject GetBox(Vector3 pos, Vector3 size, Matrix orient, Model model, bool moveable)
+        public Entity GetBox(Vector3 pos, Vector3 size, Matrix orient, Model model, bool moveable)
         {
             // position of box was upper leftmost corner
             // body has world position
             // skin is relative to the body
             Box boxPrimitive = new Box(-.5f * size, orient, size); // relative to the body, the position is the top left-ish corner instead of the center, so subtract from the center, half of all sides to get that point.
 
-            Gobject box = new Gobject(
+            Entity box = new Entity(
                 pos,
                 size / 2,
                 boxPrimitive,
@@ -273,14 +273,14 @@ namespace GameHelper.Physics
         {
             GetSphere(new Vector3(0, 3, 0), .5f, s, true);
         }
-        public Gobject GetDefaultSphere(Model model)
+        public Entity GetDefaultSphere(Model model)
         {
             return GetSphere(new Vector3(0, 0, 0), 5, model, true);
         }
-        public Gobject GetSphere(Vector3 pos, float radius, Model model, bool moveable)
+        public Entity GetSphere(Vector3 pos, float radius, Model model, bool moveable)
         {
             Sphere spherePrimitive = new Sphere(pos, radius);
-            Gobject sphere = new Gobject(
+            Entity sphere = new Entity(
                 pos,
                 Vector3.One * radius,
                 spherePrimitive,

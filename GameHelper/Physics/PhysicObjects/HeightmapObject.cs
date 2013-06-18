@@ -13,12 +13,12 @@ using GameHelper.Objects;
 
 namespace GameHelper.Physics.PhysicsObjects
 {
-    public class HeightmapObject : Gobject
+    public class HeightmapObject : Entity
     {
         public HeightmapObject(Model model,Vector2 shift, Vector3 position)
             : base()
         {
-            Body = new Body(); // just a dummy. The PhysicObject uses its position to get the draw pos
+            body = new Body(); // just a dummy. The PhysicObject uses its position to get the draw pos
             Skin = new CollisionSkin(null);
 
             HeightMapInfo heightMapInfo = model.Tag as HeightMapInfo;
@@ -35,7 +35,7 @@ namespace GameHelper.Physics.PhysicsObjects
             // move the body. The body (because its not connected to the collision
             // skin) is just a dummy. But the base class shoudl know where to
             // draw the model.
-            Body.MoveTo(new Vector3(shift.X,0,shift.Y), Matrix.Identity);
+            body.MoveTo(new Vector3(shift.X,0,shift.Y), Matrix.Identity);
 
             Skin.AddPrimitive(new Heightmap(field, shift.X, shift.Y, heightMapInfo.terrainScale, heightMapInfo.terrainScale), new MaterialProperties(0.7f, 0.7f, 0.6f));
 

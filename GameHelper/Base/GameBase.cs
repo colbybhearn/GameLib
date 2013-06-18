@@ -56,14 +56,14 @@ namespace GameHelper.Base
         #endregion
 
         #region Physics / Object Management
-        public AssetManager assetManager;
+        public EntityManager assetManager;
         public PhysicsManager physicsManager;
         public static GameBase Instance { get; private set; }
         
-        public SortedList<int, Gobject> gameObjects; // This member is accessed from muldtiple threads and needs to be locked
-        public SortedList<int, Gobject> objectsToAdd; // This member is accessed from multiple threads and needs to be locked
+        public SortedList<int, Entity> gameObjects; // This member is accessed from muldtiple threads and needs to be locked
+        public SortedList<int, Entity> objectsToAdd; // This member is accessed from multiple threads and needs to be locked
         public List<int> objectsToDelete;
-        public Gobject currentSelectedObject;
+        public Entity currentSelectedObject;
         internal List<ObjectUpdatePacket> physicsUpdateList = new List<ObjectUpdatePacket>();
         #endregion
 
@@ -161,8 +161,8 @@ namespace GameHelper.Base
         public virtual void CommonInit(double physicsUpdateInterval, double cameraUpdateInterval)
         {
             graphicsDevice = null;
-            gameObjects = new SortedList<int, Gobject>();
-            objectsToAdd = new SortedList<int, Gobject>();
+            gameObjects = new SortedList<int, Entity>();
+            objectsToAdd = new SortedList<int, Entity>();
             objectsToDelete = new List<int>();
             Instance = this;
 
@@ -223,7 +223,7 @@ namespace GameHelper.Base
         /// </summary>
         public virtual void InitializeContent()
         {
-            assetManager = new AssetManager(ref gameObjects, ref objectsToAdd, ref objectsToDelete);
+            assetManager = new EntityManager(ref gameObjects, ref objectsToAdd, ref objectsToDelete);
             Content = new ContentManager(Services, "content");
             try
             {
@@ -303,7 +303,7 @@ namespace GameHelper.Base
         #region Methods
 
         #region Common
-        public void SelectGameObject(Gobject go)
+        public void SelectGameObject(Entity go)
         {
             if (go == null)
                 return;
@@ -700,7 +700,7 @@ namespace GameHelper.Base
         {
             lock (gameObjects)
             {
-                foreach (Gobject go in gameObjects.Values)
+                foreach (Entity go in gameObjects.Values)
                 {
                     //ObjectAddedPacket oap1 = new ObjectAddedPacket(-1, go.ID, go.type);
                     //commServer.SendPacket(oap1, id);

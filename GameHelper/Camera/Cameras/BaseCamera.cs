@@ -23,7 +23,7 @@ namespace GameHelper.Camera.Cameras
         public Matrix view = Matrix.Identity;
         public Matrix _projection;
         // allows multiple Gobjects to be used by a camera for calculation, or reference points.
-        public List<Gobject> Gobjects = new List<Gobject>();
+        public List<Entity> Gobjects = new List<Entity>();
         public Vector3 PitchYawRoll = new Vector3(); // Named this way Becuase X,Y,Z = Pitch,Yaw,Roll when stored
         
         public float Speed = .1f;
@@ -194,7 +194,7 @@ namespace GameHelper.Camera.Cameras
             LookInDirection(direction);
         }
 
-        public void SetGobjectList(List<Gobject> gobs)
+        public void SetGobjectList(List<Entity> gobs)
         {
             Gobjects = gobs;
         }
@@ -220,7 +220,7 @@ namespace GameHelper.Camera.Cameras
             UpdateLookAt();
         }
 
-        public Gobject GetFirstGobject()
+        public Entity GetFirstGobject()
         {
             if (Gobjects == null)
                 return null;

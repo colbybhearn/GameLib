@@ -11,7 +11,7 @@ using GameHelper.Objects;
 
 namespace GameHelper.Physics.PhysicObjects
 {
-    public class Planet : Gobject
+    public class Planet : Entity
     {
         List<TriangleMesh> triangleMeshes = new List<TriangleMesh>();
         List<List<TriangleVertexIndices>> meshesIndices = new List<List<TriangleVertexIndices>>();
@@ -23,7 +23,7 @@ namespace GameHelper.Physics.PhysicObjects
             : base()
         {
             this.texture = texture;
-            Body = new Body();
+            body = new Body();
             Skin = new CollisionSkin(null);
 
             for (double i = 0; i < MathHelper.TwoPi - JigLibX.Math.JiggleMath.Epsilon; i += radianMeshSize)
@@ -98,7 +98,7 @@ namespace GameHelper.Physics.PhysicObjects
             // Transform
             Skin.ApplyLocalTransform(new JigLibX.Math.Transform(center, Matrix.Identity));
             // we also need to move this dummy, so the object is *rendered* at the correct positiob
-            Body.MoveTo(center, Matrix.Identity);
+            body.MoveTo(center, Matrix.Identity);
             CommonInit(center, new Vector3(1, 1, 1), null, false, -1);
         }
 
@@ -157,7 +157,7 @@ namespace GameHelper.Physics.PhysicObjects
             {
                 tverts[i] = vpnt[i];
                 tverts[i].Position = Vector3.Transform(vpnt[i].Position,
-                                            Body.Orientation * Matrix.CreateTranslation(Body.Position));
+                                            body.Orientation * Matrix.CreateTranslation(body.Position));
             }
             return tverts;
         }

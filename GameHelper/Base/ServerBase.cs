@@ -107,7 +107,7 @@ namespace GameHelper.Base
                         ObjectActionPacket oap = MultiplayerUpdateQueue[0] as ObjectActionPacket;
                         if (!gameObjects.ContainsKey(oap.objectId))
                             continue; // TODO - infinite loop if this is hit
-                        Gobject go = gameObjects[oap.objectId];
+                        Entity go = gameObjects[oap.objectId];
                         go.actionManager.ProcessActionValues(oap.actionParameters);
                         MultiplayerUpdateQueue.RemoveAt(0);
                     }
@@ -133,7 +133,7 @@ namespace GameHelper.Base
             {
                 lock (gameObjects)
                 {
-                    foreach (Gobject go in gameObjects.Values)
+                    foreach (Entity go in gameObjects.Values)
                     {
                         #region Send Attribute Updates to the client
                         if (go.hasAttributeChanged)

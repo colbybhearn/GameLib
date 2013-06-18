@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace GameHelper.Physics
 {
-    public class Terrain : Gobject
+    public class Terrain : Entity
     {
         VertexPositionNormalTexture[] verts;
         int[] indices;
@@ -145,10 +145,10 @@ namespace GameHelper.Physics
                 System.Diagnostics.Debug.WriteLine(E.StackTrace);
             }
 
-            this.Body = new Body();
-            Skin = new CollisionSkin(Body);
-            Body.CollisionSkin = Skin;
-            Body.ExternalData = this;
+            this.body = new Body();
+            Skin = new CollisionSkin(body);
+            body.CollisionSkin = Skin;
+            body.ExternalData = this;
             float heightf = 0;
             try
             {
@@ -266,7 +266,7 @@ namespace GameHelper.Physics
             {
                 tverts[i] = vpnt[i];
                 tverts[i].Position = Vector3.Transform(vpnt[i].Position,
-                                            Body.Orientation * Matrix.CreateTranslation(Body.Position));
+                                            body.Orientation * Matrix.CreateTranslation(body.Position));
             }
             return tverts;
         }

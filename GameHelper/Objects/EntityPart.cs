@@ -4,13 +4,17 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using JigLibX.Physics;
+using JigLibX.Collision;
 
 namespace GameHelper.Objects
 {
-    public class RigBone
+    public class EntityPart
     {
         public int Id;
-        Model Mod;
+        Model model;
+        public Body body;
+        CollisionSkin Skin;
         
         public Quaternion Orient
         {
@@ -34,18 +38,29 @@ namespace GameHelper.Objects
         Vector3 RelativeOrigin = Vector3.Zero;
         Vector3 RelativeOrientYPR = Vector3.Zero;
         
-        public RigBone ParentBone;
-        public SortedList<int, RigBone> ChildBones = new SortedList<int, RigBone>();
+        public EntityPart fParentPart;
+        public SortedList<int, EntityPart> parts = new SortedList<int, EntityPart>();
 
-        public RigBone(int id, Model m, Vector3 scale, Vector3 relOrientYPR, Vector3 relOrigin, Vector3 modelOrientCorrection, Vector3 modelOriginCorrection)
+        public EntityPart(int id, Model m, Vector3 scale, Vector3 relOrientYPR, Vector3 relOrigin, Vector3 modelOrientCorrection, Vector3 modelOriginCorrection)
         {
             Id = id;
-            Mod = m;
+            model = m;
             ModelScaleCorrection = scale;
             RelativeOrientYPR = relOrientYPR;
             RelativeOrigin = relOrigin;
             ModelOrientCorrectionYPR = modelOrientCorrection;
             ModelOriginCorrection = modelOriginCorrection;
+            
+            body = new Body();
+            Skin = new CollisionSkin(body);
+            body.CollisionSkin = Skin;
+            body.ExternalData = this;
+            body.CollisionSkin.callbackFn += new CollisionCallbackFn(CollisionSkin_callbackFn);
+        }
+
+        bool CollisionSkin_callbackFn(CollisionSkin skin0, CollisionSkin skin1)
+        {
+            return true; // let the physics system handle the collision
         }
 
         public void AdjustYawPitchRoll(float yaw, float pitch, float roll)
@@ -55,27 +70,23 @@ namespace GameHelper.Objects
             RelativeOrientYPR.Z += roll;
         }
 
-        private void AddBone(RigBone rb)
+        public void AddPart(ref EntityPart rb)
         {
-            ChildBones.Add(rb.Id, rb);
-        }
-        public void AddBone(ref RigBone rb)
-        {
-            ChildBones.Add(rb.Id, rb);
+            parts.Add(rb.Id, rb);            
         }
 
-        public static RigBone GetBone(int id, Model m, Vector3 scale, Vector3 orientYPR, Vector3 RelativeOrigin, Vector3 modelOrientCorrection, Vector3 modelOriginCorrection)
+        public static EntityPart GetPart(int id, Model m, Vector3 scale, Vector3 orientYPR, Vector3 RelativeOrigin, Vector3 modelOrientCorrection, Vector3 modelOriginCorrection)
         {
-            RigBone rb = new RigBone(id, m, scale, orientYPR, RelativeOrigin,modelOrientCorrection, modelOriginCorrection);
+            EntityPart rb = new EntityPart(id, m, scale, orientYPR, RelativeOrigin,modelOrientCorrection, modelOriginCorrection);
             return rb;
         }
-        public static RigBone GetBone(int id, Model m, float scale, Vector3 orientYPR, Vector3 RelativeOrigin, Vector3 modelOrientCorrection, Vector3 modelOriginCorrection)
+        public static EntityPart GetPart(int id, Model m, float scale, Vector3 orientYPR, Vector3 RelativeOrigin, Vector3 modelOrientCorrection, Vector3 modelOriginCorrection)
         {
-            return GetBone(id, m, new Vector3(scale, scale, scale), orientYPR, RelativeOrigin, modelOrientCorrection, modelOriginCorrection);
+            return GetPart(id, m, new Vector3(scale, scale, scale), orientYPR, RelativeOrigin, modelOrientCorrection, modelOriginCorrection);
         }
-        public static RigBone GetBone(int id, Model m, Vector3 orientYPR, Vector3 RelativeOrigin, Vector3 modelOrientCorrection, Vector3 modelOriginCorrection)
+        public static EntityPart GetPart(int id, Model m, Vector3 orientYPR, Vector3 RelativeOrigin, Vector3 modelOrientCorrection, Vector3 modelOriginCorrection)
         {
-            return GetBone(id, m, 1.0f, orientYPR, RelativeOrigin,modelOrientCorrection,  modelOriginCorrection);
+            return GetPart(id, m, 1.0f, orientYPR, RelativeOrigin,modelOrientCorrection,  modelOriginCorrection);
         }
         /// <summary>
         /// Used for iterating through the meshes
@@ -84,8 +95,8 @@ namespace GameHelper.Objects
         {
             get
             {
-                Matrix[] tranforms = new Matrix[Mod.Bones.Count];
-                Mod.CopyAbsoluteBoneTransformsTo(tranforms);
+                Matrix[] tranforms = new Matrix[model.Bones.Count];
+                model.CopyAbsoluteBoneTransformsTo(tranforms);
                 return tranforms;
             }
         }
@@ -118,8 +129,8 @@ namespace GameHelper.Objects
             //X:-0.35 Y:0.1 Z:-0.26
             transform*=Matrix.CreateTranslation(RelativeOrigin); // Move the model
                 
-            if(ParentBone!=null)
-                transform *= ParentBone.GetTransformation(false); // Apply parent's transforms
+            if(fParentPart!=null)
+                transform *= fParentPart.GetTransformation(false); // Apply parent's transforms
 
             return transform;
         }
@@ -131,8 +142,8 @@ namespace GameHelper.Objects
         public Matrix GetOrientation()
         {
             Matrix orient = Matrix.CreateFromQuaternion(Orient); // include animation or user-input-based orientation transformation only
-            if(ParentBone != null) // if there is a parent,
-                orient *= ParentBone.GetOrientation(); // include their orientation transform
+            if(fParentPart != null) // if there is a parent,
+                orient *= fParentPart.GetOrientation(); // include their orientation transform
             return orient;
         }
 
@@ -141,6 +152,11 @@ namespace GameHelper.Objects
             RelativeOrientYPR.X = yaw;
             RelativeOrientYPR.Y = pitch;
             RelativeOrientYPR.Z = roll;
+        }
+
+        internal void EnableBody()
+        {
+            body.EnableBody();
         }
     }
 }

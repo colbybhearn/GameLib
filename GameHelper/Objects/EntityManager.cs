@@ -60,7 +60,7 @@ namespace GameHelper.Objects
      * 
      * 
      */
-    public class AssetManager
+    public class EntityManager
     {
         /*
          * (Object -> Client) Gobject should have an owner field for the client. 
@@ -68,25 +68,24 @@ namespace GameHelper.Objects
          * (Object owned?) Gobject owner == -1;
          */
         
-        private SortedList<int, Gobject> gameObjects;
-        private SortedList<int, Gobject> objectsToAdd;
+        private SortedList<int, Entity> gameObjects;
+        private SortedList<int, Entity> objectsToAdd;
         private List<int> objectsToDelete;
         private SortedList<int, List<int>> ObjectIdsByOwningClient = new SortedList<int, List<int>>();
         private SortedList<int, int> OwningClientsByObjectId = new SortedList<int, int>();
         private string assetConfigDirectory;
         private string processedModelDirectory;
 
-        private SortedList<string, AssetType> AssetTypesByName = new SortedList<string, AssetType>();
-        private SortedList<int, AssetType> AssetTypesById = new SortedList<int, AssetType>();
-        private SortedList<int, List<AssetConfig>> AssetsByType = new SortedList<int, List<AssetConfig>>();
-        //SortedList<string, AssetConfig> assetConfigs = new SortedList<string, AssetConfig>();
+        private SortedList<string, EntityType> AssetTypesByName = new SortedList<string, EntityType>();
+        private SortedList<int, EntityType> AssetTypesById = new SortedList<int, EntityType>();
+        private SortedList<int, List<EntityConfig>> AssetsByType = new SortedList<int, List<EntityConfig>>();
 
-        public AssetManager(ref SortedList<int, Gobject> gObjects, ref SortedList<int, Gobject> nObjects, ref List<int> dObjects)
+        public EntityManager(ref SortedList<int, Entity> gObjects, ref SortedList<int, Entity> nObjects, ref List<int> dObjects)
             : this(ref gObjects, ref nObjects, ref dObjects, System.Windows.Forms.Application.StartupPath)
         {
         }
 
-        public AssetManager(ref SortedList<int, Gobject> gObjects, ref SortedList<int, Gobject> nObjects, ref List<int> dObjects, string Root)
+        public EntityManager(ref SortedList<int, Entity> gObjects, ref SortedList<int, Entity> nObjects, ref List<int> dObjects, string Root)
         {
             gameObjects = gObjects;
             objectsToAdd = nObjects;
@@ -98,9 +97,9 @@ namespace GameHelper.Objects
 
         private void LoadCompiledAssets(ContentManager cm)
         {
-            foreach (AssetType at in AssetTypesByName.Values)
+            foreach (EntityType at in AssetTypesByName.Values)
             {
-                foreach (AssetConfig ac in at.PrototypeAssets.Values)
+                foreach (EntityConfig ac in at.PrototypeAssets.Values)
                 {
                     try
                     {
@@ -114,36 +113,6 @@ namespace GameHelper.Objects
             }
         }
 
-        private void AddAsset(Asset a, AssetConfig ac)
-        {
-            //if (Assets.ContainsKey(a.Name))
-                //return;
-            //Assets.Add(a.Name, a);
-            /*
-            if (AssetTypesByName.ContainsKey(ac.AssetTypeName))
-            {
-                AssetType at = AssetTypesByName[ac.AssetTypeName];
-                if (!AssetsByType.ContainsKey(at.Id))
-                {
-                    AssetsByType.Add(at.Id, new List<AssetConfig>());
-                }
-                //at.AddAsset(
-                List<AssetConfig> assets = AssetsByType[at.Id];
-                assets.Add(a);
-            }*/
-        }
-
-        /// <summary>
-        /// Adds an asset
-        /// </summary>
-        /// <param name="a"></param>
-        public void AddAsset(Asset a)
-        {
-            //if (Assets.ContainsKey(a.Name))
-            //    return;
-            //Assets.Add(a.Name, a);
-        }
-
         public void LoadAssetConfigFiles()
         {
             string[] files = Directory.GetFiles(assetConfigDirectory, "*.xml");
@@ -151,7 +120,7 @@ namespace GameHelper.Objects
                 LoadAssetConfigFile(file);
         }
 
-        public Gobject GetAssetOfType(Enum e)
+        public Entity GetAssetOfType(Enum e)
         {
             if (!AssetTypesByName.ContainsKey(e.ToString()))
                 return null;
@@ -161,24 +130,25 @@ namespace GameHelper.Objects
         private void LoadAssetConfigFile(string file)
         {
             // make an instance of the generic loader to determine which specific loader to use
-            AssetConfig ac = new AssetConfig(string.Empty);
+            EntityConfig ac = new EntityConfig(string.Empty);
             ac.LoadFromFile(file);
             if (!AssetTypesByName.ContainsKey(ac.AssetTypeName))
                 return;
 
             
             // run it through the more specific loader
-            AssetType at = AssetTypesByName[ac.AssetTypeName];
+            EntityType at = AssetTypesByName[ac.AssetTypeName];
             at.LoadConfigFromFile(file); 
             //assetConfigs.Add(ac.AssetName, ac);
         }
 
+        #region Compilation
         private bool CompileAssets()
         {
             ContentBuilder contentBuilder = new ContentBuilder();
-            foreach (AssetType at in AssetTypesByName.Values)
+            foreach (EntityType at in AssetTypesByName.Values)
             {
-                foreach (AssetConfig ac in at.PrototypeAssets.Values)
+                foreach (EntityConfig ac in at.PrototypeAssets.Values)
                 {
                     if (NeedsCompiling(ac))
                         contentBuilder.Add(ac.fbxModelFilepath, ac.AssetName, "FbxImporter", "ModelProcessor");
@@ -212,8 +182,7 @@ namespace GameHelper.Objects
             MessageBox.Show("Files compiled successfully.");
             return true;
         }
-
-        private bool NeedsCompiling(AssetConfig ac)
+        private bool NeedsCompiling(EntityConfig ac)
         {            
             if (!File.Exists(ac.fbxModelFilepath))
                 return false;
@@ -226,6 +195,7 @@ namespace GameHelper.Objects
             DateTime dtCompiled = File.GetLastWriteTimeUtc(compiledFile);
             return dtSource > dtCompiled;
         }
+        #endregion
 
         /// <summary>
         /// Adds an asset type
@@ -233,25 +203,24 @@ namespace GameHelper.Objects
         /// <param name="name"></param>
         /// <param name="CreateCallback"></param>
         /// <param name="scale"></param>
-        //public void AddAssetType(Enum e, GetGobjectDelegate CreateCallback, Vector3 scale, AssetConfig config)
         public void AddAssetType(Enum e, Vector3 scale, Type typeOfGobject)
         {
             if (AssetTypesByName.ContainsKey(e.ToString()))
                 return;
 
-            AssetType at = new AssetType(e, null, typeOfGobject);
+            EntityType at = new EntityType(e, null, typeOfGobject);
             //AssetType at = new AssetType(e, null, CreateCallback);
             int id = (int)Convert.ChangeType(e, e.GetTypeCode());
             AssetTypesById.Add(id, at);
             AssetTypesByName.Add(e.ToString(), at);
         }
+
         /// <summary>
         /// Adds an asset with a scale of X = Y = Z = scale
         /// </summary>
         /// <param name="name"></param>
         /// <param name="CreateCallback"></param>
         /// <param name="scale"></param>
-        //public void AddAssetType(Enum e, GetGobjectDelegate CreateCallback, float scale, AssetConfig config)
         public void AddAssetType(Enum e, float scale, Type typeOfGobject)
         {
             AddAssetType(e, new Vector3(scale, scale, scale), typeOfGobject);
@@ -262,7 +231,6 @@ namespace GameHelper.Objects
         /// </summary>
         /// <param name="name"></param>
         /// <param name="CreateCallback"></param>
-        //public void AddAssetType(Enum e, GetGobjectDelegate CreateCallback, AssetConfig config)
         public void AddAssetType(Enum e, Type typeOfGobject)
         {
             AddAssetType(e, 1.0f, typeOfGobject);
@@ -273,7 +241,7 @@ namespace GameHelper.Objects
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        public Gobject GetNewInstance(Enum e)
+        public Entity GetNewInstance(Enum e)
         {
             return GetNewInstanceOfType(e, -1);
         }
@@ -284,7 +252,7 @@ namespace GameHelper.Objects
         /// <param name="e"></param>
         /// <param name="owningClientId"></param>
         /// <returns></returns>
-        public Gobject GetNewInstanceOfType(Enum e, int owningClientId)
+        public Entity GetNewInstanceOfType(Enum e, int owningClientId)
         {
             int id = (int)Convert.ChangeType(e, e.GetTypeCode());
             return GetNewInstanceOfType(id, owningClientId);
@@ -296,7 +264,7 @@ namespace GameHelper.Objects
         /// <param name="e"></param>
         /// <param name="owningClientId"></param>
         /// <returns></returns>
-        private Gobject GetNewInstanceOfType(int id, int owningClientId)
+        private Entity GetNewInstanceOfType(int id, int owningClientId)
         {
             if (!AssetTypesById.ContainsKey(id))
             {
@@ -304,8 +272,8 @@ namespace GameHelper.Objects
                 return null;
             }
 
-            AssetType at  = AssetTypesById[id];
-            Gobject go = at.GetNewGobject();
+            EntityType at  = AssetTypesById[id];
+            Entity go = at.GetNewGobject();
             go.OwningClientId = owningClientId;
             go.ID = GetAvailableObjectId();
 

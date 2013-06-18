@@ -8,7 +8,7 @@ using GameHelper.Objects;
 
 namespace GameHelper.Physics.PhysicsObjects
 {
-    public class RoverObject : Gobject
+    public class RoverObject : Entity
     {
         #region Properties and Fields
         private Rover rover;
@@ -106,10 +106,10 @@ namespace GameHelper.Physics.PhysicsObjects
                 wheelZOffset, wheelRestingFrac, wheelDampingFrac,
                 wheelNumRays, driveTorque, gravity);
 
-            this.Body = rover.Chassis.Body;
+            this.body = rover.Chassis.Body;
             this.Skin = rover.Chassis.Skin;
-            Body.CollisionSkin = Skin;
-            Body.ExternalData = this;
+            body.CollisionSkin = Skin;
+            body.ExternalData = this;
             this.wheel = wheels;
             CommonInit(pos, new Vector3(1, 1, 1), model, true, asset);
             SetRoverMass(400.1f);
@@ -133,8 +133,8 @@ namespace GameHelper.Physics.PhysicsObjects
                 //Vector3 com = SetMass(2.0f);
                 //SetMass(2.0f);
                 //Skin.ApplyLocalTransform(new JigLibX.Math.Transform(-com, Matrix.Identity));
-                Body.MoveTo(Position, Matrix.Identity);
-                Body.EnableBody(); // adds to CurrentPhysicsSystem
+                body.MoveTo(Position, Matrix.Identity);
+                body.EnableBody(); // adds to CurrentPhysicsSystem
             }
             catch (Exception E)
             {
@@ -400,7 +400,7 @@ namespace GameHelper.Physics.PhysicsObjects
             }
             #endregion
         }
-        RigManager rig = new RigManager();
+        EntityPartManager rig = new EntityPartManager();
         
 
         #endregion
@@ -426,23 +426,23 @@ namespace GameHelper.Physics.PhysicsObjects
             Vector3 LaserBoxRelativeToCam = new Vector3(-.35f, .1f, -.26f); //X:-0.35 Y:0.1 Z:-0.26 
             Vector3 LaserScaleCorrection = new Vector3(.05f, .05f, .1f);
 
-            RigBone CameraPole = RigBone.GetBone((int)RigParts.CameraPole, Pole, CamPoleScaleCorrection, Vector3.Zero, CamPoleLocation, Vector3.Zero, Vector3.Zero);
+            EntityPart CameraPole = EntityPart.GetPart((int)RigParts.CameraPole, Pole, CamPoleScaleCorrection, Vector3.Zero, CamPoleLocation, Vector3.Zero, Vector3.Zero);
 
-            RigBone CameraArmA = RigBone.GetBone((int)RigParts.CameraArmA, Arm, 1.4f, Vector3.Zero, CamArmAPointOfRotationFromPole, Vector3.Zero, CamArmAOriginCorrection);
+            EntityPart CameraArmA = EntityPart.GetPart((int)RigParts.CameraArmA, Arm, 1.4f, Vector3.Zero, CamArmAPointOfRotationFromPole, Vector3.Zero, CamArmAOriginCorrection);
             CameraArmA.AdjustYawPitchRoll(rotCamYaw, 0, 0);
 
-            RigBone CameraArmB = RigBone.GetBone((int)RigParts.CameraArmB, Arm, 1.4f, Vector3.Zero, CamArmBPointOfRotationFromArmA, CamArmBOrientCorrection, CamArmBOriginCorrection);
+            EntityPart CameraArmB = EntityPart.GetPart((int)RigParts.CameraArmB, Arm, 1.4f, Vector3.Zero, CamArmBPointOfRotationFromArmA, CamArmBOrientCorrection, CamArmBOriginCorrection);
             CameraArmB.AdjustYawPitchRoll(0, rotCamPitch, 0);
 
-            RigBone CameraBox = RigBone.GetBone((int)RigParts.CameraBox, Cam, Vector3.Zero, CamBoxPointOfRotationFromArmB, CamBoxOrientCorrection, CamBoxOriginCorrection);
+            EntityPart CameraBox = EntityPart.GetPart((int)RigParts.CameraBox, Cam, Vector3.Zero, CamBoxPointOfRotationFromArmB, CamBoxOrientCorrection, CamBoxOriginCorrection);
 
-            RigBone LaserBox = RigBone.GetBone((int)RigParts.LaserBox, Laser, LaserScaleCorrection, Vector3.Zero, LaserBoxRelativeToCam, Vector3.Zero, Vector3.Zero);
+            EntityPart LaserBox = EntityPart.GetPart((int)RigParts.LaserBox, Laser, LaserScaleCorrection, Vector3.Zero, LaserBoxRelativeToCam, Vector3.Zero, Vector3.Zero);
 
-            rig.AddBone(-1, CameraPole);
-            rig.AddBone((int)RigParts.CameraPole, CameraArmA);
-            rig.AddBone((int)RigParts.CameraArmA, CameraArmB);
-            rig.AddBone((int)RigParts.CameraArmB, CameraBox);
-            rig.AddBone((int)RigParts.CameraBox, LaserBox);
+            rig.AddPart(-1, CameraPole);
+            rig.AddPart((int)RigParts.CameraPole, CameraArmA);
+            rig.AddPart((int)RigParts.CameraArmA, CameraArmB);
+            rig.AddPart((int)RigParts.CameraArmB, CameraBox);
+            rig.AddPart((int)RigParts.CameraBox, LaserBox);
         }
 
         public Matrix GetRoverCamWorldMatrix()
@@ -489,7 +489,7 @@ namespace GameHelper.Physics.PhysicsObjects
 
         private void SetRoverMass(float mass)
         {
-            Body.Mass = mass;
+            body.Mass = mass;
             Vector3 min, max;
             rover.Chassis.GetDims(out min, out max);
             Vector3 sides = max - min;
@@ -505,7 +505,7 @@ namespace GameHelper.Physics.PhysicsObjects
         }
         public override Vector3 GetPositionAbove()
         {
-            return Body.Position + Vector3.UnitY * 4;
+            return body.Position + Vector3.UnitY * 4;
         }
 
         #region Input

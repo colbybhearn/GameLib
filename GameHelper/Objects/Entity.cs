@@ -9,27 +9,27 @@ using System.Collections.Generic;
 
 namespace GameHelper.Objects
 {
-    public class Gobject
+    public class Entity
     {
         public int ID;
-        public Body Body { get; internal set; }
+        internal Body body;// { get;  set; }
         public CollisionSkin Skin { get; internal set; }
         public Model Model { get; set; }
         public Vector3 Position { get; set; }
         public bool isOnServer;
         public bool isOnClient;
-        public AssetType aType;
-        public AssetConfig config;
+        public EntityType aType;
+        public EntityConfig config;
         public string assetName;
         public Matrix Orientation
         {
             get
             {
-                return Body.Orientation;
+                return body.Orientation;
             }
             set
             {
-                Body.Orientation = value;
+                body.Orientation = value;
             }
         }
         //public Vector3 Scale { get; set; }
@@ -39,6 +39,7 @@ namespace GameHelper.Objects
         internal BasicEffect Effect { get; set; }
         public bool hasNotDoneFirstInterpoladation = true; // this object has never processed an update and interpolated (with any factor) 
         public int OwningClientId = -1;
+        public EntityPartManager partRoot;
 
         /// <summary>
         /// Default Constructor
@@ -47,15 +48,16 @@ namespace GameHelper.Objects
         /// </summary>
         /// <param name="position">Initial Body Position</param>
         /// <param name="scale">Scale</param>
-        public Gobject()
+        public Entity()
         {
-            Body = new Body();
-            Skin = new CollisionSkin(Body);
-            Body.CollisionSkin = Skin;
-            Body.ExternalData = this;
-            Body.CollisionSkin.callbackFn += new CollisionCallbackFn(CollisionSkin_callbackFn);
-
+            body = new Body();
+            partRoot = new EntityPartManager(body);
+            Skin = new CollisionSkin();
+            body.CollisionSkin = null;
+            body.ExternalData = this;
+            //body.CollisionSkin.callbackFn += new CollisionCallbackFn(CollisionSkin_callbackFn);
         }
+
         private bool CollidedRecently = true; // we want the object to update immediately once created
 
         bool CollisionSkin_callbackFn(CollisionSkin skin0, CollisionSkin skin1)
@@ -78,6 +80,7 @@ namespace GameHelper.Objects
             }
         }
 
+        #region Initialization
         /// <summary>
         /// Single Primitive Constructor with custom MaterialProperty
         /// </summary>
@@ -85,7 +88,7 @@ namespace GameHelper.Objects
         /// <param name="scale">Scale</param>
         /// <param name="primative">Primitive to add to Skin</param>
         /// <param name="prop">Material Properties of Primitive</param>
-        public Gobject(Vector3 position, Vector3 scale, Primitive primative, MaterialProperties prop, Model model, int asset)
+        public Entity(Vector3 position, Vector3 scale, Primitive primative, MaterialProperties prop, Model model, int asset)
             : this()
         {
             Skin.AddPrimitive(primative, prop);
@@ -100,7 +103,7 @@ namespace GameHelper.Objects
         /// <param name="scale">Scale</param>
         /// <param name="primative">Primitive to add to Skin</param>
         /// <param name="propId">Predefined Material Properties of Primitive</param>
-        public Gobject(Vector3 position, Vector3 scale, Primitive primative, MaterialTable.MaterialID propId, Model model, int asset)
+        public Entity(Vector3 position, Vector3 scale, Primitive primative, MaterialTable.MaterialID propId, Model model, int asset)
             : this()
         {
             Skin.AddPrimitive(primative, (int)propId);
@@ -116,7 +119,7 @@ namespace GameHelper.Objects
         /// <param name="scale">Scale</param>
         /// <param name="primatives">Primitives to add to Skin</param>
         /// <param name="props">Material Properties of Primitives to add</param>
-        public Gobject(Vector3 position, Vector3 scale, List<Primitive> primatives, List<MaterialProperties> props, Model model, int asset)
+        public Entity(Vector3 position, Vector3 scale, List<Primitive> primatives, List<MaterialProperties> props, Model model, int asset)
             : this()
         {
             for (int i = 0; i < primatives.Count && i < props.Count; i++)
@@ -125,7 +128,7 @@ namespace GameHelper.Objects
             CommonInit(position, scale, model, true, asset);
         }
 
-        public Gobject(Vector3 position, Vector3 scale, Primitive primitive, Model model, bool moveable, int asset)
+        public Entity(Vector3 position, Vector3 scale, Primitive primitive, Model model, bool moveable, int asset)
             : this()
         {
             
@@ -142,17 +145,13 @@ namespace GameHelper.Objects
                 System.Diagnostics.Debug.WriteLine(E.StackTrace);
             }
         }
-        public enum types
-        {
-            a1,
-            b2,
-        }
+        
         public void CommonInit(Vector3 pos, Vector3 scale, Model model, bool moveable, int asset)
         {
             Position = pos;
             config.Scale = scale;
             Model = model;
-            Body.Immovable = !moveable;
+            body.Immovable = !moveable;
             // Enumerated AssetTypes are the only integers/Enums
 
 
@@ -168,17 +167,17 @@ namespace GameHelper.Objects
         {
             Position = pos;
             Orientation = orient;
-            Body.Immovable = !moveable;
+            body.Immovable = !moveable;
             // MOVED TO BEFORE INTEGRATE
             //FinalizeBody();
         }
+#endregion
+
 
         public void AddCollisionCallback(CollisionCallbackFn cbf)
         {
-            this.Body.CollisionSkin.callbackFn += cbf;
+            this.body.CollisionSkin.callbackFn += cbf;
         }
-
-        
 
         public void AddController(Controller c)
         {
@@ -188,25 +187,25 @@ namespace GameHelper.Objects
 
         public Vector3 BodyPosition()
         {
-            return Body.Position;
+            return body.Position;
         }
 
         public Matrix BodyOrientation()
         {
-            return Body.Orientation;
+            return body.Orientation;
         }
         public void SetOrientation(Matrix o)
         {
-            Body.Orientation = o;
+            body.Orientation = o;
         }
 
         public Vector3 BodyVelocity()
         {
-            return Body.Velocity;
+            return body.Velocity;
         }
         public void SetVelocity(Vector3 v)
         {
-            Body.Velocity = v;
+            body.Velocity = v;
         }
 
         public virtual void FinalizeBody()
@@ -216,14 +215,20 @@ namespace GameHelper.Objects
             {
                 Vector3 com = SetMass(1.0f);
 
-                Body.MoveTo(Position, Orientation);
+                body.MoveTo(Position, Orientation);
                 Skin.ApplyLocalTransform(new JigLibX.Math.Transform(-com, Matrix.Identity));
-                Body.EnableBody(); // adds to CurrentPhysicsSystem
+                body.EnableBody(); // adds to CurrentPhysicsSystem
             }
             catch (Exception E)
             {
                 System.Diagnostics.Debug.WriteLine(E.StackTrace);
             }
+        }
+
+        public void EnableParts()
+        {
+            body.EnableBody();
+            partRoot.EnableBody();
         }
 
         internal Vector3 SetMass(float mass)
@@ -238,8 +243,8 @@ namespace GameHelper.Objects
             Matrix it, itCom;
 
             Skin.GetMassProperties(primitiveProperties, out junk, out com, out it, out itCom);            
-            Body.BodyInertia = itCom;
-            Body.Mass = junk;
+            body.BodyInertia = itCom;
+            body.Mass = junk;
 
             return com;
         }
@@ -275,7 +280,7 @@ namespace GameHelper.Objects
             try
             {
                 VertexPositionColor[] wireFrame = Skin.GetLocalSkinWireframe();
-                Body.TransformWireframe(wireFrame);
+                body.TransformWireframe(wireFrame);
                 if (Effect == null)
                 {
                     Effect = new BasicEffect(Graphics);
@@ -295,8 +300,8 @@ namespace GameHelper.Objects
                 }
 
                 VertexPositionColor[] Velocity = new VertexPositionColor[2];
-                Velocity[0] = new VertexPositionColor(Body.Position, Color.Blue);
-                Velocity[1] = new VertexPositionColor(Body.Position + Body.Velocity, Color.Red);
+                Velocity[0] = new VertexPositionColor(body.Position, Color.Blue);
+                Velocity[1] = new VertexPositionColor(body.Position + body.Velocity, Color.Red);
 
                 foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
                 {
@@ -315,7 +320,7 @@ namespace GameHelper.Objects
                         Force[0] = new VertexPositionColor(bc.ForcePosition, Color.Green);
                         Force[1] = new VertexPositionColor(bc.ForcePosition + (bc.Force * bc.forceMag), Color.Yellow);
                         if (!bc.worldForce)
-                            Body.TransformWireframe(Force);
+                            body.TransformWireframe(Force);
 
                         VertexBuffer verts = new VertexBuffer(Graphics, VertexPositionColor.VertexDeclaration, Force.Length, BufferUsage.WriteOnly);
                         verts.SetData(Force);
@@ -345,7 +350,7 @@ namespace GameHelper.Objects
         /// <returns></returns>
         public Matrix GetWorldMatrix()
         {
-            return Matrix.CreateScale(config.Scale) * Skin.GetPrimitiveLocal(0).Transform.Orientation * Body.Orientation * Matrix.CreateTranslation(Body.Position);
+            return Matrix.CreateScale(config.Scale) * Skin.GetPrimitiveLocal(0).Transform.Orientation * body.Orientation * Matrix.CreateTranslation(body.Position);
         }
 
         
@@ -354,13 +359,13 @@ namespace GameHelper.Objects
         {
             Position = pos;
             
-            Body.MoveTo(pos, orient);
+            body.MoveTo(pos, orient);
         }
         public bool isMoveable
         {
             get
             {
-                return !Body.Immovable;
+                return !body.Immovable;
             }
         }
 
@@ -370,7 +375,7 @@ namespace GameHelper.Objects
         /// <param name="vel"></param>
         public void UpdateVelocity(Vector3 vel)
         {
-            Body.Velocity = vel;
+            body.Velocity = vel;
             //Body.UpdateVelocity(vel.Length);
         }
 
@@ -381,8 +386,8 @@ namespace GameHelper.Objects
 
         public virtual Vector3 GetPositionAbove()
         {
-            Vector3 ret = Body.Position;
-            ret.Y += Math.Abs((Body.CollisionSkin.WorldBoundingBox.Min.Y + Body.CollisionSkin.WorldBoundingBox.Max.Y) / 2f); // Assume body is halfway in this?
+            Vector3 ret = body.Position;
+            ret.Y += Math.Abs((body.CollisionSkin.WorldBoundingBox.Min.Y + body.CollisionSkin.WorldBoundingBox.Max.Y) / 2f); // Assume body is halfway in this?
             return ret;
         }
 
@@ -461,19 +466,24 @@ namespace GameHelper.Objects
         {
             get
             {
-                return Body.IsActive;
+                return body.IsActive;
             }
         }
 
-        public virtual AssetConfig LoadConfig(string file)
+        public virtual EntityConfig LoadConfig(string file)
         {
             config.LoadFromFile(file);
             return config;
         }
 
-        public void ApplyConfig(AssetConfig aConfig)
+        public void ApplyConfig(EntityConfig aConfig)
         {
             config = aConfig;
+        }
+
+        public void SetAngularVelocity(Vector3 av)
+        {
+            body.AngularVelocity = av;
         }
     }
 }

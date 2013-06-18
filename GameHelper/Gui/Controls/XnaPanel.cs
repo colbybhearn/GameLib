@@ -47,8 +47,8 @@ namespace GameHelper.Gui.Forms.XnaView
 
         #region Game
         private Stopwatch tmrDrawElapsed;
-        private SortedList<int, Gobject> gameObjects; // This member is accessed from multiple threads and needs to be locked
-        private SortedList<int, Gobject> newObjects;
+        private SortedList<int, Entity> gameObjects; // This member is accessed from multiple threads and needs to be locked
+        private SortedList<int, Entity> newObjects;
         GameBase game;
         #endregion
         
@@ -184,7 +184,7 @@ namespace GameHelper.Gui.Forms.XnaView
                 {
                     
                     ObjectsDrawn = 0;
-                    foreach (Gobject go in gameObjects.Values)
+                    foreach (Entity go in gameObjects.Values)
                     {
                         BoundingFrustum frustum = new BoundingFrustum(view * proj);
                         if (frustum.Contains(go.Skin.WorldBoundingBox) != ContainmentType.Disjoint)
