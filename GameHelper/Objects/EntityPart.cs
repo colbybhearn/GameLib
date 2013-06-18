@@ -15,6 +15,7 @@ namespace GameHelper.Objects
         Model model;
         public Body body;
         CollisionSkin Skin;
+        Vector3 Scale = new Vector3(1, 1, 1);
         
         public Quaternion Orient
         {
@@ -157,6 +158,81 @@ namespace GameHelper.Objects
         internal void EnableBody()
         {
             body.EnableBody();
+        }
+
+        public virtual void Draw(ref Matrix View, ref Matrix Projection)
+        {
+            if (model == null)
+                return;
+            Matrix[] transforms = new Matrix[model.Bones.Count];
+
+            model.CopyAbsoluteBoneTransformsTo(transforms);
+            Matrix worldMatrix = GetWorldMatrix();
+
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.PreferPerPixelLighting = true;
+                    //if (Selected)
+                        //effect.AmbientLightColor = Color.Red.ToVector3();
+                    effect.World = transforms[mesh.ParentBone.Index] * worldMatrix;
+                    effect.View = View;
+                    effect.Projection = Projection;
+                }
+                mesh.Draw();
+            }
+        }
+        internal BasicEffect Effect { get; set; }
+        public virtual void DrawWireframe(GraphicsDevice Graphics, Matrix View, Matrix Projection)
+        {
+            try
+            {
+                VertexPositionColor[] wireFrame = Skin.GetLocalSkinWireframe();
+                body.TransformWireframe(wireFrame);
+                if (Effect == null)
+                {
+                    Effect = new BasicEffect(Graphics);
+                    Effect.VertexColorEnabled = true;
+                }
+                Effect.TextureEnabled = false;
+                Effect.LightingEnabled = false;
+                Effect.View = View;
+                Effect.Projection = Projection;
+
+                foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+                    Graphics.DrawUserPrimitives<VertexPositionColor>(
+                        Microsoft.Xna.Framework.Graphics.PrimitiveType.LineStrip,
+                        wireFrame, 0, wireFrame.Length - 1);
+                }
+
+                VertexPositionColor[] Velocity = new VertexPositionColor[2];
+                Velocity[0] = new VertexPositionColor(body.Position, Color.Blue);
+                Velocity[1] = new VertexPositionColor(body.Position + body.Velocity, Color.Red);
+
+                foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+                    Graphics.DrawUserPrimitives<VertexPositionColor>(
+                        Microsoft.Xna.Framework.Graphics.PrimitiveType.LineStrip,
+                        Velocity, 0, Velocity.Length - 1);
+                }
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e.StackTrace);
+            }
+        }
+        /// <summary>
+        /// only used for the model
+        /// </summary>
+        /// <returns></returns>
+        public Matrix GetWorldMatrix()
+        {
+            return Matrix.CreateScale(Scale) * Skin.GetPrimitiveLocal(0).Transform.Orientation * body.Orientation * Matrix.CreateTranslation(body.Position);
         }
     }
 }

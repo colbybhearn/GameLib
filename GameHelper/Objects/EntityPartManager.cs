@@ -5,13 +5,14 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using JigLibX.Physics;
+using JigLibX.Collision;
 
 namespace GameHelper.Objects
 {
     public class EntityPartManager
     {
         SortedList<int, EntityPart> parts = new SortedList<int,EntityPart>();
-        
+        public CollisionCallbackFn collisionCallback;
         public EntityPartManager()
         {
         }
@@ -58,13 +59,21 @@ namespace GameHelper.Objects
         {
             if (!parts.ContainsKey(child.Id))
                 parts.Add(child.Id, child);
-
+            child.body.CollisionSkin.callbackFn += new CollisionCallbackFn(PartCollisioncallbackFn);
             if (parts.ContainsKey(parentId))
             {
                 EntityPart parent = parts[parentId];
                 parent.AddPart(ref child);
                 child.fParentPart = parent;
             }
+        }
+
+        bool PartCollisioncallbackFn(CollisionSkin skin0, CollisionSkin skin1)
+        {
+            
+            if (collisionCallback == null)
+                return true;
+            return collisionCallback(skin0, skin1);
         }
 
         public void AddPart(int id, Model m, Vector3 scale, Vector3 orientYPR, Vector3 RelativeOrigin, Vector3 modelOrientCorrection, Vector3 modelOriginCorrection)
@@ -87,6 +96,22 @@ namespace GameHelper.Objects
             foreach (EntityPart ep in parts.Values)
             {
                 ep.EnableBody();
+            }
+        }
+
+        internal void DrawWireframe(GraphicsDevice Graphics, Matrix View, Matrix Projection)
+        {
+            foreach (EntityPart p in parts.Values)
+            {
+                p.DrawWireframe(Graphics, View, Projection);
+            }
+        }
+
+        internal void Draw(ref Matrix View, ref Matrix Projection)
+        {
+            foreach (EntityPart p in parts.Values)
+            {
+                p.Draw(ref View, ref Projection);
             }
         }
     }

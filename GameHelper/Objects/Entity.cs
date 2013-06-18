@@ -176,7 +176,8 @@ namespace GameHelper.Objects
 
         public void AddCollisionCallback(CollisionCallbackFn cbf)
         {
-            this.body.CollisionSkin.callbackFn += cbf;
+            this.partRoot.collisionCallback += cbf;
+            //this.body.CollisionSkin.callbackFn += cbf;
         }
 
         public void AddController(Controller c)
@@ -188,6 +189,15 @@ namespace GameHelper.Objects
         public Vector3 BodyPosition()
         {
             return body.Position;
+        }
+
+        public void BodyInit(Vector3 pos, Matrix orient)
+        {
+            body.MoveTo(pos, orient);
+        }
+        public void BodyInit(Vector3 pos)
+        {
+            body.MoveTo(pos, Matrix.Identity);
         }
 
         public Matrix BodyOrientation()
@@ -251,7 +261,8 @@ namespace GameHelper.Objects
 
         public virtual void Draw(ref Matrix View, ref Matrix Projection)
         {
-            string s = this.assetName;
+            partRoot.Draw(ref View, ref Projection);
+            /*
             if (Model == null)
                 return;
             Matrix[] transforms = new Matrix[Model.Bones.Count];
@@ -272,11 +283,13 @@ namespace GameHelper.Objects
                     effect.Projection = Projection;
                 }
                 mesh.Draw();
-            }
+            }*/
         }
 
         public virtual void DrawWireframe(GraphicsDevice Graphics, Matrix View, Matrix Projection)
         {
+            partRoot.DrawWireframe(Graphics, View, Projection);
+            /*
             try
             {
                 VertexPositionColor[] wireFrame = Skin.GetLocalSkinWireframe();
@@ -330,18 +343,17 @@ namespace GameHelper.Objects
                             pass.Apply();
                             Graphics.SetVertexBuffer(verts);
                             Graphics.DrawPrimitives(Microsoft.Xna.Framework.Graphics.PrimitiveType.LineStrip, 0, Force.Length - 1);
-                            /*Graphics.DrawUserPrimitives<VertexPositionColor>(
-                                Microsoft.Xna.Framework.Graphics.PrimitiveType.LineStrip,
-                                Force, 0, Force.Length - 1, LightingVertexFormat.VertexDeclaration);*/
+                            //Graphics.DrawUserPrimitives<VertexPositionColor>(
+                            //    Microsoft.Xna.Framework.Graphics.PrimitiveType.LineStrip,
+                            //    Force, 0, Force.Length - 1, LightingVertexFormat.VertexDeclaration);
                         }
                     }
                 }
-
             }
             catch (Exception e)
             {
                 System.Console.WriteLine(e.StackTrace);
-            }
+            }*/
         }
 
         /// <summary>

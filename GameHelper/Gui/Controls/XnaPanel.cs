@@ -187,7 +187,7 @@ namespace GameHelper.Gui.Forms.XnaView
                     foreach (Entity go in gameObjects.Values)
                     {
                         BoundingFrustum frustum = new BoundingFrustum(view * proj);
-                        if (frustum.Contains(go.Skin.WorldBoundingBox) != ContainmentType.Disjoint)
+                        //if (frustum.Contains(go.Skin.WorldBoundingBox) != ContainmentType.Disjoint)
                         {
                             ObjectsDrawn++;
                             if (DrawingEnabled)
