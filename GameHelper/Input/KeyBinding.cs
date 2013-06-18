@@ -6,14 +6,6 @@ using System.Text;
 
 namespace GameHelper.Input
 {
-    public enum KeyEvent
-    {
-        [Description("While Not Pressed")]  Up, // happens to be up right now           
-        [Description("While Pressed")]      Down, // happens to be down right now
-        [Description("On Press")]           Pressed, // just pressed since last update
-        [Description("On Release")]         Released, // just released since last update
-    }
-
     [Flags]
     public enum KeyModifier
     {
@@ -37,20 +29,20 @@ namespace GameHelper.Input
 
         public KeyBinding() { }
 
-        public KeyBinding(string alias, Keys k, KeyModifier mods, KeyEvent kevent)
+        public KeyBinding(string alias, Keys k, KeyModifier mods, ButtonEvent kevent)
             : this(alias, k, mods, kevent, null) { }
 
-        public KeyBinding(string alias, Keys k, KeyModifier mods, KeyEvent kevent, KeyBindingDelegate kdel)
+        public KeyBinding(string alias, Keys k, KeyModifier mods, ButtonEvent kevent, KeyBindingDelegate kdel)
             : base(alias, kevent, kdel)
         {
             Key = k;
             Modifiers = mods;
         }
 
-        public KeyBinding(string alias, Keys k, KeyEvent kevent)
+        public KeyBinding(string alias, Keys k, ButtonEvent kevent)
             : this(alias, k, KeyModifier.None, kevent, null) { }
 
-        public KeyBinding(string alias, Keys k, KeyEvent kevent, KeyBindingDelegate kdel)
+        public KeyBinding(string alias, Keys k, ButtonEvent kevent, KeyBindingDelegate kdel)
             : this(alias, k, KeyModifier.None, kevent, kdel) { }
 
         public override void Check(InputState state)

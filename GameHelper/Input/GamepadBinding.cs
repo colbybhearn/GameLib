@@ -15,10 +15,10 @@ namespace GameHelper.Input
         
         GamePadBinding() { }
 
-        public GamePadBinding(string alias, Buttons b, KeyEvent kevent)
+        public GamePadBinding(string alias, Buttons b, ButtonEvent kevent)
             : this(alias, b, kevent, null) { }
 
-        public GamePadBinding(string alias, Buttons b, KeyEvent kevent, KeyBindingDelegate kdel)
+        public GamePadBinding(string alias, Buttons b, ButtonEvent kevent, KeyBindingDelegate kdel)
             : base(alias, kevent, kdel)
         {
             Button = b;

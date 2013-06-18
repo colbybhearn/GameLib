@@ -1,12 +1,22 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace GameHelper.Input
 {
+    
+    public enum ButtonEvent
+    {
+        [Description("While Not Pressed")]  Up, // happens to be up right now           
+        [Description("While Pressed")]      Down, // happens to be down right now
+        [Description("On Press")]           Pressed, // just pressed since last update
+        [Description("On Release")]         Released, // just released since last update
+    }
+
     [DataContract]
     public abstract class ButtonBinding
     { 
         [DataMember]
-        public KeyEvent KeyEvent { get; set; }
+        public ButtonEvent ButtonEvent { get; set; }
 
         [IgnoreDataMember]
         public KeyBindingDelegate Callback { get; set; }
@@ -16,13 +26,13 @@ namespace GameHelper.Input
 
         protected ButtonBinding() { }
 
-        protected ButtonBinding(string alias, KeyEvent kevent)
+        protected ButtonBinding(string alias, ButtonEvent kevent)
         {
             Alias = alias;
-            KeyEvent = kevent;
+            ButtonEvent = kevent;
         }
 
-        protected ButtonBinding(string alias, KeyEvent kevent, KeyBindingDelegate kdel)
+        protected ButtonBinding(string alias, ButtonEvent kevent, KeyBindingDelegate kdel)
             : this(alias, kevent)
         {
             Callback = kdel;
@@ -45,21 +55,21 @@ namespace GameHelper.Input
 
             bool passCheck = true;
 
-            switch (KeyEvent)
+            switch (ButtonEvent)
             {
-                case KeyEvent.Released:
+                case ButtonEvent.Released:
                     if (!(wasButtonDown && isButtonUp))
                         passCheck = false;
                     break;
-                case KeyEvent.Pressed:
+                case ButtonEvent.Pressed:
                     if (!(wasButtonUp && isButtonDown))
                         passCheck = false;
                     break;
-                case KeyEvent.Down:
+                case ButtonEvent.Down:
                     if (!(isButtonDown))
                         passCheck = false;
                     break;
-                case KeyEvent.Up:
+                case ButtonEvent.Up:
                     if (!(isButtonUp))
                         passCheck = false;
                     break;
