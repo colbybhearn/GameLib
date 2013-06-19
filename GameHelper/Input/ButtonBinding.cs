@@ -12,30 +12,27 @@ namespace GameHelper.Input
         [Description("On Release")]         Released, // just released since last update
     }
 
+    public delegate void ButtonBindingDelegate();
+
     [DataContract]
-    public abstract class ButtonBinding
+    public abstract class ButtonBinding : InputBinding
     { 
         [DataMember]
         public ButtonEvent ButtonEvent { get; set; }
 
         [IgnoreDataMember]
-        public KeyBindingDelegate Callback { get; set; }
+        public ButtonBindingDelegate Callback { get; set; }
 
-        [DataMember]
-        public string Alias { get; set; }
-
-        protected ButtonBinding() { }
-
-        protected ButtonBinding(string alias, ButtonEvent kevent)
+        protected ButtonBinding(string alias, ButtonEvent bEvent)
+            : base(alias)
         {
-            Alias = alias;
-            ButtonEvent = kevent;
+            ButtonEvent = bEvent;
         }
 
-        protected ButtonBinding(string alias, ButtonEvent kevent, KeyBindingDelegate kdel)
-            : this(alias, kevent)
+        protected ButtonBinding(string alias, ButtonEvent bEvent, ButtonBindingDelegate bDel)
+            : this(alias, bEvent)
         {
-            Callback = kdel;
+            Callback = bDel;
         }
 
         protected void CallDelegate()
@@ -44,8 +41,6 @@ namespace GameHelper.Input
                 return;
             Callback();
         }
-
-        public abstract void Check(InputState state);
 
         // Still a bit messy ... but better
         protected void Check(bool isButtonDown, bool wasButtonDown)

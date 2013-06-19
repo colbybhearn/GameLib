@@ -70,12 +70,12 @@ namespace GameHelper.Input
         public SortedList<InputMode, Delegate> InputModeDelegates;
         public String game;
         Settings frmSettings;
-        ButtonMapCollection buttonMaps = new ButtonMapCollection();
+        InputCollection buttonMaps = new InputCollection();
 
-        public InputManager(String gameName, ButtonMapCollection defaultKeyMapcollection)
+        public InputManager(String gameName, InputCollection defaultKeyMapcollection)
         {
             game = gameName;
-            buttonMaps = ButtonMapCollection.Load(game, defaultKeyMapcollection);
+            buttonMaps = InputCollection.Load(game, defaultKeyMapcollection);
             Mode = InputMode.Mapped;
             InputModeDelegates = new SortedList<InputMode, Delegate>();
             inputState = new InputState();
@@ -119,7 +119,7 @@ namespace GameHelper.Input
                         ((ChatDelegate)d)(GetPressedKeysWithShift(inputState.KeyboardStateLast, inputState.KeyboardState));
                     break;
                 case InputMode.Mapped:
-                    foreach (ButtonMap map in buttonMaps.buttonMaps.Values)
+                    foreach (InputMap map in buttonMaps.inputMaps.Values)
                     {
                         if (map != null)
                             map.Check(inputState);
@@ -144,7 +144,7 @@ namespace GameHelper.Input
         
         public void Save()
         {
-            ButtonMapCollection.Save(buttonMaps);
+            InputCollection.Save(buttonMaps);
             //KeyMap.SaveKeyMap(keyMap);
         }
         

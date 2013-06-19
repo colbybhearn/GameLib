@@ -121,6 +121,8 @@
     <Compile Include="Handlers.cs" />
     <Compile Include="Input\ActionBinding.cs" />
     <Compile Include="Input\ActionManager.cs" />
+    <Compile Include="Input\AnalogBinding.cs" />
+    <Compile Include="Input\AnalogMap.cs" />
     <Compile Include="Input\ButtonBinding.cs" />
     <Compile Include="Input\FlowLayoutTabPage.cs">
       <SubType>Component</SubType>
@@ -128,8 +130,11 @@
     <Compile Include="Input\FlowLayoutTabPage.Designer.cs">
       <DependentUpon>FlowLayoutTabPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="Input\GamepadBinding.cs" />
+    <Compile Include="Input\GamePadButtonBinding.cs" />
+    <Compile Include="Input\GamePadThumbStickBinding.cs" />
+    <Compile Include="Input\InputBinding.cs" />
     <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Input\InputMap.cs" />
     <Compile Include="Input\InputState.cs" />
     <Compile Include="Input\KeyBinding.cs" />
     <Compile Include="Input\KeyBindingControl.cs">
@@ -139,7 +144,7 @@
       <DependentUpon>KeyBindingControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Input\ButtonMap.cs" />
-    <Compile Include="Input\ButtonMapCollection.cs" />
+    <Compile Include="Input\InputMapCollection.cs" />
     <Compile Include="Input\Settings.cs">
       <SubType>Form</SubType>
     </Compile>

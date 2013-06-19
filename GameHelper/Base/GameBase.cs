@@ -76,7 +76,7 @@ namespace GameHelper.Base
             Camera,
             Client,
         }
-        ButtonMapCollection keyMapCollections;
+        InputCollection keyMapCollections;
         #endregion
 
         #region Audio
@@ -213,7 +213,7 @@ namespace GameHelper.Base
             keyMapCollections = GetDefaultControls();
             inputManager = new InputManager(this.name, keyMapCollections);
         }
-        public virtual ButtonMapCollection GetDefaultControls()
+        public virtual InputCollection GetDefaultControls()
         {
             return null;
         }

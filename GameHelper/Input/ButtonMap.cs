@@ -15,36 +15,27 @@ namespace GameHelper.Input
     /// Stores a set of keys, mapped to a set of possible bindings
     /// </summary>
     [DataContract]
-    public class ButtonMap
+    public class ButtonMap : InputMap
     {
-        public bool Enabled;
-
-        [DataMember]
-        public string Alias;
         [DataMember]
         public SortedList<string, ButtonBinding> ButtonBindings { get; private set; }
 
-        public ButtonMap()
-        {
-        }
-
         public ButtonMap(string alias)
+            : base(alias)
         {
-            Alias = alias;
             ButtonBindings = new SortedList<string, ButtonBinding>();
         }
 
-        public ButtonMap(string alias, List<KeyBinding> defaultBindings)
+        public ButtonMap(string alias, List<ButtonBinding> defaultBindings)
+            : this(alias)
         {
-            Alias = alias;
-            ButtonBindings = new SortedList<string, ButtonBinding>();
-            foreach (KeyBinding kb in defaultBindings)
-                ButtonBindings.Add(kb.Alias, kb);
+            foreach (ButtonBinding bb in defaultBindings)
+                ButtonBindings.Add(bb.Alias, bb);
         }
 
         public ButtonMap(ButtonMap other)
+            : this(other.Alias)
         {
-            Alias = other.Alias;
             ButtonBindings = new SortedList<string, ButtonBinding>(other.ButtonBindings);
         }
 
@@ -53,42 +44,43 @@ namespace GameHelper.Input
             ButtonBindings.Add(bb.Alias, bb);
         }
 
-        public void Check(InputState state)
+        public override void Check(InputState state)
         {
             if (Enabled == false)
                 return; 
 
-            foreach (KeyBinding kb in ButtonBindings.Values)
-                kb.Check(state);
+            foreach (ButtonBinding bb in ButtonBindings.Values)
+                bb.Check(state);
         }
 
-        internal void LoadOverrides(ButtonMap savedkm)
+        internal override void Load(InputMap savedMap)
         {
-            foreach (ButtonBinding saved in savedkm.ButtonBindings.Values)
+            if (savedMap is ButtonMap == false)
+                throw new Exception("ButtonMap attempting to load type other than ButtonMap");
+
+            ButtonMap savedButtonMap = savedMap as ButtonMap;
+
+            foreach (ButtonBinding saved in savedButtonMap.ButtonBindings.Values)
             {
-                // if the game can use that preference,
                 if (this.ButtonBindings.ContainsKey(saved.Alias))
                 {
-                    // get the default for that input, 
                     ButtonBinding binding = ButtonBindings[saved.Alias];
-                    // and totally override it with the saved preference
+
+                    if(binding.GetType().Equals(saved) == false)
+                        throw new Exception("Error loading Button Bindings: Saved binding is not a same type as default binding");
+                        
+
                     if (binding is KeyBinding)
                     {
-                        if (saved is KeyBinding == false)
-                            throw new Exception("Error loading Button Bindings: Saved binding is not a KeyBinding");
-
                         KeyBinding kb = binding as KeyBinding;
                         KeyBinding other = saved as KeyBinding;
                         kb.Key = other.Key;
                         kb.Modifiers = other.Modifiers;
                     }
-                    else if (binding is GamePadBinding)
+                    else if (binding is GamePadButtonBinding)
                     {
-                        if (saved is GamePadBinding == false)
-                            throw new Exception("Error loading Button Bindings: Saved binding is not a GamePadBinding");
-
-                        GamePadBinding gb = binding as GamePadBinding;
-                        GamePadBinding other = saved as GamePadBinding;
+                        GamePadButtonBinding gb = binding as GamePadButtonBinding;
+                        GamePadButtonBinding other = saved as GamePadButtonBinding;
                         gb.Button = other.Button;
                     }
                     else

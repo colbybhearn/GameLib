@@ -262,7 +262,7 @@ namespace GameHelper.Objects
         public virtual void Draw(ref Matrix View, ref Matrix Projection)
         {
             partRoot.Draw(ref View, ref Projection);
-            /*
+            
             if (Model == null)
                 return;
             Matrix[] transforms = new Matrix[Model.Bones.Count];
@@ -283,7 +283,7 @@ namespace GameHelper.Objects
                     effect.Projection = Projection;
                 }
                 mesh.Draw();
-            }*/
+            }
         }
 
         public virtual void DrawWireframe(GraphicsDevice Graphics, Matrix View, Matrix Projection)

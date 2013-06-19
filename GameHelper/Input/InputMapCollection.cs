@@ -8,12 +8,12 @@ namespace GameHelper.Input
 {
     // DataContract serialization allows IDictionary implementers to be serialized! WooHoo
     [DataContract]
-    public class ButtonMapCollection
+    public class InputCollection
     {
         [DataMember]
         public string Game;
         [DataMember]
-        public SortedList<string, ButtonMap> buttonMaps = new SortedList<string, ButtonMap>(); // this can't be serialized with XMLSerializer, so DataContract serialization has been used.
+        public SortedList<string, InputMap> inputMaps = new SortedList<string, InputMap>(); // this can't be serialized with XMLSerializer, so DataContract serialization has been used.
 
         private string FilePath
         {
@@ -23,54 +23,54 @@ namespace GameHelper.Input
             }
         }
 
-        public ButtonMapCollection()
+        public InputCollection()
         {
         }
 
-        public ButtonMapCollection(ButtonMapCollection other)
+        public InputCollection(InputCollection other)
         {
             Game = other.Game;
-            buttonMaps = new SortedList<string, ButtonMap>(other.buttonMaps);
+            inputMaps = new SortedList<string, InputMap>(other.inputMaps);
         }
 
-        public ButtonMapCollection(SortedList<string, ButtonMap> maps)
+        public InputCollection(SortedList<string, InputMap> maps)
         {
-            buttonMaps = maps;
+            inputMaps = maps;
         }
 
         /// <summary>
         /// Adds a keymap to the collection
         /// </summary>
         /// <param name="keyMap"></param>
-        public void AddMap(ButtonMap keyMap)
+        public void AddMap(InputMap keyMap)
         {
             string alias = keyMap.Alias;
-            if (buttonMaps.ContainsKey(alias))
+            if (inputMaps.ContainsKey(alias))
                 throw new ArgumentException("A Button Map group by the name " + alias + " already exists. Use a different name.");
-            buttonMaps.Add(alias, keyMap);
+            inputMaps.Add(alias, keyMap);
         }
 
         public void DisableAllButtonMaps()
         {
-            foreach (ButtonMap map in buttonMaps.Values)
+            foreach (ButtonMap map in inputMaps.Values)
                 map.Enabled = false;
         }
 
         public void EnableButtonMap(string alias)
         {
-            if (buttonMaps.ContainsKey(alias))
-                buttonMaps[alias].Enabled = true;
+            if (inputMaps.ContainsKey(alias))
+                inputMaps[alias].Enabled = true;
         }
 
         public void DisableButtonMap(string alias)
         {
-            if (buttonMaps.ContainsKey(alias))
-                buttonMaps[alias].Enabled = false;
+            if (inputMaps.ContainsKey(alias))
+                inputMaps[alias].Enabled = false;
         }
 
-        public static void Save(ButtonMapCollection bmc)
+        public static void Save(InputCollection bmc)
         {
-            DataContractSerializer x = new DataContractSerializer(typeof(ButtonMapCollection));
+            DataContractSerializer x = new DataContractSerializer(typeof(InputCollection));
             StreamWriter stm = null;
             StringWriter sw = new StringWriter();
             XmlTextWriter tw = new XmlTextWriter(sw);
@@ -101,25 +101,25 @@ namespace GameHelper.Input
             }
         }
 
-        public static ButtonMapCollection Load(string game, ButtonMapCollection defaultButtonMap)
+        public static InputCollection Load(string game, InputCollection defaultButtonMap)
         {
-            DataContractSerializer x = new DataContractSerializer(typeof(ButtonMapCollection));
-            ButtonMapCollection finalCollection = new ButtonMapCollection(defaultButtonMap);
+            DataContractSerializer x = new DataContractSerializer(typeof(InputCollection));
+            InputCollection finalCollection = new InputCollection(defaultButtonMap);
             StreamReader stm = null;
             try
             {
-                string filepath = ButtonMapCollection.GetSettingsPath(game);
+                string filepath = InputCollection.GetSettingsPath(game);
                 stm = new StreamReader(filepath);
 
-                ButtonMapCollection savedCollection = (ButtonMapCollection)x.ReadObject(stm.BaseStream);
+                InputCollection savedCollection = (InputCollection)x.ReadObject(stm.BaseStream);
 
-                foreach (ButtonMap finalkm in finalCollection.buttonMaps.Values)
+                foreach (InputMap finalim in finalCollection.inputMaps.Values)
                     // if tha keymap by this name exists on disk
-                    if (savedCollection.buttonMaps.ContainsKey(finalkm.Alias))
+                    if (savedCollection.inputMaps.ContainsKey(finalim.Alias))
                     {
-                        ButtonMap savedkm = savedCollection.buttonMaps[finalkm.Alias];
+                        InputMap savedkm = savedCollection.inputMaps[finalim.Alias];
                         // load those preferences, overriding the defaults
-                        finalkm.LoadOverrides(savedkm);
+                        finalim.Load(savedkm);
                     }
             }
             catch (Exception e)
