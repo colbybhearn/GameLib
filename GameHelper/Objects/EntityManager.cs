@@ -120,26 +120,26 @@ namespace GameHelper.Objects
                 LoadAssetConfigFile(file);
         }
 
+        private void LoadAssetConfigFile(string file)
+        {
+            // make an instance of the generic loader to determine which specific loader to use
+            EntityConfig ec = new EntityConfig(string.Empty);
+            ec.LoadFromFile(file);
+            if (!AssetTypesByName.ContainsKey(ec.AssetTypeName))
+                return;
+
+            
+            // run it through the more specific loader
+            EntityType at = AssetTypesByName[ec.AssetTypeName];
+            at.LoadConfigFromFile(file); 
+            //assetConfigs.Add(ac.AssetName, ac);
+        }
+
         public Entity GetAssetOfType(Enum e)
         {
             if (!AssetTypesByName.ContainsKey(e.ToString()))
                 return null;
             return AssetTypesByName[e.ToString()].GetNewGobject();
-        }
-
-        private void LoadAssetConfigFile(string file)
-        {
-            // make an instance of the generic loader to determine which specific loader to use
-            EntityConfig ac = new EntityConfig(string.Empty);
-            ac.LoadFromFile(file);
-            if (!AssetTypesByName.ContainsKey(ac.AssetTypeName))
-                return;
-
-            
-            // run it through the more specific loader
-            EntityType at = AssetTypesByName[ac.AssetTypeName];
-            at.LoadConfigFromFile(file); 
-            //assetConfigs.Add(ac.AssetName, ac);
         }
 
         #region Compilation

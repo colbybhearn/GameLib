@@ -7,6 +7,7 @@ using System.Xml;
 using GameHelper.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Windows.Forms;
 
 namespace GameHelper.Objects
 {
@@ -18,7 +19,7 @@ namespace GameHelper.Objects
         public string fbxModelFilepath;
         public SortedList<string, string> Params = new SortedList<string, string>();
         //public string Name;
-        
+
         public Vector3 Scale;
         public Color Color;
         public Model model;
@@ -32,7 +33,7 @@ namespace GameHelper.Objects
         {
             this.name = name;
         }
-        
+
 
         /// <summary>
         /// this method should be overloaded in the specific asset config class for each asset and load the setting in the file into memory
@@ -40,6 +41,21 @@ namespace GameHelper.Objects
         /// <param name="file"></param>
         public virtual bool LoadFromFile(string file)
         {
+
+            XmlValidator config = new XmlValidator(file, new List<string> { Properties.Resources.EntityConfig });
+
+            if(!config.isValid())
+            {
+                MessageBox.Show(config.ValidationResult);
+            }
+
+            object info = config.GetConfigurationInfo(typeof(GenEntityConfigTypes.Entity));
+
+            if (info is GenEntityConfigTypes.Entity)
+            {
+
+            }
+
             Scale = new Vector3(1.2f, 1.3f, 1.4f);
             string text = File.ReadAllText(file);
             XmlDocument d = new XmlDocument();
@@ -50,7 +66,7 @@ namespace GameHelper.Objects
                 return false;
             AssetName = n.InnerText;
 
-            n= XmlUtil.GetFirstElementWithTagName(d, "AssetTypeName");
+            n = XmlUtil.GetFirstElementWithTagName(d, "AssetTypeName");
             if (n == null)
                 return false;
             AssetTypeName = n.InnerText;
