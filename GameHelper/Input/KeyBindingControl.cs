@@ -19,7 +19,7 @@ namespace GameHelper.Input
             binding = kb;
             InitializeComponent();
             lblAlias.Text = binding.Alias;
-            lblEvent.Text = binding.KeyEvent.ToString();
+            lblEvent.Text = binding.ButtonEvent.ToString();
             UpdateBindingKeyAlias();
         }
 

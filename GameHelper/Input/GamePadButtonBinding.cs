@@ -8,17 +8,15 @@ using Microsoft.Xna.Framework.Input;
 namespace GameHelper.Input
 {
     [DataContract]
-    class GamePadBinding : ButtonBinding
+    class GamePadButtonBinding : ButtonBinding
     {
         [DataMember]
         public Buttons Button { get; set; }
-        
-        GamePadBinding() { }
 
-        public GamePadBinding(string alias, Buttons b, KeyEvent kevent)
+        public GamePadButtonBinding(string alias, Buttons b, ButtonEvent kevent)
             : this(alias, b, kevent, null) { }
 
-        public GamePadBinding(string alias, Buttons b, KeyEvent kevent, KeyBindingDelegate kdel)
+        public GamePadButtonBinding(string alias, Buttons b, ButtonEvent kevent, ButtonBindingDelegate kdel)
             : base(alias, kevent, kdel)
         {
             Button = b;
