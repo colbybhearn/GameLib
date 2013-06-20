@@ -153,7 +153,7 @@ namespace GameHelper.Objects
                     if (NeedsCompiling(ac))
                         contentBuilder.Add(ac.fbxModelFilepath, ac.AssetName, "FbxImporter", "ModelProcessor");
                     else
-                        Trace.WriteLine("Skipping compilation of asset \"" + ac.AssetName + "\"");
+                        Debug.WriteLine("Skipping compilation of asset \"" + ac.AssetName + "\"");
                 }
             }
 
@@ -268,7 +268,7 @@ namespace GameHelper.Objects
         {
             if (!AssetTypesById.ContainsKey(id))
             {
-                Trace.WriteLine("Aborting instantiation of asset Type. Unkown to AssetManager: " + id);
+                Debug.WriteLine("Aborting instantiation of asset Type. Unkown to AssetManager: " + id);
                 return null;
             }
 

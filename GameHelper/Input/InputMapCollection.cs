@@ -124,7 +124,7 @@ namespace GameHelper.Input
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine("Error in LoadKeyMap " + e.StackTrace);
+                System.Diagnostics.Debug.WriteLine("Error in loading an InputMap " + e.StackTrace);
             }
             finally
             {

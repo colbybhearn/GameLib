@@ -188,7 +188,7 @@ namespace GameHelper.Base
             }
             catch (Exception e)
             {
-                System.Diagnostics.Trace.WriteLine(e.StackTrace);
+                System.Diagnostics.Debug.WriteLine(e.StackTrace);
             }
 
         }
@@ -729,7 +729,7 @@ namespace GameHelper.Base
         
         private void CallClientConnected(int id, string alias)
         {
-            Trace.WriteLine("Alias Connected");
+            Debug.WriteLine("Alias Connected");
             players.Add(id, alias);
             // Let new client know about all other clients
             for (int i = 0; i < players.Count; i++)

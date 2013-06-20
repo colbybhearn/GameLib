@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework;
 
 namespace GameHelper.Input
 {
@@ -23,6 +19,9 @@ namespace GameHelper.Input
         public KeyboardState KeyboardState { get; private set; }
         public KeyboardState KeyboardStateLast { get; private set; }
 
+        public MouseState MouseState { get; private set; }
+        public MouseState MouseStateLast { get; private set; }
+
         public PlayerIndex PlayerIndex { get; private set; }
 
         public InputState()
@@ -38,6 +37,9 @@ namespace GameHelper.Input
             KeyboardState = new KeyboardState();
             KeyboardStateLast = new KeyboardState();
 
+            MouseState = new MouseState();
+            MouseStateLast = new MouseState();
+
             PlayerIndex = p;
         }
 
@@ -48,6 +50,9 @@ namespace GameHelper.Input
 
             KeyboardStateLast = KeyboardState;
             KeyboardState = Keyboard.GetState(PlayerIndex);
+
+            MouseStateLast = MouseState;
+            MouseState = Mouse.GetState();
         }
     }
 }
