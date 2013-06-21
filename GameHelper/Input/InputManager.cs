@@ -83,17 +83,17 @@ namespace GameHelper.Input
 
         public void DisableAllKeyMaps()
         {
-            inputCollection.DisableAllButtonMaps();
+            inputCollection.SetAllMapsState(false);
         }
 
         public void EnableKeyMap(string id)
         {
-            inputCollection.EnableButtonMap(id);
+            inputCollection.EnableMap(id);
         }
 
         public void DisableKeyMap(string id)
         {
-            inputCollection.DisableButtonMap(id);
+            inputCollection.DisableMap(id);
         }
 
         public void AddInputMode(InputMode m, Delegate d)
