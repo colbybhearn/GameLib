@@ -85,7 +85,7 @@ namespace GameHelper.Gui.Xna
         {
             if (FocusedItem != null)
                 FocusedItem.Callback();
-        } 
+        }
         #endregion
     }
 }

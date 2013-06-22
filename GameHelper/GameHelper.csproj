@@ -136,6 +136,7 @@
     </Compile>
     <Compile Include="Input\GamePadButtonBinding.cs" />
     <Compile Include="Input\GamePadThumbStickBinding.cs" />
+    <Compile Include="Input\GamePadTriggerBinding.cs" />
     <Compile Include="Input\InputBinding.cs" />
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="Input\InputMap.cs" />
