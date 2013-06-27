@@ -194,7 +194,17 @@ namespace GameHelper.Objects
             
             foreach (EntityType at in AssetTypesByName.Values)
                 foreach (EntityConfig ac in at.PrototypeAssets.Values)
+//<<<<<<< HEAD
                     CheckPart(ac.Parts);                    
+//=======
+//                {
+//                    if (NeedsCompiling(ac))
+//                        contentBuilder.Add(ac.fbxModelFilepath, ac.AssetName, "FbxImporter", "ModelProcessor");
+//                    else
+//                        Debug.WriteLine("Skipping compilation of asset \"" + ac.AssetName + "\"");
+//                }
+//            }
+//>>>>>>> 2dbeb8655797c9cd196612178f8ddca744fa620c
 
             if (!contentBuilder.hasContent)
                 return true;
@@ -313,7 +323,7 @@ namespace GameHelper.Objects
         {
             if (!AssetTypesById.ContainsKey(id))
             {
-                Trace.WriteLine("Aborting instantiation of asset Type. Unkown to AssetManager: " + id);
+                Debug.WriteLine("Aborting instantiation of asset Type. Unkown to AssetManager: " + id);
                 return null;
             }
 

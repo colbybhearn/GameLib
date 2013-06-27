@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Input;
-using System.Xml.Serialization;
-using System.IO;
-using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace GameHelper.Input

@@ -114,7 +114,7 @@ namespace GameHelper.Multiplayer
 
             if (packet is ClientInfoResponsePacket)
             {
-                Trace.WriteLine("Received Client info Response");
+                Debug.WriteLine("Received Client info Response");
                 //client connects. Server sends infoRequest, Client sends infoResponse.
                 ClientInfoResponsePacket cirp = packet as ClientInfoResponsePacket;
                 CallClientConnected(cpi.id, cirp.Alias);
@@ -137,7 +137,7 @@ namespace GameHelper.Multiplayer
             }
             else if (packet is ObjectRequestPacket)
             {
-                Trace.WriteLine("Received ObjectRequestPacket");
+                Debug.WriteLine("Received ObjectRequestPacket");
                 ObjectRequestPacket corp = packet as ObjectRequestPacket;
                 CallObjectRequestReceived(cpi.id,corp.AssetName);
             }

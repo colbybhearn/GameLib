@@ -80,7 +80,7 @@ namespace GameHelper.Gui.Forms.XnaView
             }
             catch (Exception e)
             {
-                System.Diagnostics.Trace.WriteLine(e.StackTrace);
+                System.Diagnostics.Debug.WriteLine(e.StackTrace);
             }
         }
         #endregion

@@ -70,12 +70,12 @@ namespace GameHelper.Input
         public SortedList<InputMode, Delegate> InputModeDelegates;
         public String game;
         Settings frmSettings;
-        InputCollection buttonMaps = new InputCollection();
+        InputCollection inputCollection = new InputCollection();
 
         public InputManager(String gameName, InputCollection defaultKeyMapcollection)
         {
             game = gameName;
-            buttonMaps = InputCollection.Load(game, defaultKeyMapcollection);
+            inputCollection = InputCollection.Load(game, defaultKeyMapcollection);
             Mode = InputMode.Mapped;
             InputModeDelegates = new SortedList<InputMode, Delegate>();
             inputState = new InputState();
@@ -83,17 +83,17 @@ namespace GameHelper.Input
 
         public void DisableAllKeyMaps()
         {
-            buttonMaps.DisableAllButtonMaps();
+            inputCollection.SetAllMapsState(false);
         }
 
         public void EnableKeyMap(string id)
         {
-            buttonMaps.EnableButtonMap(id);
+            inputCollection.EnableMap(id);
         }
 
         public void DisableKeyMap(string id)
         {
-            buttonMaps.DisableButtonMap(id);
+            inputCollection.DisableMap(id);
         }
 
         public void AddInputMode(InputMode m, Delegate d)
@@ -119,7 +119,7 @@ namespace GameHelper.Input
                         ((ChatDelegate)d)(GetPressedKeysWithShift(inputState.KeyboardStateLast, inputState.KeyboardState));
                     break;
                 case InputMode.Mapped:
-                    foreach (InputMap map in buttonMaps.inputMaps.Values)
+                    foreach (InputMap map in inputCollection.inputMaps.Values)
                     {
                         if (map != null)
                             map.Check(inputState);
@@ -144,19 +144,19 @@ namespace GameHelper.Input
         
         public void Save()
         {
-            InputCollection.Save(buttonMaps);
+            InputCollection.Save(inputCollection);
             //KeyMap.SaveKeyMap(keyMap);
         }
         
         public void EditSettings()
         {
-            frmSettings = new Settings(buttonMaps);
+            frmSettings = new Settings(inputCollection);
             InputMode lastMode = Mode;
             Mode = InputMode.Setup;            
             System.Windows.Forms.DialogResult dr = frmSettings.ShowDialog();
             if (dr == System.Windows.Forms.DialogResult.OK)
             {
-                buttonMaps = frmSettings.keyMaps;
+                inputCollection = frmSettings.keyMaps;
                 Save();
             }
             frmSettings.Dispose();

@@ -50,25 +50,25 @@ namespace GameHelper.Input
             inputMaps.Add(alias, keyMap);
         }
 
-        public void DisableAllButtonMaps()
+        public void SetAllMapsState(bool enable)
         {
-            foreach (ButtonMap map in inputMaps.Values)
-                map.Enabled = false;
+            foreach (InputMap map in inputMaps.Values)
+                map.Enabled = enable;
         }
 
-        public void EnableButtonMap(string alias)
+        public void EnableMap(string alias)
         {
             if (inputMaps.ContainsKey(alias))
                 inputMaps[alias].Enabled = true;
         }
 
-        public void DisableButtonMap(string alias)
+        public void DisableMap(string alias)
         {
             if (inputMaps.ContainsKey(alias))
                 inputMaps[alias].Enabled = false;
         }
 
-        public static void Save(InputCollection bmc)
+        public static void Save(InputCollection ic)
         {
             DataContractSerializer x = new DataContractSerializer(typeof(InputCollection));
             StreamWriter stm = null;
@@ -76,7 +76,7 @@ namespace GameHelper.Input
             XmlTextWriter tw = new XmlTextWriter(sw);
             try
             {
-                string filepath = bmc.FilePath;                
+                string filepath = ic.FilePath;                
                 if (!Directory.Exists(filepath))
                 {
                     string dirpath = Path.GetDirectoryName(filepath);
@@ -84,7 +84,7 @@ namespace GameHelper.Input
                 }
                 stm = new StreamWriter(filepath);
                 tw.Formatting = Formatting.Indented; // Make it human readable!
-                x.WriteObject(tw, bmc);
+                x.WriteObject(tw, ic);
                 tw.Flush();
                 stm.Write(sw.ToString());
             }
@@ -124,7 +124,7 @@ namespace GameHelper.Input
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine("Error in LoadKeyMap " + e.StackTrace);
+                System.Diagnostics.Debug.WriteLine("Error in loading an InputMap " + e.StackTrace);
             }
             finally
             {

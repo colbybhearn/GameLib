@@ -114,7 +114,7 @@ namespace GameHelper.Multiplayer
         {
             if (packet is ClientInfoRequestPacket)
             {
-                Trace.WriteLine("Received ClientInfoRequest");
+                Debug.WriteLine("Received ClientInfoRequest");
                 ClientInfoRequestPacket cir = packet as ClientInfoRequestPacket;
                 ClientInfoResponsePacket clientInfoResponse = new ClientInfoResponsePacket(sAlias);
                 client.Send(clientInfoResponse);
@@ -127,7 +127,7 @@ namespace GameHelper.Multiplayer
             }
             else if (packet is ObjectAddedPacket)
             {
-                Trace.WriteLine("Received ObjectAdded");
+                Debug.WriteLine("Received ObjectAdded");
                 ObjectAddedPacket corp = packet as ObjectAddedPacket;
                 CallObjectRequestResponseReceived(corp.Owner, corp.ID, corp.AssetName);
             }
@@ -158,7 +158,7 @@ namespace GameHelper.Multiplayer
             }
             else if (packet is ObjectDeletedPacket)
             {
-                Trace.WriteLine("Received ObjectDelete");
+                Debug.WriteLine("Received ObjectDelete");
                 ObjectDeletedPacket odp = packet as ObjectDeletedPacket;
                 CallObjectDeleteReceived(odp);
             }

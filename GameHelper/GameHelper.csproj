@@ -118,6 +118,10 @@
     <Compile Include="Gui\Forms\Server.designer.cs">
       <DependentUpon>Server.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gui\Xna\XnaItem.cs" />
+    <Compile Include="Gui\Xna\XnaItemCollection.cs" />
+    <Compile Include="Gui\Xna\XnaMenu.cs" />
+    <Compile Include="Gui\Xna\XnaMenuItem.cs" />
     <Compile Include="Handlers.cs" />
     <Compile Include="Input\ActionBinding.cs" />
     <Compile Include="Input\ActionManager.cs" />
@@ -132,6 +136,7 @@
     </Compile>
     <Compile Include="Input\GamePadButtonBinding.cs" />
     <Compile Include="Input\GamePadThumbStickBinding.cs" />
+    <Compile Include="Input\GamePadTriggerBinding.cs" />
     <Compile Include="Input\InputBinding.cs" />
     <Compile Include="Input\InputManager.cs" />
     <Compile Include="Input\InputMap.cs" />
@@ -144,7 +149,7 @@
       <DependentUpon>KeyBindingControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Input\ButtonMap.cs" />
-    <Compile Include="Input\InputMapCollection.cs" />
+    <Compile Include="Input\InputCollection.cs" />
     <Compile Include="Input\Settings.cs">
       <SubType>Form</SubType>
     </Compile>
