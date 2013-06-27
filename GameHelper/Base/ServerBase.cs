@@ -154,7 +154,7 @@ namespace GameHelper.Base
                             go.UpdateCountdown--;
                             if (go.UpdateCountdown == 0 || assetManager.isObjectOwnedByAnyClient(go.ID))
                             {
-                                ObjectUpdatePacket oup = new ObjectUpdatePacket(go.ID, go.assetName, go.BodyPosition(), go.BodyOrientation(), go.BodyVelocity());
+                                ObjectUpdatePacket oup = new ObjectUpdatePacket(go.ID, go.config.Name, go.Position, go.Orientation, go.Velocity);
                                 commServer.BroadcastObjectUpdate(oup);
                                 go.UpdateCountdown = 10;
                             }

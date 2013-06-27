@@ -6,17 +6,23 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using JigLibX.Physics;
 using JigLibX.Collision;
+using GenEntityConfigTypes;
+using JigLibX.Geometry;
 
 namespace GameHelper.Objects
 {
     public class EntityPart
     {
+        #region Fields
         public int Id;
         Model model;
         public Body body;
         CollisionSkin Skin;
         Vector3 Scale = new Vector3(1, 1, 1);
-        
+        bool isRoot = false;
+        #endregion
+
+        #region Properties
         public Quaternion Orient
         {
             get
@@ -31,6 +37,8 @@ namespace GameHelper.Objects
                 return Quaternion.CreateFromYawPitchRoll(ModelOrientCorrectionYPR.X, ModelOrientCorrectionYPR.Y, ModelOrientCorrectionYPR.Z);
             }
         }
+        internal BasicEffect Effect { get; set; }
+
         Vector3 ModelScaleCorrection = new Vector3(1, 1, 1);
         Vector3 ModelOriginCorrection = Vector3.Zero;
         Vector3 ModelOrientCorrectionYPR = Vector3.Zero;
@@ -39,9 +47,14 @@ namespace GameHelper.Objects
         Vector3 RelativeOrigin = Vector3.Zero;
         Vector3 RelativeOrientYPR = Vector3.Zero;
         
+        public event CollisionCallbackFn CollisionOccurred;
+
         public EntityPart fParentPart;
         public SortedList<int, EntityPart> parts = new SortedList<int, EntityPart>();
+        public GenEntityConfigTypes.Part part;
+        #endregion
 
+        #region Initialization
         public EntityPart(int id, Model m, Vector3 scale, Vector3 relOrientYPR, Vector3 relOrigin, Vector3 modelOrientCorrection, Vector3 modelOriginCorrection)
         {
             Id = id;
@@ -59,10 +72,92 @@ namespace GameHelper.Objects
             body.CollisionSkin.callbackFn += new CollisionCallbackFn(CollisionSkin_callbackFn);
         }
 
+        public EntityPart(int id, Model model, GenEntityConfigTypes.Part part)
+        {
+            // TODO: Complete member initialization
+            this.Id = id;
+            this.model = model;
+            this.part = part;
+            body = new Body();
+            Skin = new CollisionSkin(body);
+            ApplyConfig(part);
+            body.CollisionSkin = Skin;
+
+            //use part config here
+            
+        }
+
+        public EntityPart(bool isroot)
+        {
+            body = new Body();
+            Skin = new CollisionSkin();
+            isRoot = isroot;
+            if (isroot)
+            {
+                body.CollisionSkin = new CollisionSkin();
+                Skin.AddPrimitive(new Box(new Vector3((float)3 * -.5f, (float)3 * -.5f, (float)3 * -.5f),
+                    Matrix.Identity,
+                    new Vector3((float)3, (float)3, (float)3)), (int)MaterialTable.MaterialID.NotBouncyNormal);
+             
+            }
+            else
+            {
+                body.CollisionSkin = Skin;
+            }
+            body.ExternalData = this;
+        }
+        #endregion
+
+        #region Config
+        public void ApplyConfig(GenEntityConfigTypes.Part part)
+        {
+            this.RelativeOrigin = new Vector3((float)part.Body.relTranslation.X,
+                                                (float)part.Body.relTranslation.Y,
+                                                (float)part.Body.relTranslation.Z);
+            ApplyBoxConfig(part.Body.Skin.Box);
+            ApplyTriangleConfig(part.Body.Skin.Triangles);
+        }
+       
+       
+        private void ApplyBoxConfig(ecBox[] boxes)
+        {
+            if (boxes == null)
+                return;
+            foreach (ecBox box in boxes)
+            {
+                Skin.AddPrimitive(new Box(new Vector3((float)box.SideLengths.X * -.5f, (float)box.SideLengths.Y * -.5f, (float)box.SideLengths.Z * -.5f),
+                    Matrix.Identity,
+                    new Vector3((float)box.SideLengths.X, (float)box.SideLengths.Y, (float)box.SideLengths.Z)), (int)MaterialTable.MaterialID.NotBouncyNormal);
+            }
+        }
+        private void ApplyTriangleConfig(ecTriangle[] tris)
+        {
+            if (tris == null)
+                return;
+            foreach (ecTriangle tri in tris)
+            {
+            }
+        }
+        #endregion
+
+        #region physics
+        internal void Enable()
+        {
+            body.EnableBody();
+            //this.body.DoShockProcessing = false;
+            foreach (EntityPart ep in parts.Values)
+            {
+                ep.body.Mass = 1f;
+                ep.Enable();                
+            }
+        }
         bool CollisionSkin_callbackFn(CollisionSkin skin0, CollisionSkin skin1)
         {
+            if (CollisionOccurred != null)
+                CollisionOccurred(skin0, skin1);
             return true; // let the physics system handle the collision
         }
+        #endregion
 
         public void AdjustYawPitchRoll(float yaw, float pitch, float roll)
         {
@@ -155,15 +250,15 @@ namespace GameHelper.Objects
             RelativeOrientYPR.Z = roll;
         }
 
-        internal void EnableBody()
-        {
-            body.EnableBody();
-        }
-
+        #region Visual
         public virtual void Draw(ref Matrix View, ref Matrix Projection)
         {
+            foreach(EntityPart ep in parts.Values)
+                ep.Draw(ref View, ref Projection);
+
             if (model == null)
                 return;
+
             Matrix[] transforms = new Matrix[model.Bones.Count];
 
             model.CopyAbsoluteBoneTransformsTo(transforms);
@@ -184,18 +279,51 @@ namespace GameHelper.Objects
                 mesh.Draw();
             }
         }
-        internal BasicEffect Effect { get; set; }
         public virtual void DrawWireframe(GraphicsDevice Graphics, Matrix View, Matrix Projection)
         {
+           
+            
+            
             try
             {
-                VertexPositionColor[] wireFrame = Skin.GetLocalSkinWireframe();
-                body.TransformWireframe(wireFrame);
+
                 if (Effect == null)
                 {
                     Effect = new BasicEffect(Graphics);
                     Effect.VertexColorEnabled = true;
                 }
+
+                
+                foreach (EntityPart ep in parts.Values)
+                {
+
+                    #region part skeleton
+                    ep.DrawWireframe(Graphics, View, Projection);
+
+                    VertexPositionColor[] bone = new VertexPositionColor[2];
+                    bone[0] = new VertexPositionColor(Position, Color.Green);
+                    bone[1] = new VertexPositionColor(ep.Position, Color.Green);
+                    //TransformVectorList(Velocity);
+
+                    foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
+                    {
+                        pass.Apply();
+                        Graphics.DrawUserPrimitives<VertexPositionColor>(
+                            Microsoft.Xna.Framework.Graphics.PrimitiveType.LineStrip,
+                            bone, 0, bone.Length - 1);
+                    }
+                    #endregion
+                }
+                
+
+
+
+
+                VertexPositionColor[] wireFrame = Skin.GetLocalSkinWireframe();
+                if (wireFrame.Length == 0)
+                    return;
+                TransformVectorList(wireFrame);
+
                 Effect.TextureEnabled = false;
                 Effect.LightingEnabled = false;
                 Effect.View = View;
@@ -209,9 +337,11 @@ namespace GameHelper.Objects
                         wireFrame, 0, wireFrame.Length - 1);
                 }
 
+                
                 VertexPositionColor[] Velocity = new VertexPositionColor[2];
-                Velocity[0] = new VertexPositionColor(body.Position, Color.Blue);
-                Velocity[1] = new VertexPositionColor(body.Position + body.Velocity, Color.Red);
+                Velocity[0] = new VertexPositionColor(Position, Color.Blue);
+                Velocity[1] = new VertexPositionColor(Position + body.Velocity, Color.Red);
+                //TransformVectorList(Velocity);
 
                 foreach (EffectPass pass in Effect.CurrentTechnique.Passes)
                 {
@@ -226,13 +356,86 @@ namespace GameHelper.Objects
                 System.Console.WriteLine(e.StackTrace);
             }
         }
+        #endregion
+
         /// <summary>
         /// only used for the model
         /// </summary>
         /// <returns></returns>
         public Matrix GetWorldMatrix()
         {
-            return Matrix.CreateScale(Scale) * Skin.GetPrimitiveLocal(0).Transform.Orientation * body.Orientation * Matrix.CreateTranslation(body.Position);
+            Matrix m = Matrix.Identity;
+            //if(fParentPart!=null)
+                //m = fParentPart.GetWorldMatrix();
+            /*
+            //ORIGINAL
+            if(Skin.NumPrimitives==0)
+                return m * Matrix.CreateScale(Scale) * body.Orientation * Matrix.CreateTranslation(body.Position);
+            else
+                return m * Matrix.CreateScale(Scale) * Skin.GetPrimitiveLocal(0).Transform.Orientation * body.Orientation * Matrix.CreateTranslation(body.Position) * Matrix.CreateTranslation(RelativeOrigin);
+            */
+            if (Skin.NumPrimitives == 0)
+                return m * Matrix.CreateScale(Scale) * body.Orientation * Matrix.CreateTranslation(body.Position);
+            else
+                return m * Matrix.CreateScale(Scale) * Skin.GetPrimitiveLocal(0).Transform.Orientation * body.Orientation * Matrix.CreateTranslation(body.Position);
+             
+
+            /*
+             * no good
+            if (Skin.NumPrimitives == 0)
+                return m * body.Orientation * Matrix.CreateTranslation(body.Position);
+            else
+                return m * Skin.GetPrimitiveLocal(0).Transform.Orientation * body.Orientation * Matrix.CreateTranslation(body.Position) * Matrix.CreateTranslation(RelativeOrigin);
+             */
+        }
+        public Vector3 Position
+        {
+            get
+            {
+                return Vector3.Transform(RelativeOrigin,
+                                                GetWorldMatrix());
+            }
+        }
+        public void TransformVectorList(VertexPositionColor[] wireframe)
+        {
+             for (int i = 0; i < wireframe.Length; i++)
+                {
+                    wireframe[i].Position = Vector3.Transform(wireframe[i].Position,
+                                                GetWorldMatrix());
+                }
+        }
+
+        internal void FinalizeBody()
+        {
+            try
+            {
+                Vector3 com = SetMass(1.0f);
+
+                //body.MoveTo(Position, Orientation);
+                Skin.ApplyLocalTransform(new JigLibX.Math.Transform(-com, Matrix.Identity));
+            }
+            catch (Exception E)
+            {
+                System.Diagnostics.Debug.WriteLine(E.StackTrace);
+            }
+        }
+
+        internal Vector3 SetMass(float mass)
+        {
+            PrimitiveProperties primitiveProperties = new PrimitiveProperties(
+                PrimitiveProperties.MassDistributionEnum.Solid,
+                PrimitiveProperties.MassTypeEnum.Mass,
+                mass);
+
+            float oMass;
+            Vector3 com = new Vector3();
+            Matrix it, itCom;
+
+            Skin.GetMassProperties(primitiveProperties, out oMass, out com, out it, out itCom);  
+            body.BodyInertia = itCom;
+            body.Mass = oMass;
+
+            return com;
         }
     }
 }

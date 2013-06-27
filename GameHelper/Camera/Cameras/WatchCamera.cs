@@ -23,7 +23,7 @@ namespace GameHelper.Camera.Cameras
             Entity gob = GetFirstGobject();
             if (gob == null) return;
 
-            LookAtLocation(gob.BodyPosition(), Vector3.Up);
+            LookAtLocation(gob.Position, Vector3.Up);
             
         }
     }

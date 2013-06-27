@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using JigLibX.Physics;
 using JigLibX.Collision;
+using GenEntityConfigTypes;
 
 namespace GameHelper.Objects
 {
@@ -17,7 +18,7 @@ namespace GameHelper.Objects
         {
         }
 
-        public EntityPartManager(Body body)
+        public EntityPartManager(ref Body body)
         {
         }
 
@@ -59,6 +60,7 @@ namespace GameHelper.Objects
         {
             if (!parts.ContainsKey(child.Id))
                 parts.Add(child.Id, child);
+            
             child.body.CollisionSkin.callbackFn += new CollisionCallbackFn(PartCollisioncallbackFn);
             if (parts.ContainsKey(parentId))
             {
@@ -68,9 +70,9 @@ namespace GameHelper.Objects
             }
         }
 
+        public event CollisionCallbackFn CollisionOccurred;
         bool PartCollisioncallbackFn(CollisionSkin skin0, CollisionSkin skin1)
         {
-            
             if (collisionCallback == null)
                 return true;
             return collisionCallback(skin0, skin1);
@@ -95,7 +97,7 @@ namespace GameHelper.Objects
         {
             foreach (EntityPart ep in parts.Values)
             {
-                ep.EnableBody();
+                ep.Enable();
             }
         }
 
@@ -113,6 +115,48 @@ namespace GameHelper.Objects
             {
                 p.Draw(ref View, ref Projection);
             }
+        }
+
+        internal void ApplyConfig(GenEntityConfigTypes.Part[] parts)
+        {
+            
+        }
+
+        private int GetPartId()
+        {
+            int i = 0;
+            while (parts.ContainsKey(++i)) ;
+            return i;
+        }
+
+        internal void ApplyConfig(Part[] parts, SortedList<string, Model> models)
+        {
+            int id = 0;
+            AddParts(id, parts, models);
+        }
+
+        private void AddParts(int pid, Part[] parts, SortedList<string, Model> models)
+        {
+            if (parts == null)
+                return;
+            foreach (Part part in parts)
+                 AddPart(pid, part, models);
+        }
+
+        private void AddPart(int pid, Part part, SortedList<string, Model> models)
+        {
+            int id = GetPartId();
+            EntityPart ep = new EntityPart(id, models[CleanPath(part.Model.relFilepath)], part);
+            // add this parts under a parent
+            AddPart(pid, ep);
+
+            // add this parts' children
+            AddParts(id, part.Parts, models);
+        }
+
+        private string CleanPath(string path)
+        {
+            return path.Replace("\\", string.Empty).Replace(".", string.Empty);
         }
     }
 }

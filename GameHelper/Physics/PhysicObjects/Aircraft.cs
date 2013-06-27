@@ -67,8 +67,8 @@ namespace GameHelper.Physics.PhysicsObjects
             get
             {               
                 
-                Vector3 vel = BodyVelocity();
-                Vector3 forr = BodyOrientation().Forward;
+                Vector3 vel = Velocity;
+                Vector3 forr = Orientation.Forward;
                 // the amount of vel in the direction of forr
                 float speed = Vector3.Dot(vel, forr);
                 if (speed < 0)
@@ -103,13 +103,13 @@ namespace GameHelper.Physics.PhysicsObjects
             Vector3 RightWingLiftLocation = 4 * Vector3.Right;
             RightWingLiftLocation.Z = CenterOfPressure.Z;
 
-            Thrust = new BoostController(body, Vector3.Forward, 4 * Vector3.Forward, Vector3.Zero);
-            LiftLeft = new BoostController(body, Vector3.Up, LeftWingLiftLocation, Vector3.Zero);  // this could be totally different than a force at a position (midwing)
-            LiftRight = new BoostController(body, Vector3.Up, RightWingLiftLocation, Vector3.Zero);
-            Elevator = new BoostController(body, Vector3.Zero, Vector3.Backward * 3, Vector3.Zero);
-            Drag = new BoostController(body, Vector3.Zero, Vector3.Zero, Vector3.Zero);
+            Thrust = new BoostController(root.body, Vector3.Forward, 4 * Vector3.Forward, Vector3.Zero);
+            LiftLeft = new BoostController(root.body, Vector3.Up, LeftWingLiftLocation, Vector3.Zero);  // this could be totally different than a force at a position (midwing)
+            LiftRight = new BoostController(root.body, Vector3.Up, RightWingLiftLocation, Vector3.Zero);
+            Elevator = new BoostController(root.body, Vector3.Zero, Vector3.Backward * 3, Vector3.Zero);
+            Drag = new BoostController(root.body, Vector3.Zero, Vector3.Zero, Vector3.Zero);
 
-            Yaw = new BoostController(body, Vector3.Zero, Vector3.UnitY);
+            Yaw = new BoostController(root.body, Vector3.Zero, Vector3.UnitY);
             Drag.worldForce = true;
 
             AddController(Thrust);
@@ -126,10 +126,10 @@ namespace GameHelper.Physics.PhysicsObjects
         {
             try
             {
-                Vector3 com = SetMass(1.0f);
-                body.MoveTo(Position, Matrix.Identity);
+                //Vector3 com = SetMass(1.0f);
+                root.body.MoveTo(Position, Matrix.Identity);
                 //Skin.ApplyLocalTransform(new JigLibX.Math.Transform(-com, Matrix.Identity));
-                body.EnableBody(); // adds to CurrentPhysicsSystem
+                root.body.EnableBody(); // adds to CurrentPhysicsSystem
             }
             catch (Exception E)
             {
@@ -193,8 +193,8 @@ namespace GameHelper.Physics.PhysicsObjects
             // a large amount of velocity in the direction of forward means we're going very straight. We want small drag.
             // a small amount of velocity in the direction of forward means we're crooked. We want large drag.
             //float f = BodyOrientation().Forward.Length() - Vector3.Dot(BodyOrientation().Forward, BodyVelocity());
-            Vector3 velo = BodyVelocity();
-            Vector3 forw = BodyOrientation().Forward;
+            Vector3 velo = Velocity;
+            Vector3 forw = Orientation.Forward;
             if (velo == Vector3.Zero ||
                 forw == Vector3.Zero)
             {
@@ -202,16 +202,16 @@ namespace GameHelper.Physics.PhysicsObjects
                 return;
             }
 
-            float f = 1 - Vector3.Dot(Vector3.Normalize(BodyVelocity()), Vector3.Normalize(BodyOrientation().Forward));
+            float f = 1 - Vector3.Dot(Vector3.Normalize(Velocity), Vector3.Normalize(Orientation.Forward));
             float area = .6f + (.5f * f);
             //if(area >.00001f)
                 //System.Diagnostics.Debug.WriteLine(area);
             // 1/2 * airDensity * Velocity^2 * Cd * area
-            dragForce = .5f * airDensity * BodyVelocity().LengthSquared() * DragCoefficient * area;
+            dragForce = .5f * airDensity * Velocity.LengthSquared() * DragCoefficient * area;
             //dragForce = BodyVelocity().Length() * DragCoefficient;
-            Drag.Force = Vector3.Normalize(-BodyVelocity());
-            Matrix orient = BodyOrientation();
-            Drag.ForcePosition = body.Position + Vector3.Transform(CenterOfPressure, orient);
+            Drag.Force = Vector3.Normalize(-Velocity);
+            Matrix orient = Orientation;
+            Drag.ForcePosition = root.body.Position + Vector3.Transform(CenterOfPressure, orient);
             Drag.SetForceMagnitude(dragForce);
         }
         public void SetAilerons(float v)

@@ -718,7 +718,7 @@ namespace GameHelper.Base
                     #endregion
 
                     #region Send Object Updates to the client
-                    ObjectUpdatePacket oup = new ObjectUpdatePacket(go.ID, go.assetName, go.BodyPosition(), go.BodyOrientation(), go.BodyVelocity());
+                    ObjectUpdatePacket oup = new ObjectUpdatePacket(go.ID, go.config.Name, go.Position, go.Orientation, go.Velocity);
                     commServer.SendPacket(oup,id);
                     #endregion
                 }

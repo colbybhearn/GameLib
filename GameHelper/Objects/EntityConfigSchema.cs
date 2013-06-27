@@ -20,9 +20,8 @@ namespace GenEntityConfigTypes {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/EntityConfig.xsd")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="http://tempuri.org/EntityConfig.xsd", IsNullable=false)]
-    public partial class Entity {
+    [System.Xml.Serialization.XmlRootAttribute("Entity", Namespace="", IsNullable=false)]
+    public partial class EntityConfig {
         
         private string nameField;
         
@@ -30,9 +29,10 @@ namespace GenEntityConfigTypes {
         
         private string typeField;
         
-        private PartList partsField;
+        private Part[] partsField;
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string Name {
             get {
                 return this.nameField;
@@ -43,6 +43,7 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string Description {
             get {
                 return this.descriptionField;
@@ -53,6 +54,7 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string Type {
             get {
                 return this.typeField;
@@ -63,7 +65,9 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
-        public PartList Parts {
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public Part[] Parts {
             get {
                 return this.partsField;
             }
@@ -78,37 +82,18 @@ namespace GenEntityConfigTypes {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/EntityConfig.xsd")]
-    public partial class PartList {
-        
-        private Part partField;
-        
-        /// <remarks/>
-        public Part Part {
-            get {
-                return this.partField;
-            }
-            set {
-                this.partField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.1")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/EntityConfig.xsd")]
     public partial class Part {
         
         private string nameField;
         
-        private Model modelField;
+        private ecModel modelField;
         
-        private Body bodyField;
+        private ecBody bodyField;
+        
+        private Part[] partsField;
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string Name {
             get {
                 return this.nameField;
@@ -119,7 +104,8 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
-        public Model Model {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecModel Model {
             get {
                 return this.modelField;
             }
@@ -129,12 +115,25 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
-        public Body Body {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecBody Body {
             get {
                 return this.bodyField;
             }
             set {
                 this.bodyField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public Part[] Parts {
+            get {
+                return this.partsField;
+            }
+            set {
+                this.partsField = value;
             }
         }
     }
@@ -144,16 +143,16 @@ namespace GenEntityConfigTypes {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/EntityConfig.xsd")]
-    public partial class Model {
+    public partial class ecModel {
         
         private string relFilepathField;
         
-        private Vector3D relTranslationField;
+        private ecVector3D relTranslationField;
         
-        private Vector3D relRotationField;
+        private ecVector3D relRotationField;
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string relFilepath {
             get {
                 return this.relFilepathField;
@@ -164,7 +163,8 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
-        public Vector3D relTranslation {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecVector3D relTranslation {
             get {
                 return this.relTranslationField;
             }
@@ -174,7 +174,8 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
-        public Vector3D relRotation {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecVector3D relRotation {
             get {
                 return this.relRotationField;
             }
@@ -189,24 +190,22 @@ namespace GenEntityConfigTypes {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/EntityConfig.xsd")]
-    public partial class Vector3D {
+    public partial class ecVector3D {
         
         private decimal xField;
         
+        private bool xFieldSpecified;
+        
         private decimal yField;
+        
+        private bool yFieldSpecified;
         
         private decimal zField;
         
-        public Vector3D() {
-            this.xField = ((decimal)(0m));
-            this.yField = ((decimal)(0m));
-            this.zField = ((decimal)(0m));
-        }
+        private bool zFieldSpecified;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(typeof(decimal), "0")]
         public decimal X {
             get {
                 return this.xField;
@@ -217,8 +216,18 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool XSpecified {
+            get {
+                return this.xFieldSpecified;
+            }
+            set {
+                this.xFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(typeof(decimal), "0")]
         public decimal Y {
             get {
                 return this.yField;
@@ -229,14 +238,35 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool YSpecified {
+            get {
+                return this.yFieldSpecified;
+            }
+            set {
+                this.yFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(typeof(decimal), "0")]
         public decimal Z {
             get {
                 return this.zField;
             }
             set {
                 this.zField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool ZSpecified {
+            get {
+                return this.zFieldSpecified;
+            }
+            set {
+                this.zFieldSpecified = value;
             }
         }
     }
@@ -246,19 +276,19 @@ namespace GenEntityConfigTypes {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/EntityConfig.xsd")]
-    public partial class Triangle {
+    public partial class ecTriangle {
         
-        private Vector3D centerField;
+        private ecVector3D centerField;
         
-        private Vector3D point1Field;
+        private ecVector3D point1Field;
         
-        private Vector3D point2Field;
+        private ecVector3D point2Field;
         
-        private Vector3D point3Field;
+        private ecVector3D point3Field;
         
         /// <remarks/>
-        public Vector3D Center {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecVector3D Center {
             get {
                 return this.centerField;
             }
@@ -268,7 +298,8 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
-        public Vector3D Point1 {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecVector3D Point1 {
             get {
                 return this.point1Field;
             }
@@ -278,7 +309,8 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
-        public Vector3D Point2 {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecVector3D Point2 {
             get {
                 return this.point2Field;
             }
@@ -288,7 +320,8 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
-        public Vector3D Point3 {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecVector3D Point3 {
             get {
                 return this.point3Field;
             }
@@ -303,15 +336,15 @@ namespace GenEntityConfigTypes {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/EntityConfig.xsd")]
-    public partial class Box {
+    public partial class ecBox {
         
-        private Vector3D centerField;
+        private ecVector3D centerField;
         
-        private Vector3D sideLengthsField;
+        private ecVector3D sideLengthsField;
         
         /// <remarks/>
-        public Vector3D Center {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecVector3D Center {
             get {
                 return this.centerField;
             }
@@ -321,7 +354,8 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
-        public Vector3D SideLengths {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecVector3D SideLengths {
             get {
                 return this.sideLengthsField;
             }
@@ -336,20 +370,31 @@ namespace GenEntityConfigTypes {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/EntityConfig.xsd")]
-    public partial class Primitive {
+    public partial class ecSkin {
         
-        private object itemField;
+        private ecBox[] boxField;
+        
+        private ecTriangle[] trianglesField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Box", typeof(Box))]
-        [System.Xml.Serialization.XmlElementAttribute("Triangle", typeof(Triangle))]
-        public object Item {
+        [System.Xml.Serialization.XmlElementAttribute("Box", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecBox[] Box {
             get {
-                return this.itemField;
+                return this.boxField;
             }
             set {
-                this.itemField = value;
+                this.boxField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Triangles", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecTriangle[] Triangles {
+            get {
+                return this.trianglesField;
+            }
+            set {
+                this.trianglesField = value;
             }
         }
     }
@@ -359,17 +404,17 @@ namespace GenEntityConfigTypes {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/EntityConfig.xsd")]
-    public partial class Body {
+    public partial class ecBody {
         
-        private Vector3D relTranslationField;
+        private ecVector3D relTranslationField;
         
-        private Vector3D relRotationField;
+        private ecVector3D relRotationField;
         
-        private Primitive[] skinField;
+        private ecSkin skinField;
         
         /// <remarks/>
-        public Vector3D relTranslation {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecVector3D relTranslation {
             get {
                 return this.relTranslationField;
             }
@@ -379,7 +424,8 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
-        public Vector3D relRotation {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecVector3D relRotation {
             get {
                 return this.relRotationField;
             }
@@ -389,8 +435,8 @@ namespace GenEntityConfigTypes {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute(IsNullable=false)]
-        public Primitive[] Skin {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public ecSkin Skin {
             get {
                 return this.skinField;
             }

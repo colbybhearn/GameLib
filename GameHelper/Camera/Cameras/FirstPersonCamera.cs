@@ -43,14 +43,14 @@ namespace GameHelper.Camera.Cameras
             // create an adjustment quat for the orientation
             Quaternion orientOffset = Quaternion.CreateFromYawPitchRoll(orientAdjustment.Y, orientAdjustment.X, orientAdjustment.Z);// YXZ
             // combine body orientation and adjustment quat
-            Quaternion newOrientation = Quaternion.CreateFromRotationMatrix( gob.BodyOrientation()) * orientOffset;
+            Quaternion newOrientation = Quaternion.CreateFromRotationMatrix( gob.Orientation) * orientOffset;
             // update the orientation
             SetTargetOrientation(newOrientation);
 
             // put the adjustment vector for the position into body coordinates
             positionAdjustment = Vector3.Transform(positionAdjustment, newOrientation);
             // update the position
-            CurrentPosition = gob.BodyPosition() + positionAdjustment;
+            CurrentPosition = gob.Position + positionAdjustment;
 
         }
     }

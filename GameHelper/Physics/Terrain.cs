@@ -145,10 +145,10 @@ namespace GameHelper.Physics
                 System.Diagnostics.Debug.WriteLine(E.StackTrace);
             }
 
-            this.body = new Body();
-            Skin = new CollisionSkin(body);
-            body.CollisionSkin = Skin;
-            body.ExternalData = this;
+            //this.body = new Body();
+            //Skin = new CollisionSkin(body);
+            //body.CollisionSkin = Skin;
+            //body.ExternalData = this;
             float heightf = 0;
             try
             {
@@ -176,11 +176,11 @@ namespace GameHelper.Physics
                                                     (-size.Z / 2) / (cellsZ + 0) + cellSizeZ/2, 
                                                     size.X / (cellsX+0), 
                                                     size.Z / (cellsZ+0));
-                Skin.AddPrimitive(hm, new MaterialProperties(0.7f, 0.7f, 0.6f));
+                //Skin.AddPrimitive(hm, new MaterialProperties(0.7f, 0.7f, 0.6f));
                 //Skin.AddPrimitive(GetMesh(), new MaterialProperties(0.7f, 0.7f, 0.6f));
                 //VertexPositionColor[] wireFrame = Skin.GetLocalSkinWireframe(); // 1200 across before Z changes to from -7.5/-7.35 to -7.35/-7.2
                 
-                PhysicsSystem.CurrentPhysicsSystem.CollisionSystem.AddCollisionSkin(Skin);
+                //PhysicsSystem.CurrentPhysicsSystem.CollisionSystem.AddCollisionSkin(Skin);
                 CommonInit(posCenter, new Vector3(0,0,0), null, false, 0);
             }
             catch(Exception E)
@@ -266,7 +266,7 @@ namespace GameHelper.Physics
             {
                 tverts[i] = vpnt[i];
                 tverts[i].Position = Vector3.Transform(vpnt[i].Position,
-                                            body.Orientation * Matrix.CreateTranslation(body.Position));
+                                            root.body.Orientation * Matrix.CreateTranslation(root.body.Position));
             }
             return tverts;
         }

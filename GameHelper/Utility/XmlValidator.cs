@@ -80,17 +80,6 @@ namespace GameHelper.Utility
         public bool isValid()
         {
             FileStream fsconfig = null;
-            if (xmlMStream == null)
-            {
-                // load the xml configuration file
-                string configcontent = string.Empty;
-                fsconfig = File.OpenRead(xmlConfigFilePath);
-                StreamReader srconfig = new StreamReader(fsconfig);
-                configcontent = srconfig.ReadToEnd();
-                fsconfig.Close();
-                Trace.WriteLine(configcontent);
-            }
-
             // create xml reader
             XmlReaderSettings rdrSettings = new XmlReaderSettings();
             rdrSettings.ValidationFlags = rdrSettings.ValidationFlags | XmlSchemaValidationFlags.ReportValidationWarnings;
@@ -108,11 +97,10 @@ namespace GameHelper.Utility
                 if (xmlMStream != null)
                     config = XmlReader.Create(xmlMStream, rdrSettings);
                 else
-                {
+                {                    
                     fsconfig = File.OpenRead(xmlConfigFilePath);
                     config = XmlReader.Create(fsconfig, rdrSettings);
                 }
-
             }
             catch (Exception E)
             {
@@ -123,6 +111,7 @@ namespace GameHelper.Utility
             {
                 if (fsconfig != null)
                     fsconfig.Close();
+                
                 return false;
             }
 
@@ -137,10 +126,12 @@ namespace GameHelper.Utility
             }
 
             if (config != null)
-                if (config.ReadState != ReadState.Closed)
                     config.Close();
+                    
             if (fsconfig != null)
-                fsconfig.Close();
+            {
+                fsconfig.Dispose();
+            }
 
             // validation messages will accumulate in fValidationResult
             if (fValidationResult.ToString().Length < 1)
@@ -183,13 +174,17 @@ namespace GameHelper.Utility
             {
                 xmlMStream.Position = 0;
                 XmlSerializer s = new XmlSerializer(root);
-                return s.Deserialize(xmlMStream);
+                object o = s.Deserialize(xmlMStream);                
+                return o;
             }
             else
             {
                 fs = new FileStream(xmlConfigFilePath, FileMode.Open);
                 XmlSerializer s = new XmlSerializer(root);
-                return s.Deserialize(fs);
+                object o = s.Deserialize(fs);
+                fs.Close();
+                return o;
+
             }
         }
 

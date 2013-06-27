@@ -1,16 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<xs:schema id="EntityConfig"
-    targetNamespace="http://tempuri.org/EntityConfig.xsd"
-    elementFormDefault="qualified"
-    xmlns="http://tempuri.org/EntityConfig.xsd"
-    xmlns:mstns="http://tempuri.org/EntityConfig.xsd"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
->
+﻿<!--<?xml version="1.0" encoding="utf-8"?>-->
+<xs:schema id="EntityConfigSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-  <xs:element name="Entity" type="Entity">
+  <xs:element name="Entity" type="EntityConfig">
   </xs:element>
 
-  <xs:complexType name="Entity">
+  <xs:complexType name="EntityConfig">
     <xs:sequence>
       <xs:element minOccurs="1" maxOccurs="1" name="Name" type="xs:string"/>
       <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string"/>
@@ -21,67 +15,69 @@
 
   <xs:complexType name="PartList">
     <xs:sequence>
-      <xs:element minOccurs="1" maxOccurs="1" name="Part" type="Part"></xs:element>
+      <xs:element minOccurs="0" maxOccurs="10" name="Part" type="Part"></xs:element>
     </xs:sequence>
   </xs:complexType>
   
   <xs:complexType name="Part">
     <xs:sequence>
       <xs:element minOccurs="1" maxOccurs="1" name="Name" type="xs:string"></xs:element>
-      <xs:element minOccurs="1" maxOccurs="1" name="Model" type="Model"></xs:element>
-      <xs:element minOccurs="1" maxOccurs="1" name="Body" type="Body"></xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="Model" type="ecModel"></xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="Body" type="ecBody"></xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="Parts" type="PartList"></xs:element>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Model">
+  <xs:complexType name="ecModel">
     <xs:sequence>
       <xs:element minOccurs="1" maxOccurs="1" name="relFilepath" type="xs:string"></xs:element>
-      <xs:element minOccurs="0" maxOccurs="1" name="relTranslation" type="Vector3D"></xs:element>
-      <xs:element minOccurs="0" maxOccurs="1" name="relRotation" type="Vector3D"></xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="relTranslation" type="ecVector3D"></xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="relRotation" type="ecVector3D"></xs:element>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Body">
+  <xs:complexType name="ecBody">
     <xs:sequence>      
-      <xs:element minOccurs="0" maxOccurs="1" name="relTranslation" type="Vector3D"></xs:element>
-      <xs:element minOccurs="0" maxOccurs="1" name="relRotation" type="Vector3D"></xs:element>
-      <xs:element minOccurs="1" maxOccurs="1" name="Skin" type="Skin"></xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="relTranslation" type="ecVector3D"></xs:element>
+      <xs:element minOccurs="0" maxOccurs="1" name="relRotation" type="ecVector3D"></xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="Skin" type="ecSkin"></xs:element>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Skin">
+  <xs:complexType name="ecSkin">
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="50" name="Primitive" type="Primitive"></xs:element>
+      <xs:element  minOccurs="0" maxOccurs="10" name="Box" type="ecBox"></xs:element>
+      <xs:element  minOccurs="0" maxOccurs="10" name="Triangles" type="ecTriangle"></xs:element>
     </xs:sequence>
   </xs:complexType>
   
-  <xs:complexType name="Primitive">
-    <xs:choice>
-      <xs:element name="Box" type="Box"></xs:element>
-      <xs:element name="Triangle" type="Triangle"></xs:element>
-    </xs:choice>
-  </xs:complexType>
-
-  <xs:complexType name="Box">
+  <xs:complexType name="ecPrimitive">
     <xs:sequence>
-      <xs:element minOccurs="1" maxOccurs="1" name="Center" type="Vector3D"></xs:element>
-      <xs:element minOccurs="1" maxOccurs="1" name="SideLengths" type="Vector3D"></xs:element>
+      <xs:element  minOccurs="0" maxOccurs="10" name="Box" type="ecBox"></xs:element>
+      <xs:element  minOccurs="0" maxOccurs="10" name="Triangles" type="ecTriangle"></xs:element>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Triangle">
+  <xs:complexType name="ecBox">
     <xs:sequence>
-      <xs:element minOccurs="1" maxOccurs="1" name="Center" type="Vector3D"></xs:element>
-      <xs:element minOccurs="1" maxOccurs="1" name="Point1" type="Vector3D"></xs:element>
-      <xs:element minOccurs="1" maxOccurs="1" name="Point2" type="Vector3D"></xs:element>
-      <xs:element minOccurs="1" maxOccurs="1" name="Point3" type="Vector3D"></xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="Center" type="ecVector3D"></xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="SideLengths" type="ecVector3D"></xs:element>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Vector3D">
-    <xs:attribute name="X" type="xs:decimal" default="0"></xs:attribute>
-    <xs:attribute name="Y" type="xs:decimal" default="0"></xs:attribute>
-    <xs:attribute name="Z" type="xs:decimal" default="0"></xs:attribute>
+  <xs:complexType name="ecTriangle">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="Center" type="ecVector3D"></xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="Point1" type="ecVector3D"></xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="Point2" type="ecVector3D"></xs:element>
+      <xs:element minOccurs="1" maxOccurs="1" name="Point3" type="ecVector3D"></xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ecVector3D">
+    <xs:attribute name="X" type="xs:decimal"/>
+    <xs:attribute name="Y" type="xs:decimal"/>
+    <xs:attribute name="Z" type="xs:decimal"/>
   </xs:complexType>
   
   

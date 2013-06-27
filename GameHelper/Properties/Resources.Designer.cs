@@ -70,12 +70,16 @@ namespace GameHelper.Properties {
         ///    xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;
         ///&gt;
         ///
-        ///&lt;/xs:schema&gt;
-        ///.
+        ///  &lt;xs:element name=&quot;Entity&quot; type=&quot;Entity&quot;&gt;
+        ///  &lt;/xs:element&gt;
+        ///
+        ///  &lt;xs:complexType name=&quot;Entity&quot;&gt;
+        ///    &lt;xs:sequence&gt;
+        ///      &lt;xs:element minOccurs=&quot;1&quot; maxOccurs=&quot;1&quot; name=&quot;Name&quot; type=&quot;xs:string [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string EntityConfig {
+        internal static string EntityConfigSchema {
             get {
-                return ResourceManager.GetString("EntityConfig", resourceCulture);
+                return ResourceManager.GetString("EntityConfigSchema", resourceCulture);
             }
         }
     }

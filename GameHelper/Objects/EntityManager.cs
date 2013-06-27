@@ -10,6 +10,7 @@ using System.IO;
 using System.Xml;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Content;
+using GenEntityConfigTypes;
 
 namespace GameHelper.Objects
 {
@@ -75,10 +76,11 @@ namespace GameHelper.Objects
         private SortedList<int, int> OwningClientsByObjectId = new SortedList<int, int>();
         private string assetConfigDirectory;
         private string processedModelDirectory;
+        private SortedList<string, SortedList<string, Model>> models = new SortedList<string, SortedList<string, Model>>();
 
         private SortedList<string, EntityType> AssetTypesByName = new SortedList<string, EntityType>();
         private SortedList<int, EntityType> AssetTypesById = new SortedList<int, EntityType>();
-        private SortedList<int, List<EntityConfig>> AssetsByType = new SortedList<int, List<EntityConfig>>();
+        private SortedList<int, List<EntityConfig>> ConfigByType = new SortedList<int, List<EntityConfig>>();
 
         public EntityManager(ref SortedList<int, Entity> gObjects, ref SortedList<int, Entity> nObjects, ref List<int> dObjects)
             : this(ref gObjects, ref nObjects, ref dObjects, System.Windows.Forms.Application.StartupPath)
@@ -101,15 +103,41 @@ namespace GameHelper.Objects
             {
                 foreach (EntityConfig ac in at.PrototypeAssets.Values)
                 {
-                    try
-                    {
-                        ac.model = cm.Load<Model>(ac.AssetName);
-                    }
-                    catch (Exception E)
-                    {
-                        System.Diagnostics.Debug.WriteLine(E.StackTrace);
-                    }
+                    LoadParts(ac.Name, cm, ac.Parts);
                 }
+            }
+        }
+
+        private void LoadParts(string entityName, ContentManager cm, GenEntityConfigTypes.Part[] parts)
+        {
+            if (parts == null)
+                return;
+            foreach (Part part in parts)
+            {                
+                LoadPart(entityName, cm, part);
+
+                LoadParts(entityName, cm, part.Parts);
+            }
+        }
+
+        private void LoadPart(string entityName, ContentManager cm, Part part)
+        {
+            if (!models.ContainsKey(entityName))
+                models.Add(entityName, new SortedList<string,Model>());
+            
+            SortedList<string, Model> mods = models[entityName];
+
+            string cleanedName = CleanPath(part.Model.relFilepath);
+            if(mods.ContainsKey(cleanedName))
+                return;
+            try
+            {
+                Model m =cm.Load<Model>(cleanedName);
+                mods.Add(cleanedName, m);
+            }
+            catch (Exception E)
+            {
+                System.Diagnostics.Debug.WriteLine(E.StackTrace);
             }
         }
 
@@ -123,39 +151,50 @@ namespace GameHelper.Objects
         private void LoadAssetConfigFile(string file)
         {
             // make an instance of the generic loader to determine which specific loader to use
-            EntityConfig ec = new EntityConfig(string.Empty);
-            ec.LoadFromFile(file);
-            if (!AssetTypesByName.ContainsKey(ec.AssetTypeName))
+            EntityConfig ec = EntityConfigHelper.Load(file);
+            //ec.LoadFromFile(file);
+            if (!AssetTypesByName.ContainsKey(ec.Type))
                 return;
 
+            int id = AssetTypesByName[ec.Type].Id;
+            if (!ConfigByType.ContainsKey(id))
+                ConfigByType.Add(id, new List<EntityConfig>());
+
+            List<EntityConfig> configs = ConfigByType[id];
+            configs.Add(ec);    
             
             // run it through the more specific loader
-            EntityType at = AssetTypesByName[ec.AssetTypeName];
+            EntityType at = AssetTypesByName[ec.Type];
             at.LoadConfigFromFile(file); 
             //assetConfigs.Add(ac.AssetName, ac);
         }
 
-        public Entity GetAssetOfType(Enum e)
-        {
-            if (!AssetTypesByName.ContainsKey(e.ToString()))
-                return null;
-            return AssetTypesByName[e.ToString()].GetNewGobject();
-        }
 
         #region Compilation
+
+        private void CheckPart(Part[] partlist)
+        {
+            if (partlist == null)
+                return;
+            foreach (Part part in partlist)
+            {
+                if (NeedsCompiling(part.Model))
+                    contentBuilder.Add(part.Model.relFilepath, CleanPath(part.Model.relFilepath), "FbxImporter", "ModelProcessor");
+                else
+                    Trace.WriteLine("Skipping compilation of asset \"" + part.Model.relFilepath + "\"");
+
+                CheckPart(part.Parts);
+
+            }
+        }
+
+        ContentBuilder contentBuilder = new ContentBuilder();
         private bool CompileAssets()
         {
-            ContentBuilder contentBuilder = new ContentBuilder();
+            
             foreach (EntityType at in AssetTypesByName.Values)
-            {
                 foreach (EntityConfig ac in at.PrototypeAssets.Values)
-                {
-                    if (NeedsCompiling(ac))
-                        contentBuilder.Add(ac.fbxModelFilepath, ac.AssetName, "FbxImporter", "ModelProcessor");
-                    else
-                        Trace.WriteLine("Skipping compilation of asset \"" + ac.AssetName + "\"");
-                }
-            }
+                    CheckPart(ac.Parts);                    
 
             if (!contentBuilder.hasContent)
                 return true;
@@ -182,20 +221,25 @@ namespace GameHelper.Objects
             MessageBox.Show("Files compiled successfully.");
             return true;
         }
-        private bool NeedsCompiling(EntityConfig ac)
-        {            
-            if (!File.Exists(ac.fbxModelFilepath))
+        private bool NeedsCompiling(ecModel ac)
+        {
+            if (!File.Exists(ac.relFilepath))
                 return false;
 
-            string compiledFile = Path.Combine(processedModelDirectory, ac.AssetName + ".xnb");
+            string compiledFile = Path.Combine(processedModelDirectory, CleanPath(ac.relFilepath) + ".xnb");
             if (!File.Exists(compiledFile))
                 return true;
 
-            DateTime dtSource = File.GetLastWriteTimeUtc(ac.fbxModelFilepath);
+            DateTime dtSource = File.GetLastWriteTimeUtc(CleanPath(ac.relFilepath));
             DateTime dtCompiled = File.GetLastWriteTimeUtc(compiledFile);
             return dtSource > dtCompiled;
         }
         #endregion
+
+        private string CleanPath(string path)
+        {
+            return path.Replace("\\",string.Empty).Replace(".",string.Empty);
+        }
 
         /// <summary>
         /// Adds an asset type
@@ -235,6 +279,7 @@ namespace GameHelper.Objects
         {
             AddAssetType(e, 1.0f, typeOfGobject);
         }
+
         /// <summary>
         /// returns an instance of the specified asset type
         /// Assumes no client owns the object
@@ -273,7 +318,16 @@ namespace GameHelper.Objects
             }
 
             EntityType at  = AssetTypesById[id];
-            Entity go = at.GetNewGobject();
+
+            if (!ConfigByType.ContainsKey(at.Id))
+            {
+                Trace.WriteLine("Unable to instantiate asset Type. Config not loaded. " + id);
+                return null;
+            }
+
+            EntityConfig ec = ConfigByType[at.Id][0];
+
+            Entity go = at.GetNewGobject(ec, models[ec.Name]);
             go.OwningClientId = owningClientId;
             go.ID = GetAvailableObjectId();
 

@@ -105,7 +105,7 @@ namespace GameHelper.Physics
                         {
                             // Remove the body inbetween updates
                             // don't collide on it in the mean time
-                            Body b = gameObjects[id].body;
+                            Body b = gameObjects[id].root.body;
                             b.DisableBody();
                             gameObjects.Remove(id);
                         }

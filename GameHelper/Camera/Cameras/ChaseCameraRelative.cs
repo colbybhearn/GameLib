@@ -43,15 +43,15 @@ namespace GameHelper.Camera.Cameras
             Entity gob = GetFirstGobject();
             if (gob == null) return;
             // bodyPosition is the physical location of the body
-            Vector3 bodyPosition = gob.BodyPosition();
-            Matrix bodyOrientation = gob.BodyOrientation();
+            Vector3 bodyPosition = gob.Position;
+            Matrix bodyOrientation = gob.Orientation;
             try
             {
                 // the location of where it's headed
-                Vector3 ObjectDirection = gob.BodyVelocity(); // this * 2 value is pointless I think
+                Vector3 ObjectDirection = gob.Velocity; // this * 2 value is pointless I think
 
                 if (ObjectDirection.Length() < 2) // this may be here just to prevent slow velocities from making a stalker camera
-                    ObjectDirection = gob.BodyOrientation().Forward;
+                    ObjectDirection = gob.Orientation.Forward;
 
                 Vector3 WhereItsHeaded = bodyPosition + ObjectDirection;
                 

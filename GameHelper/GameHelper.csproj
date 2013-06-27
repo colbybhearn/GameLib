@@ -174,7 +174,7 @@
     <Compile Include="Multiplayer\Packets\ClientInfoResponsePacket.cs" />
     <Compile Include="Multiplayer\Packets\Packet.cs" />
     <Compile Include="Multiplayer\ServerInfo.cs" />
-    <Compile Include="Objects\EntityConfig.cs" />
+    <Compile Include="Objects\EntityConfigHelper.cs" />
     <Compile Include="Objects\EntityConfigSchema.cs" />
     <Compile Include="Objects\EntityType.cs" />
     <Compile Include="Objects\ContentBuilder.cs" />

@@ -34,10 +34,10 @@ namespace GameHelper.Physics.PhysicsObjects
                 wheelZOffset, wheelRestingFrac, wheelDampingFrac,
                 wheelNumRays, driveTorque, gravity);
 
-            this.body = car.Chassis.Body;
-            this.Skin= car.Chassis.Skin;
-            body.CollisionSkin = Skin;
-            body.ExternalData = this;
+            //this.root.body = car.Chassis.Body;
+            //this.Skin= car.Chassis.Skin;
+            //this.root.body.CollisionSkin = Skin;
+            //this.root.body.ExternalData = this;
             this.wheel = wheels;
             CommonInit(pos, new Vector3(1, 1, 1), model, true, asset);
             SetCarMass(100.1f);
@@ -61,8 +61,8 @@ namespace GameHelper.Physics.PhysicsObjects
                 //Vector3 com = SetMass(2.0f);
                 //SetMass(2.0f);
                 //Skin.ApplyLocalTransform(new JigLibX.Math.Transform(-com, Matrix.Identity));
-                body.MoveTo(Position, Matrix.Identity);
-                body.EnableBody(); // adds to CurrentPhysicsSystem
+                //body.MoveTo(Position, Matrix.Identity);
+                //body.EnableBody(); // adds to CurrentPhysicsSystem
             }
             catch (Exception E)
             {
@@ -103,7 +103,7 @@ namespace GameHelper.Physics.PhysicsObjects
             DrawWheel(car.Wheels[1], true, View, Projection);
             DrawWheel(car.Wheels[2], false, View, Projection);
             DrawWheel(car.Wheels[3], false, View, Projection);
-
+            /*
             if (Model == null)
                 return;
             Matrix[] transforms = new Matrix[Model.Bones.Count];
@@ -124,7 +124,7 @@ namespace GameHelper.Physics.PhysicsObjects
                     effect.Projection = Projection;
                 }
                 mesh.Draw();
-            }
+            }*/
         }
 
         public Car Car
@@ -134,7 +134,7 @@ namespace GameHelper.Physics.PhysicsObjects
 
         private void SetCarMass(float mass)
         {
-            body.Mass = mass;
+            root.body.Mass = mass;
             Vector3 min, max;
             car.Chassis.GetDims(out min, out max);
             Vector3 sides = max - min;
@@ -151,7 +151,7 @@ namespace GameHelper.Physics.PhysicsObjects
 
         public override Vector3 GetPositionAbove()
         {
-            return body.Position + Vector3.UnitY * 4;
+            return root.body.Position + Vector3.UnitY * 4;
         }
 
         #region Input

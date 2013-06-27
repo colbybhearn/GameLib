@@ -106,10 +106,10 @@ namespace GameHelper.Physics.PhysicsObjects
                 wheelZOffset, wheelRestingFrac, wheelDampingFrac,
                 wheelNumRays, driveTorque, gravity);
 
-            this.body = rover.Chassis.Body;
-            this.Skin = rover.Chassis.Skin;
-            body.CollisionSkin = Skin;
-            body.ExternalData = this;
+            //this.body = rover.Chassis.Body;
+            //this.Skin = rover.Chassis.Skin;
+            //body.CollisionSkin = Skin;
+            //body.ExternalData = this;
             this.wheel = wheels;
             CommonInit(pos, new Vector3(1, 1, 1), model, true, asset);
             SetRoverMass(400.1f);
@@ -133,8 +133,8 @@ namespace GameHelper.Physics.PhysicsObjects
                 //Vector3 com = SetMass(2.0f);
                 //SetMass(2.0f);
                 //Skin.ApplyLocalTransform(new JigLibX.Math.Transform(-com, Matrix.Identity));
-                body.MoveTo(Position, Matrix.Identity);
-                body.EnableBody(); // adds to CurrentPhysicsSystem
+                root.body.MoveTo(Position, Matrix.Identity);
+                root.body.EnableBody(); // adds to CurrentPhysicsSystem
             }
             catch (Exception E)
             {
@@ -151,7 +151,7 @@ namespace GameHelper.Physics.PhysicsObjects
             DrawWheel(rover.Wheels[3], false, View, Projection);
             DrawWheel(rover.Wheels[4], false, View, Projection);
             DrawWheel(rover.Wheels[5], false, View, Projection);
-
+            /*
             if (Model == null)
                 return;
             Matrix[] transforms = new Matrix[Model.Bones.Count];
@@ -181,6 +181,7 @@ namespace GameHelper.Physics.PhysicsObjects
                 DrawLaser(View, Projection);
 
             DrawCameraRig(View, Projection);
+             */
         }
         private void DrawWheel(Wheel wh, bool rotated, Matrix View, Matrix Projection)
         {
@@ -209,7 +210,7 @@ namespace GameHelper.Physics.PhysicsObjects
             }
         }
         private void DrawRadar(Matrix View, Matrix Projection)
-        {
+        {/*
             float rotationsPerSecond = .3f;
             float stepsPerRotation = 20;
             float radiansPerStep = 2.0f * (float)Math.PI / stepsPerRotation;
@@ -243,7 +244,7 @@ namespace GameHelper.Physics.PhysicsObjects
                 }
                 mesh.Draw();
             }
-            lastDraw = now;
+            lastDraw = now;*/
         }
         private void DrawLaser(Matrix View, Matrix Projection)
         {
@@ -279,11 +280,11 @@ namespace GameHelper.Physics.PhysicsObjects
                     Matrix.CreateTranslation(CamArmAPointOfRotationFromPole) * // move to the point of rotation for the arm
                     rover.Chassis.Body.Orientation * // orient with the rover
                     Matrix.CreateTranslation(rover.Chassis.Body.Position); // move to the rover (Step 1)*/
-
+            /*
             Matrix world = Matrix.CreateScale(config.Scale) * 
                             rig.GetTranformationMatrix((int)RigParts.LaserBox) *
                             rover.Chassis.Body.Orientation * // orient with the rover
-                            Matrix.CreateTranslation(rover.Chassis.Body.Position); // move to the rover (Step 1)*/
+                            Matrix.CreateTranslation(rover.Chassis.Body.Position); // move to the rover (Step 1)
             Matrix[] ltransforms = new Matrix[Laser.Bones.Count];
             Laser.CopyAbsoluteBoneTransformsTo(ltransforms);
             foreach (ModelMesh mesh in Laser.Meshes)
@@ -298,7 +299,7 @@ namespace GameHelper.Physics.PhysicsObjects
                     effect.Projection = Projection;
                 }
                 mesh.Draw();
-            }
+            }*/
         }
         private void DrawCameraRig(Matrix View, Matrix Projection)
         {
@@ -328,7 +329,7 @@ namespace GameHelper.Physics.PhysicsObjects
             #endregion
 
             #region Rotation Arm A
-
+            /*
             world = Matrix.CreateScale(config.Scale) *
                     //Matrix.CreateScale(Scale * 1.4f) *
                     rig.GetTranformationMatrix((int)RigParts.CameraArmA) *
@@ -350,11 +351,11 @@ namespace GameHelper.Physics.PhysicsObjects
                     effect.Projection = Projection;
                 }
                 mesh.Draw();
-            }
+            }*/
             #endregion
 
             #region Rotation Arm B
-
+            /*
             world = Matrix.CreateScale(config.Scale) *
                     rig.GetTranformationMatrix((int)RigParts.CameraArmB) *
                     rover.Chassis.Body.Orientation * // orient with the rover
@@ -372,11 +373,11 @@ namespace GameHelper.Physics.PhysicsObjects
                     effect.Projection = Projection;
                 }
                 mesh.Draw();
-            }
+            }*/
             #endregion
 
             #region Camera
-
+            /*
             world = Matrix.CreateScale(config.Scale) *
                     rig.GetTranformationMatrix((int)RigParts.CameraBox) *
                     rover.Chassis.Body.Orientation * // orient with the rover
@@ -397,7 +398,7 @@ namespace GameHelper.Physics.PhysicsObjects
                     effect.Projection = Projection;
                 }
                 mesh.Draw();
-            }
+            }*/
             #endregion
         }
         EntityPartManager rig = new EntityPartManager();
@@ -447,10 +448,13 @@ namespace GameHelper.Physics.PhysicsObjects
 
         public Matrix GetRoverCamWorldMatrix()
         {
+            return Matrix.Identity;
+            /*
             return Matrix.CreateScale(config.Scale) *
                     rig.GetTranformationMatrix((int)RigParts.CameraBox) *
                     rover.Chassis.Body.Orientation * // orient with the rover
                     Matrix.CreateTranslation(rover.Chassis.Body.Position); // move to the rover (Step 1)
+          * */
         }
         public Vector3 GetCamPosition()
         {
@@ -489,7 +493,7 @@ namespace GameHelper.Physics.PhysicsObjects
 
         private void SetRoverMass(float mass)
         {
-            body.Mass = mass;
+            root.body.Mass = mass;
             Vector3 min, max;
             rover.Chassis.GetDims(out min, out max);
             Vector3 sides = max - min;
@@ -505,7 +509,7 @@ namespace GameHelper.Physics.PhysicsObjects
         }
         public override Vector3 GetPositionAbove()
         {
-            return body.Position + Vector3.UnitY * 4;
+            return root.body.Position + Vector3.UnitY * 4;
         }
 
         #region Input

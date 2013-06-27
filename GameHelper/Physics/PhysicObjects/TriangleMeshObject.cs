@@ -17,8 +17,8 @@ namespace GameHelper.Physics.PhysicsObjects
         public TriangleMeshObject(Model model, Matrix orientation, Vector3 position)
             : base()
         {
-            body = new Body();
-            Skin = new CollisionSkin(null);
+            //body = new Body();
+            //Skin = new CollisionSkin(null);
 
             triangleMesh = new TriangleMesh();
 
@@ -28,13 +28,13 @@ namespace GameHelper.Physics.PhysicsObjects
             ExtractData(vertexList, indexList, model);
 
             triangleMesh.CreateMesh(vertexList,indexList, 4, 1.0f);
-            Skin.AddPrimitive(triangleMesh, new MaterialProperties(0.8f, 0.7f, 0.6f));
-            PhysicsSystem.CurrentPhysicsSystem.CollisionSystem.AddCollisionSkin(Skin);
+            //Skin.AddPrimitive(triangleMesh, new MaterialProperties(0.8f, 0.7f, 0.6f));
+            //PhysicsSystem.CurrentPhysicsSystem.CollisionSystem.AddCollisionSkin(Skin);
 
             // Transform
-            Skin.ApplyLocalTransform(new JigLibX.Math.Transform(position, orientation));
+            //Skin.ApplyLocalTransform(new JigLibX.Math.Transform(position, orientation));
             // we also need to move this dummy, so the object is *rendered* at the correct positiob
-            body.MoveTo(position, orientation);
+            //body.MoveTo(position, orientation);
             CommonInit(position, new Vector3(1, 1, 1), model, false, 0);
         }
 

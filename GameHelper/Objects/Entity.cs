@@ -6,67 +6,106 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using GenEntityConfigTypes;
 
 namespace GameHelper.Objects
 {
     public class Entity
     {
+        /*
+        * Colby is here 2013.06.20
+        * 
+        * Entites are loading their configs and configging parts accordingly.
+        * Problem is all the entity initialization (location / orientation) in the entity, affecting entity properties, and not the ROOT PART.
+        * They should affect the root part.
+        * Either store a reference to the root part by passing it into the PartManager constructor OR pass through position/orientation calls to the part manager.
+         * 
+         * 
+         * Entity has parts
+         *  Those parts can move or have various attributes that the game can hook into.
+         * 
+         * The problem is:
+         *  We don't have specific references into which part does what, like we used to.
+         *  That's not to say it can't work by part names -> By name, find a unique part and adjust it a certain way.
+         *  In that regard, the entity needs a reference to every part, but we also need the hierarchy of parts for fewer lookups during draw calculations.
+         * 
+         * So, we keep the master list in the Entity.
+         * But what about the "root" from which everything is based.
+         * Can it not have a model and not have a skin, but be a body, and not have a name?
+        */
+
+        #region Fields
         public int ID;
-        internal Body body;// { get;  set; }
-        public CollisionSkin Skin { get; internal set; }
-        public Model Model { get; set; }
-        public Vector3 Position { get; set; }
         public bool isOnServer;
         public bool isOnClient;
         public EntityType aType;
-        public EntityConfig config;
-        public string assetName;
+        public GenEntityConfigTypes.EntityConfig config;
+        public bool Selected;
+        public GameHelper.Input.ActionManager actionManager = new GameHelper.Input.ActionManager();
+        public List<Controller> controllers = new List<Controller>();
+        public bool hasNotDoneFirstInterpoladation = true; // this object has never processed an update and interpolated (with any factor) 
+        public int OwningClientId = -1;
+        public int UpdateCountdown = 10;
+        public EntityPart root;
+        public SortedList<int, EntityPart> partList = new SortedList<int, EntityPart>();
+        private bool CollidedRecently = true; // we want the object to update immediately once created
+        #endregion
+        
+        #region Properties
+        public Vector3 Position
+        {
+            get
+            {
+                return root.body.Position;
+            }
+            set
+            {
+                root.body.Position = value;
+            }
+        }
         public Matrix Orientation
         {
             get
             {
-                return body.Orientation;
+                return root.body.Orientation;
             }
             set
             {
-                body.Orientation = value;
+                root.body.Orientation = value;
             }
         }
-        //public Vector3 Scale { get; set; }
-        public bool Selected;
-        public GameHelper.Input.ActionManager actionManager = new GameHelper.Input.ActionManager();
-        public List<Controller> controllers = new List<Controller>();
+        public Vector3 Velocity
+        {
+            get
+            {
+                return root.body.Velocity;
+            }
+            set
+            {
+                //foreach (EntityPart p in partList.Values)
+                    //p.body.Velocity = Vector3.Zero;
+
+                root.body.Velocity = value;
+                
+            }
+        }
+
         internal BasicEffect Effect { get; set; }
-        public bool hasNotDoneFirstInterpoladation = true; // this object has never processed an update and interpolated (with any factor) 
-        public int OwningClientId = -1;
-        public EntityPartManager partRoot;
-
-        /// <summary>
-        /// Default Constructor
-        /// Initalizes the Body and a CollisionSkin
-        /// No Primatives are added to the Body
-        /// </summary>
-        /// <param name="position">Initial Body Position</param>
-        /// <param name="scale">Scale</param>
-        public Entity()
+        public bool IsActive
         {
-            body = new Body();
-            partRoot = new EntityPartManager(body);
-            Skin = new CollisionSkin();
-            body.CollisionSkin = null;
-            body.ExternalData = this;
-            //body.CollisionSkin.callbackFn += new CollisionCallbackFn(CollisionSkin_callbackFn);
+            get
+            {
+                return root.body.IsActive;
+            }
         }
-
-        private bool CollidedRecently = true; // we want the object to update immediately once created
-
-        bool CollisionSkin_callbackFn(CollisionSkin skin0, CollisionSkin skin1)
+        public bool isMoveable
         {
-            CollidedRecently = true; // we just want to know when it collided
-            return true; // let the physics system handle the collision
+            get
+            {
+                return !root.body.Immovable;
+            }
         }
-
-        public int UpdateCountdown = 10;
+        
         public bool DidCollideRecently
         {
             get
@@ -79,8 +118,22 @@ namespace GameHelper.Objects
                 return false;
             }
         }
+        #endregion
 
         #region Initialization
+        /// <summary>
+        /// Default Constructor
+        /// Initalizes the Body and a CollisionSkin
+        /// No Primatives are added to the Body
+        /// </summary>
+        /// <param name="position">Initial Body Position</param>
+        /// <param name="scale">Scale</param>
+        public Entity()
+        {
+            root = new EntityPart(true);
+            partList.Add(0, root);
+        }
+
         /// <summary>
         /// Single Primitive Constructor with custom MaterialProperty
         /// </summary>
@@ -91,8 +144,6 @@ namespace GameHelper.Objects
         public Entity(Vector3 position, Vector3 scale, Primitive primative, MaterialProperties prop, Model model, int asset)
             : this()
         {
-            Skin.AddPrimitive(primative, prop);
-
             CommonInit(position, scale, model, true, asset);
         }
 
@@ -106,8 +157,6 @@ namespace GameHelper.Objects
         public Entity(Vector3 position, Vector3 scale, Primitive primative, MaterialTable.MaterialID propId, Model model, int asset)
             : this()
         {
-            Skin.AddPrimitive(primative, (int)propId);
-
             CommonInit(position, scale, model, true, asset);
         }
 
@@ -122,9 +171,6 @@ namespace GameHelper.Objects
         public Entity(Vector3 position, Vector3 scale, List<Primitive> primatives, List<MaterialProperties> props, Model model, int asset)
             : this()
         {
-            for (int i = 0; i < primatives.Count && i < props.Count; i++)
-                Skin.AddPrimitive(primatives[i], props[i]);
-
             CommonInit(position, scale, model, true, asset);
         }
 
@@ -134,11 +180,8 @@ namespace GameHelper.Objects
             
             try
             {
-                Skin.AddPrimitive(primitive, (int)MaterialTable.MaterialID.NotBouncyNormal);
-                //CollisionSkin collision = new CollisionSkin(null);
-                //Skin.AddPrimitive(primitive, 2);
+                
                 CommonInit(position, scale, model, moveable, asset);
-                //Body.CollisionSkin = collision;
             }
             catch (Exception E)
             {
@@ -149,9 +192,9 @@ namespace GameHelper.Objects
         public void CommonInit(Vector3 pos, Vector3 scale, Model model, bool moveable, int asset)
         {
             Position = pos;
-            config.Scale = scale;
-            Model = model;
-            body.Immovable = !moveable;
+            //config.
+            //Model = model;
+            root.body.Immovable = !moveable;
             // Enumerated AssetTypes are the only integers/Enums
 
 
@@ -162,107 +205,152 @@ namespace GameHelper.Objects
             // MOVED TO BEFORE INTEGRATE
             //FinalizeBody();
         }
-
         public void CommonInit(Vector3 pos, Matrix orient, bool moveable)
         {
             Position = pos;
             Orientation = orient;
-            body.Immovable = !moveable;
+            root.body.Immovable = !moveable;
             // MOVED TO BEFORE INTEGRATE
             //FinalizeBody();
         }
+        public void BodyInit(Vector3 pos, Matrix orient)
+        {
+            root.body.MoveTo(pos, orient);
+        }
+        public void BodyInit(Vector3 pos)
+        {
+            root.body.MoveTo(pos, Matrix.Identity);
+        }
 #endregion
 
-
+        #region Physics
+        bool CollisionSkin_callbackFn(CollisionSkin skin0, CollisionSkin skin1)
+        {
+            CollidedRecently = true; // we just want to know when it collided
+            return true; // let the physics system handle the collision
+        }
         public void AddCollisionCallback(CollisionCallbackFn cbf)
         {
-            this.partRoot.collisionCallback += cbf;
+            this.root.CollisionOccurred+=cbf;
             //this.body.CollisionSkin.callbackFn += cbf;
         }
-
         public void AddController(Controller c)
         {
             controllers.Add(c);
             PhysicsSystem.CurrentPhysicsSystem.AddController(c);
         }
-
-        public Vector3 BodyPosition()
+        public void MoveTo(Vector3 pos, Matrix orient)
         {
-            return body.Position;
+            root.body.MoveTo(pos, orient);
         }
-
-        public void BodyInit(Vector3 pos, Matrix orient)
-        {
-            body.MoveTo(pos, orient);
-        }
-        public void BodyInit(Vector3 pos)
-        {
-            body.MoveTo(pos, Matrix.Identity);
-        }
-
-        public Matrix BodyOrientation()
-        {
-            return body.Orientation;
-        }
-        public void SetOrientation(Matrix o)
-        {
-            body.Orientation = o;
-        }
-
-        public Vector3 BodyVelocity()
-        {
-            return body.Velocity;
-        }
-        public void SetVelocity(Vector3 v)
-        {
-            body.Velocity = v;
-        }
-
         public virtual void FinalizeBody()
         {
 
-            try
+            foreach (EntityPart p in partList.Values)
             {
-                Vector3 com = SetMass(1.0f);
-
-                body.MoveTo(Position, Orientation);
-                Skin.ApplyLocalTransform(new JigLibX.Math.Transform(-com, Matrix.Identity));
-                body.EnableBody(); // adds to CurrentPhysicsSystem
+                p.FinalizeBody();
             }
-            catch (Exception E)
-            {
-                System.Diagnostics.Debug.WriteLine(E.StackTrace);
-            }
+            root.Enable();
         }
+        #endregion
 
+        #region Parts
         public void EnableParts()
         {
-            body.EnableBody();
-            partRoot.EnableBody();
+            root.body.Mass = 100;
+            root.Enable();
         }
 
-        internal Vector3 SetMass(float mass)
+        public void AddPart(int parentId, EntityPart child)
         {
-            PrimitiveProperties primitiveProperties = new PrimitiveProperties(
-                PrimitiveProperties.MassDistributionEnum.Solid,
-                PrimitiveProperties.MassTypeEnum.Mass,
-                mass);
+            if (!partList.ContainsKey(child.Id))
+                partList.Add(child.Id, child);
+            
+            child.body.CollisionSkin.callbackFn += new CollisionCallbackFn(PartCollisioncallbackFn);
+            if (partList.ContainsKey(parentId))
+            {
+                EntityPart parent = partList[parentId];
 
-            float junk;
-            Vector3 com;
-            Matrix it, itCom;
+                /*
+                 * collision skin types which should or should not collide with those in another certain group.
+                 * 
+                 * 
+                 */
 
-            Skin.GetMassProperties(primitiveProperties, out junk, out com, out it, out itCom);            
-            body.BodyInertia = itCom;
-            body.Mass = junk;
 
-            return com;
+
+                if (child.part.Name == "fuselageA")
+                {
+                    JigLibX.Physics.ConstraintPoint c = new ConstraintPoint(parent.body, new Vector3(3, 3, 3), child.body, new Vector3(-3, -3, 3), 0, 1f);
+                    PhysicsSystem.CurrentPhysicsSystem.AddConstraint(c);
+                    c.EnableConstraint();
+                    JigLibX.Physics.ConstraintPoint c2 = new ConstraintPoint(parent.body, new Vector3(3, 3, -3), child.body, new Vector3(-3, -3, -3), 0, 1f);
+                    PhysicsSystem.CurrentPhysicsSystem.AddConstraint(c2);
+                    c2.EnableConstraint();
+                    JigLibX.Physics.ConstraintPoint c3 = new ConstraintPoint(parent.body, new Vector3(3, -3, 0), child.body, new Vector3(-3, -6, 0), 0, 1f);
+                    PhysicsSystem.CurrentPhysicsSystem.AddConstraint(c3);
+                    c3.EnableConstraint();
+                }
+                else if (child.part.Name == "fuselageB")
+                {
+                    JigLibX.Physics.ConstraintPoint c = new ConstraintPoint(parent.body, new Vector3(-3, 3, 3), child.body, new Vector3(3, -3, 3), 0, 1f);
+                    PhysicsSystem.CurrentPhysicsSystem.AddConstraint(c);
+                    c.EnableConstraint();
+                    JigLibX.Physics.ConstraintPoint c2 = new ConstraintPoint(parent.body, new Vector3(-3, 3, -3), child.body, new Vector3(3, -3, -3), 0, 1f);
+                    PhysicsSystem.CurrentPhysicsSystem.AddConstraint(c2);
+                    c2.EnableConstraint();
+                    JigLibX.Physics.ConstraintPoint c3 = new ConstraintPoint(parent.body, new Vector3(-3, -3, 0), child.body, new Vector3(3, -6, 0), 0, 1f);
+                    PhysicsSystem.CurrentPhysicsSystem.AddConstraint(c3);
+                    c3.EnableConstraint();
+                }
+
+                parent.AddPart(ref child);
+                child.fParentPart = parent;
+            }
         }
 
+        bool PartCollisioncallbackFn(CollisionSkin skin0, CollisionSkin skin1)
+        {
+            return true;
+        }
+
+        private void AddParts(int pid, Part[] parts, SortedList<string, Model> models)
+        {
+            if (parts == null)
+                return;
+            foreach (Part part in parts)
+                AddPart(pid, part, models);
+        }
+
+        private void AddPart(int pid, Part part, SortedList<string, Model> models)
+        {
+            int id = GetPartId();
+            EntityPart ep = new EntityPart(id, models[CleanPath(part.Model.relFilepath)], part);
+            // add this parts under a parent
+            AddPart(pid, ep);
+
+            // add this parts' children
+            AddParts(id, part.Parts, models);
+        }
+
+        private string CleanPath(string path)
+        {
+            return path.Replace("\\", string.Empty).Replace(".", string.Empty);
+        }
+
+        private int GetPartId()
+        {
+            int i = 0;
+            while (partList.ContainsKey(++i)) ;
+            return i;
+        }
+        #endregion
+
+        #region Visual
         public virtual void Draw(ref Matrix View, ref Matrix Projection)
         {
-            partRoot.Draw(ref View, ref Projection);
-            
+            root.Draw(ref View, ref Projection);
+            /*
             if (Model == null)
                 return;
             Matrix[] transforms = new Matrix[Model.Bones.Count];
@@ -283,12 +371,12 @@ namespace GameHelper.Objects
                     effect.Projection = Projection;
                 }
                 mesh.Draw();
-            }
+            }*/
         }
-
         public virtual void DrawWireframe(GraphicsDevice Graphics, Matrix View, Matrix Projection)
         {
-            partRoot.DrawWireframe(Graphics, View, Projection);
+            string entityName = this.aType.Name;
+            root.DrawWireframe(Graphics, View, Projection);
             /*
             try
             {
@@ -355,51 +443,26 @@ namespace GameHelper.Objects
                 System.Console.WriteLine(e.StackTrace);
             }*/
         }
+        #endregion
 
-        /// <summary>
-        /// only used for the model
-        /// </summary>
-        /// <returns></returns>
-        public Matrix GetWorldMatrix()
-        {
-            return Matrix.CreateScale(config.Scale) * Skin.GetPrimitiveLocal(0).Transform.Orientation * body.Orientation * Matrix.CreateTranslation(body.Position);
-        }
-
-        
-
-        public void MoveTo(Vector3 pos, Matrix orient)
-        {
-            Position = pos;
-            
-            body.MoveTo(pos, orient);
-        }
-        public bool isMoveable
-        {
-            get
-            {
-                return !body.Immovable;
-            }
-        }
-
+        #region Multiplayer
         /// <summary>
         /// should be called after MoveTo
         /// </summary>
         /// <param name="vel"></param>
         public void UpdateVelocity(Vector3 vel)
         {
-            body.Velocity = vel;
+            root.body.Velocity = vel;
             //Body.UpdateVelocity(vel.Length);
         }
-
         public void ProcessSimulatedInput(object[] actionvalues)
         {
             actionManager.ProcessActionValues(actionvalues);
         }
-
         public virtual Vector3 GetPositionAbove()
         {
-            Vector3 ret = body.Position;
-            ret.Y += Math.Abs((body.CollisionSkin.WorldBoundingBox.Min.Y + body.CollisionSkin.WorldBoundingBox.Max.Y) / 2f); // Assume body is halfway in this?
+            Vector3 ret = Position;
+            ret.Y += Math.Abs((root.body.CollisionSkin.WorldBoundingBox.Min.Y + root.body.CollisionSkin.WorldBoundingBox.Max.Y) / 2f); // Assume body is halfway in this?
             return ret;
         }
 
@@ -445,15 +508,15 @@ namespace GameHelper.Objects
                 interpFactor = 0;
             //MoveTo(position, orientation);
             //SetVelocity(velocity);
-            Vector3 intPosition = BodyPosition() + (position - BodyPosition()) * interpFactor;
-            Vector3 intvelocity = BodyVelocity() + (velocity - BodyVelocity()) * interpFactor;
+            Vector3 intPosition = Position + (position - Position) * interpFactor;
+            Vector3 intvelocity = Velocity + (velocity - Velocity) * interpFactor;
             if(float.IsNaN(intPosition.X) || 
                 float.IsNaN(intvelocity.X))
             {
                 return;
             }
             MoveTo(intPosition, orientation);
-            SetVelocity(intvelocity);
+            Velocity=intvelocity;
             hasNotDoneFirstInterpoladation = false;
             //SetVelocity(intvelocity);            
         }
@@ -462,7 +525,6 @@ namespace GameHelper.Objects
         {
             
         }
-
         public bool hasAttributeChanged = false;
         public virtual void GetObjectAttributes(out bool[] bv, out int[] iv, out float[] fv)
         {
@@ -474,28 +536,34 @@ namespace GameHelper.Objects
         {
         }
 
-        public bool IsActive 
-        {
-            get
-            {
-                return body.IsActive;
-            }
-        }
+        #endregion 
 
-        public virtual EntityConfig LoadConfig(string file)
+        #region Config
+        public virtual GenEntityConfigTypes.EntityConfig LoadConfig(string file)
         {
-            config.LoadFromFile(file);
+            config = EntityConfigHelper.Load(file);
             return config;
         }
-
-        public void ApplyConfig(EntityConfig aConfig)
-        {
-            config = aConfig;
-        }
-
         public void SetAngularVelocity(Vector3 av)
         {
-            body.AngularVelocity = av;
+            foreach (EntityPart p in partList.Values)
+            {
+                p.body.AngularVelocity = av;
+            }
         }
+        internal void ApplyConfig(EntityConfig ec, SortedList<string, Model> models)
+        {
+            config = ec;
+            ApplyConfig(ec.Parts, models);
+        }
+
+        internal void ApplyConfig(Part[] parts, SortedList<string, Model> models)
+        {
+            int id = 0;
+            
+            AddParts(id, parts, models);
+        }
+
+        #endregion
     }
 }

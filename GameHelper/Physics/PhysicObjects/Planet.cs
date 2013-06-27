@@ -23,8 +23,8 @@ namespace GameHelper.Physics.PhysicObjects
             : base()
         {
             this.texture = texture;
-            body = new Body();
-            Skin = new CollisionSkin(null);
+            //body = new Body();
+            //Skin = new CollisionSkin(null);
 
             for (double i = 0; i < MathHelper.TwoPi - JigLibX.Math.JiggleMath.Epsilon; i += radianMeshSize)
             {
@@ -79,7 +79,7 @@ namespace GameHelper.Physics.PhysicObjects
                     tm.CreateMesh(vl, tvi, 1, 1f); // Last two parameters are listed as not used on the octree
 
                     triangleMeshes.Add(tm);
-                    Skin.AddPrimitive(tm, (int)MaterialTable.MaterialID.NormalRough);
+                    //Skin.AddPrimitive(tm, (int)MaterialTable.MaterialID.NormalRough);
                 }
             }
 
@@ -93,12 +93,12 @@ namespace GameHelper.Physics.PhysicObjects
 
             //triangleMesh.CreateMesh(vertexList,indexList, 4, 1.0f);
             //Skin.AddPrimitive(triangleMesh, new MaterialProperties(0.8f, 0.7f, 0.6f));
-            PhysicsSystem.CurrentPhysicsSystem.CollisionSystem.AddCollisionSkin(Skin);
+            //PhysicsSystem.CurrentPhysicsSystem.CollisionSystem.AddCollisionSkin(Skin);
 
             // Transform
-            Skin.ApplyLocalTransform(new JigLibX.Math.Transform(center, Matrix.Identity));
+            //Skin.ApplyLocalTransform(new JigLibX.Math.Transform(center, Matrix.Identity));
             // we also need to move this dummy, so the object is *rendered* at the correct positiob
-            body.MoveTo(center, Matrix.Identity);
+            //body.MoveTo(center, Matrix.Identity);
             CommonInit(center, new Vector3(1, 1, 1), null, false, -1);
         }
 
@@ -157,7 +157,7 @@ namespace GameHelper.Physics.PhysicObjects
             {
                 tverts[i] = vpnt[i];
                 tverts[i].Position = Vector3.Transform(vpnt[i].Position,
-                                            body.Orientation * Matrix.CreateTranslation(body.Position));
+                                            root.body.Orientation * Matrix.CreateTranslation(root.body.Position));
             }
             return tverts;
         }
